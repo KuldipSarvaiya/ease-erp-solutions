@@ -1,6 +1,10 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import NextUiProvider from "./NextUiProvider";
+import NavBar from "@/components/NavBar";
+import AuthProvider from "@/components/AuthProvider";
+// import { Provider } from "react-redux";
+// import store from "@/redux/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,10 +15,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <NextUiProvider>{children}</NextUiProvider>
-      </body>
+    <html lang="en" className="dark">
+      <AuthProvider>
+        <body className={inter.className}>
+          <NextUiProvider>
+            <header>
+              <NavBar />
+            </header>
+            <main>{children}</main>
+          </NextUiProvider>
+        </body>
+      </AuthProvider>
     </html>
   );
 }
