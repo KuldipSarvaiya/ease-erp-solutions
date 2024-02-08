@@ -17,20 +17,19 @@ import { useState } from "react";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { VscAccount } from "react-icons/vsc";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/dist/server/api-utils";
+import { redirect } from "next/navigation";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [active, setActive] = useState("");
   const menuItems = ["Home", "Products", "AboutUs"];
-  const { data } = useSession();
-  // ({
-  // required: true,
-  // onUnauthenticated() {
-  //   redirect("/api/auth/signout?callbackUrl=/");
-  // },
-  // });
-  console.log("\n********* Nav Session = ", data);
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/");
+    },
+  });
+  console.log("\n********* Nav Session = ", session);
 
   return (
     <Navbar
@@ -80,12 +79,12 @@ export default function NavBar() {
       {/* account / login status*/}
       <NavbarContent justify="end">
         <NavbarItem>
-          {data ? (
+          {session?.user ? (
             <>
               <Button variant="flat">
                 <UiLink as={Link} href="/profile" color="secondary" size="sm">
-                  {data?.user?.image ? (
-                    <Avatar src={data.image} />
+                  {session?.user?.image ? (
+                    <Avatar src={session.user.image} />
                   ) : (
                     <VscAccount />
                   )}

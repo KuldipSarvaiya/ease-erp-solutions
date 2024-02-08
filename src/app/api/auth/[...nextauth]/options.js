@@ -15,9 +15,17 @@ export const options = {
           role = "admin";
 
         return {
+          id: profile.sub,
           ...profile,
           role,
         };
+      },
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
       },
     }),
     CredentialsProvider({
@@ -27,11 +35,13 @@ export const options = {
           type: "text",
           required: true,
           label: "Username ",
+          name: "username",
           placeholder: "@",
         },
         password: {
-          label: "Password:",
+          label: "Password ",
           type: "password",
+          name: "password",
           required: true,
           placeholder: "Enter Password",
         },

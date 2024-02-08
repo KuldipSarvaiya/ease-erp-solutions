@@ -1,12 +1,9 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
 import NextUiProvider from "./NextUiProvider";
 import NavBar from "@/components/NavBar";
 import AuthProvider from "@/components/AuthProvider";
 // import { Provider } from "react-redux";
 // import store from "@/redux/store";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Create Next App",
@@ -17,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <AuthProvider>
-        <body className={inter.className}>
+        <body>
           <NextUiProvider>
             <header>
               <NavBar />
