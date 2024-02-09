@@ -82,7 +82,15 @@ export default function NavBar() {
           {session?.user ? (
             <>
               <Button variant="flat">
-                <UiLink as={Link} href="/profile" color="secondary" size="sm">
+                <UiLink
+                  as={Link}
+                  href="/profile"
+                  color="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setActive("account");
+                  }}
+                >
                   {session?.user?.image ? (
                     <Avatar src={session.user.image} />
                   ) : (
@@ -97,6 +105,9 @@ export default function NavBar() {
                   href="/api/auth/signout?callbackUrl=/"
                   size="sm"
                   color="secondary"
+                  onClick={() => {
+                    setActive("signout");
+                  }}
                 >
                   <FaSignOutAlt />
                   &nbsp;Sign Out
@@ -110,6 +121,9 @@ export default function NavBar() {
                 href="/api/auth/signin?callbackUrl=/profile"
                 color="secondary"
                 size="sm"
+                onClick={() => {
+                  setActive("signin");
+                }}
               >
                 <FaSignInAlt />
                 &nbsp;Sign In

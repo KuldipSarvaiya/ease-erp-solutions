@@ -1,6 +1,5 @@
 import "./globals.css";
-import NextUiProvider from "./NextUiProvider";
-import NavBar from "@/components/NavBar";
+import NextUiProvider from "./NextUiProvider"; 
 import AuthProvider from "@/components/AuthProvider";
 // import { Provider } from "react-redux";
 // import store from "@/redux/store";
@@ -15,10 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className="dark">
       <AuthProvider>
         <body>
-          <NextUiProvider>
-            <header>
-              <NavBar />
-            </header>
+          <NextUiProvider> 
             <main>{children}</main>
           </NextUiProvider>
         </body>
