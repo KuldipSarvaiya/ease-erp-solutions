@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorExpense() {
   return <div>ErrorExpense Page</div>;
 }

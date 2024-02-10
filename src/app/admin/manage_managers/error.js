@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorManagerAdmin() {
   return <div>ErrorManagerAdmin Page</div>;
 }

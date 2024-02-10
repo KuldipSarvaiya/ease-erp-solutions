@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorRevenue() {
   return <div>ErrorRevenue Page</div>;
 }

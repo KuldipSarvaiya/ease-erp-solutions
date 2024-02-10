@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorCrm() {
   return <div>ErrorCrm Page</div>;
 }

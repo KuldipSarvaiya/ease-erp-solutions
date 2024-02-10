@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorAttendace() {
   return <div>ErrorAttendace Page</div>;
 }

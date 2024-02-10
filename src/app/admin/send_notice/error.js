@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorAdminNotice() {
   return <div>ErrorAdminNotice Page</div>;
 }

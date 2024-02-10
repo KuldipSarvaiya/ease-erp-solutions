@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorNotice() {
   return <div>ErrorNotice Page</div>;
 }

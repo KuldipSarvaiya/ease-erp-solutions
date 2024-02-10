@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorProfile() {
   return <div>ErrorProfile Page</div>;
 }

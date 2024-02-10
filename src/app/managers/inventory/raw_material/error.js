@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorRawMaterial() {
   return <div>ErrorRawMaterial Page</div>;
 }

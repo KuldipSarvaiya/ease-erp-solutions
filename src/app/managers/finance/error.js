@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorFinance() {
   return <div>ErrorFinance Page</div>;
 }

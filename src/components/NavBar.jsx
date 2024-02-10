@@ -48,7 +48,9 @@ export default function NavBar() {
       {/* heading */}
       <NavbarContent className="pr-3" justify="start">
         <NavbarBrand>
-          <p className="font-bold text-inherit">Ease ERP Solutions</p>
+          <p className="font-bold text-inherit">
+            <Link href={"/"}>Ease ERP Solutions</Link>
+          </p>
         </NavbarBrand>
       </NavbarContent>
 
@@ -67,7 +69,7 @@ export default function NavBar() {
                 }}
                 color="foreground"
                 aria-current="page"
-                href={`/${item === "Home" ? "/" : item.toLowerCase()}`}
+                href={`/customer/${item.toLowerCase()}`}
               >
                 {item}
               </UiLink>
@@ -84,7 +86,7 @@ export default function NavBar() {
               <Button variant="flat">
                 <UiLink
                   as={Link}
-                  href="/profile"
+                  href="/customer/profile"
                   color="secondary"
                   size="sm"
                   onClick={() => {
@@ -146,7 +148,7 @@ export default function NavBar() {
                 setIsMenuOpen(false);
                 setActive(item);
               }}
-              href={`/${item === "Home" ? "/" : item.toLowerCase()}`}
+              href={`/customer/${item.toLowerCase()}`}
             >
               {item}
             </UiLink>

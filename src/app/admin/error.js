@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorAdimn() {
   return <div>ErrorAdimn Page</div>;
 }

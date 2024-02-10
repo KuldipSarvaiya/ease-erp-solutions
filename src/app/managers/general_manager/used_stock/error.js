@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorUsedStock() {
   return <div>ErrorUsedStock Page</div>;
 }

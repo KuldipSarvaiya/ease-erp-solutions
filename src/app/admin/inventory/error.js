@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorAdminInventory() {
   return <div>ErrorAdminInventory Page</div>;
 }

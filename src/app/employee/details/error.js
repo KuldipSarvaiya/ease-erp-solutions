@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorDetails() {
   return <div>ErrorDetails Page</div>;
 }

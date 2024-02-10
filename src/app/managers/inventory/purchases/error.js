@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorPurchases() {
   return <div>ErrorPurchases Page</div>;
 }

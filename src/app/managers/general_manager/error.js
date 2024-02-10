@@ -1,3 +1,5 @@
+'use client'
+
 function ErrorGenManager() {
   return <div>ErrorGenManager Page</div>;
 }
