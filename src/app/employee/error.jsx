@@ -1,7 +1,7 @@
 'use client'
 
 function ErrorEmployee() {
-  return <div>ErrorEmployee Page</div>;
+  return <div>Error in Employee Page</div>;
 }
 
 export default ErrorEmployee;
