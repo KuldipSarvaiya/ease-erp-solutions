@@ -9,6 +9,7 @@ const customerSchema = new Schema(
     image: {
       type: String,
       required: true,
+      immutable: true,
     },
     email: {
       type: String,
@@ -31,7 +32,12 @@ const customerSchema = new Schema(
     order_id: {
       type: [Schema.ObjectId],
       required: false,
-    }, 
+    },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+    },
   },
   { timestamps: true }
 );

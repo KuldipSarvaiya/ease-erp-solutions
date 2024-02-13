@@ -21,6 +21,7 @@ const employeeSchema = new Schema(
         messages: "\n**********Gender is Not valid",
       },
       required: true,
+      immutable: true,
     },
     dob: {
       type: Date,
@@ -37,19 +38,23 @@ const employeeSchema = new Schema(
       type: Date,
       default: new Date(),
       required: true,
+      immutable: true,
     },
     prev_experience: {
       type: Number,
       required: true,
+      immutable: true,
       default: 0,
     },
     expert_area: {
       type: String,
       required: false,
+      immutable: true,
     },
     course_studied: {
       type: String,
       required: false,
+      immutable: true,
     },
     designation: {
       type: String,
@@ -110,6 +115,7 @@ const employeeSchema = new Schema(
     pan_no: {
       type: String,
       required: true,
+      immutable: true,
     },
     salary_id: {
       type: [Schema.ObjectId],
@@ -160,14 +166,25 @@ const employeeSchema = new Schema(
       required: true,
       default: false,
     },
-    date_of_resign: Date,
-    reason_for_resign: String,
+    date_of_resign: {
+      type: Date,
+      required: false,
+    },
+    reason_for_resign: {
+      type: String,
+      required: false,
+    },
     task_id: {
       type: [Schema.ObjectId],
       ref: "Task",
       required: false,
     },
-    notice: [String],
+    notice: { type: [String], required: false },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+    },
   },
   { timestamps: true }
 );

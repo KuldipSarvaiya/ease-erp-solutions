@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const attendanceSchema = new mongoose.Schema(
   {
@@ -6,11 +6,12 @@ const attendanceSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Employee",
       required: [true, "\n*******Employee Id for Attendance is Required"],
-      immutable,
+      immutable: true,
     },
     date: {
       type: Date,
       required: [true, "\n*******Date for Attendance is Required"],
+      immutable: true,
     },
     coordinates: {
       type: [String],
@@ -20,6 +21,7 @@ const attendanceSchema = new mongoose.Schema(
         message: (props) =>
           `\n*******${props.name} :  is not a valid , invalid = ${props.value}`,
       },
+      immutable: true,
     },
     state: {
       type: String,
@@ -39,6 +41,7 @@ const attendanceSchema = new mongoose.Schema(
       type: Date,
       required: true,
       default: new Date(),
+      immutable: true,
     },
     punch_out: {
       type: Date,
@@ -63,6 +66,11 @@ const attendanceSchema = new mongoose.Schema(
       },
       default: 0,
       required: false,
+    },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
     },
   },
   {

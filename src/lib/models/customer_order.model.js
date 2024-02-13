@@ -6,11 +6,13 @@ const customer_orderSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Customer",
       required: true,
+      immutable: true,
     },
     product: {
       type: Schema.ObjectId,
       ref: "Product",
       required: true,
+      immutable: true,
     },
     units: {
       type: Number,
@@ -23,6 +25,7 @@ const customer_orderSchema = new Schema(
         message: (props) => `${props.name} is not set to ${props.value}`,
       },
       required: false,
+      immutable: true,
     },
     check_no: {
       type: String,
@@ -45,6 +48,7 @@ const customer_orderSchema = new Schema(
       type: Number,
       required: false,
       default: 0,
+      immutable: true,
     },
     total_mrp: {
       type: Number,
@@ -65,6 +69,11 @@ const customer_orderSchema = new Schema(
     net_price: {
       type: Number,
       required: true,
+    },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: false,
     },
   },
   {

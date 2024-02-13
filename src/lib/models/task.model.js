@@ -1,20 +1,37 @@
-import  mongoose from "mongoose";
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-const task = new Schema({
-  date: {
-    type: Date,
-    required: true
+const taskSchema = new Schema(
+  {
+    date: {
+      type: Date,
+      required: true,
+      immutable: true,
+    },
+    assigned_employee_id: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+      immutable: true,
+    },
+    text: {
+      type: String,
+      required: true,
+      immutable: true,
+    },
+    is_complete: {
+      type: String,
+      required: true,
+      default: false,
+    },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+    },
   },
-  assigned_employee_id: {
-    type: employee,
-    required: true
-  },
-  text: {
-    type: String,
-    required: true
-  },
-  is_complete: {
-    type: String,
-    required: true
-  }
-});
+  { timestamps: true }
+);
+
+const Task = mongoose.Schema.Task || mongoose.Schema("Task", taskSchema);
+
+export default Task;

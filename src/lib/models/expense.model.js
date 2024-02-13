@@ -4,7 +4,20 @@ const expenseSchema = new Schema(
   {
     type: {
       type: String,
+      enum: {
+        values: [
+          "raw_material",
+          "employee_expense",
+          "emi",
+          "maintenance",
+          "marketing",
+          "royalti",
+          "accident",
+        ],
+        message: "Given Expense Method is not supported / valid",
+      },
       required: true,
+      immutable: true,
     },
     raw_material_order_id: {
       type: [Schema.ObjectId],
@@ -19,20 +32,27 @@ const expenseSchema = new Schema(
     date: {
       type: Date,
       required: true,
+      immutable: true,
     },
     amount: {
       type: Number,
       required: true,
+      immutable: true,
     },
     description: {
       type: String,
       required: true,
     },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+    },
   },
-  { timestamps: tr }
+  { timestamps: true }
 );
 
 const Expense =
   mongoose.model.Expense || mongoose.model("Expense", expenseSchema);
 
-  export default Expense;
+export default Expense;

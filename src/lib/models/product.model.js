@@ -1,52 +1,66 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-const product = new Schema({
-  name: {
-    type: String,
-    required: true
+const productSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: [String],
+      required: true,
+    },
+    chemical_property: {
+      type: [String],
+      required: true,
+    },
+    color: {
+      type: String,
+      required: true,
+      immutable: true,
+    },
+    size: {
+      type: String,
+      required: true,
+      immutable: true,
+    },
+    unit_of_measurement: {
+      type: String,
+      required: true,
+      immutable: true,
+    },
+    expiry_timing: {
+      type: String,
+      required: true,
+    },
+    available_stock_units: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    discount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    tags: {
+      try: [String],
+      required: true,
+    },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+    },
   },
-  description: [{
-    type: String,
-    required: true
-  }],
-  chemical_property: [{
-    type: String,
-    required: true
-  }],
-  color: {
-    type: String,
-    required: true
-  },
-  size: {
-    type: String,
-    required: true
-  },
-  image: {
-    type: String,
-    required: true
-  },
-  unit_of_measurement: {
-    type: String,
-    required: true
-  },
-  expiry_timing: {
-    type: String,
-    required: true
-  },
-  product_stock_id: [{
-    type: Schema.Types.ObjectId,
-    required: true
-  }],
-  order_id: [{
-    type: Schema.Types.ObjectId,
-    required: true
-  }],
-  available_stock_units: {
-    type: Number,
-    required: true
-  },
-  discount: {
-    type: Number,
-    required: true
-  }
-});
+  { timestamps: true }
+);
+
+const Product =
+  mongoose.model.Product || mongoose.model("Product", productSchema);
+
+export default Product;

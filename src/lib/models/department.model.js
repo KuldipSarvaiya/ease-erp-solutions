@@ -10,16 +10,22 @@ const general_dept_managerSchema = new Schema(
     dept_name: {
       type: String,
       required: true,
+      immutable: true,
     },
-    raw_materials_used_id: {
+    used_material_id: {
       type: [Schema.ObjectId],
       ref: "RawMaterial",
       required: true,
     },
     produced_material_id: {
       type: [Schema.ObjectId],
+      ref: "RawMaterial",
+      required: false,
+    },
+    produced_product_id: {
+      type: [Schema.ObjectId],
       ref: "Product",
-      required: true,
+      required: false,
     },
     production_process_level: {
       type: Number,
@@ -38,8 +44,13 @@ const general_dept_managerSchema = new Schema(
       ref: "Employee",
       required: false,
     },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+    },
   },
-  { timestamps: tr }
+  { timestamps: true }
 );
 
 const Department =
