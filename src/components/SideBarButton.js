@@ -11,11 +11,11 @@ function SideBarButton({ item, mainPath }) {
         color="secondary"
         size="lg"
         // variant={"shadow"}
-          variant={
-            window?.location?.pathname?.endsWith(item.toLowerCase())
-              ? "flat"
-              : "shadow"
-          }
+        variant={
+          window?.location?.pathname?.endsWith(item.toLowerCase())
+            ? "flat"
+            : "shadow"
+        }
       >
         {item.replaceAll("_", " ")}
       </Button>

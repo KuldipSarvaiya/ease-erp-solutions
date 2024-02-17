@@ -1,3 +1,4 @@
+import ChatModel from "@/components/ChatModel";
 import DashBoardNavBar from "@/components/DashBoardNavBar";
 import SideBar from "@/components/SideBar";
 
@@ -24,7 +25,8 @@ export default function HrLayout({ children }) {
       <div className="hidden md:block">
         <SideBar mainPath="/managers/hr/" menuItems={menuItems} />
       </div>
-      <div className="md:pl-[241px]">{children}</div>
+      <div className="md:pl-[241px]  relative pt-16">{children}</div>
+      <ChatModel />
     </section>
   );
 }

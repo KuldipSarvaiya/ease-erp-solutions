@@ -18,6 +18,7 @@ import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { VscAccount } from "react-icons/vsc";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,7 +50,14 @@ export default function NavBar() {
       <NavbarContent className="pr-3" justify="start">
         <NavbarBrand>
           <p className="font-bold text-inherit">
-            <Link href={"/"}>Ease ERP Solutions</Link>
+            <Link href={"/"}>
+              <Image
+                src={"/erp.svg"}
+                alt="Ease ERP Solutions"
+                width={250}
+                height={60}
+              />
+            </Link>
           </p>
         </NavbarBrand>
       </NavbarContent>
@@ -101,6 +109,7 @@ export default function NavBar() {
                   &nbsp; Account
                 </UiLink>
               </Button>
+              &nbsp;
               <Button variant="flat">
                 <UiLink
                   as={Link}

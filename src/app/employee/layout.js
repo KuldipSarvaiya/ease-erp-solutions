@@ -20,7 +20,7 @@ export default function EmployeeLayout({ children }) {
       <div className="hidden md:block">
         <SideBar mainPath={"/employee/"} menuItems={menuItems} />
       </div>
-      <main className="md:pl-[241px] overflow-auto relative">{children}</main>
+      <main className="md:pl-[241px] pt-16">{children}</main>
     </section>
   );
 }

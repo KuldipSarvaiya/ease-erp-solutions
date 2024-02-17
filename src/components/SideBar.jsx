@@ -5,7 +5,7 @@ import { FaSignOutAlt } from "react-icons/fa";
 
 function SideBar({ menuItems, mainPath }) {
   return (
-    <aside className="bg-[#16202DE6] absolute top-0 left-0 w-60 h-full flex flex-col gap-2 p-2 pt-16 overflow-y-auto scrollbar-hide">
+    <aside className="bg-[#16202DE6] fixed top-0 left-0 w-60 h-full flex flex-col gap-2 p-2 pt-16 overflow-y-auto scrollbar-hide">
       {menuItems.map((menu, i) => {
         return (
           <SideBarButton
@@ -15,7 +15,7 @@ function SideBar({ menuItems, mainPath }) {
           />
         );
       })}
-      <div className="static mt-5 left-2 bottom-2 w-56">
+      <div className="fixed mt-5 left-2 bottom-2 w-56">
         <i className="font-thin">stay organized everytime...</i>
         <hr />
         <Button

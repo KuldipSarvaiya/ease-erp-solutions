@@ -17,6 +17,7 @@ import {
 import { MdNotificationsActive } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import SideBarButton from "./SideBarButton";
+import Image from "next/image";
 
 function DashBoardNavBar({ menuItems }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ function DashBoardNavBar({ menuItems }) {
       isBlurred
       isBordered
       onMenuOpenChange={setIsMenuOpen}
-      className="bg-[#16202DE6]"
+      className="bg-[#16202DE6] fixed"
     >
       <NavbarContent justify="start">
         <NavbarMenuToggle
@@ -34,7 +35,15 @@ function DashBoardNavBar({ menuItems }) {
           className="md:hidden"
         />
         <NavbarBrand>
-          <p className="font-bold text-inherit">Ease ERP Solutions</p>
+          <p className="font-bold text-inherit">
+            <Image
+              src={"/erp.svg"}
+              alt="Ease ERP Solutions"
+              width={250}
+              height={60}
+              className="scale-150 max-sm:translate-x-8 translate-y-2"
+            />
+          </p>
         </NavbarBrand>
       </NavbarContent>
 

@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <AuthProvider>
-        <body className="overflow-hidden">
+        <body>
           <NextUiProvider> 
             <main>{children}</main>
           </NextUiProvider>
