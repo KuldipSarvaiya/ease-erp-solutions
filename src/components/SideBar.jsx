@@ -1,5 +1,5 @@
 import Link from "next/link";
-import SideBarButton from "./SideBarButton";
+import SideBarButton from "./SideBarButton.jsx";
 import { Button } from "@nextui-org/react";
 import { FaSignOutAlt } from "react-icons/fa";
 

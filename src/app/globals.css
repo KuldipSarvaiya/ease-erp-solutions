@@ -6,6 +6,9 @@ body {
   color: #b2becd;
   padding: 0px 1px 1px;
 }
+html {
+  cursor: url("cursor.svg"), auto;
+}
 
 @layer utilities {
   .text-balance {
