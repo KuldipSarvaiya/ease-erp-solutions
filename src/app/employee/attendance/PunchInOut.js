@@ -22,7 +22,7 @@ export function PunchIn() {
       );
       console.log("Function responce = ", res);
       startTransition(() => {
-        setLoading(!res);
+        setLoading(false);
         !res &&
           setError(
             "******Sorry, Failed To Verify Location. Please Try Again...******"
@@ -30,7 +30,8 @@ export function PunchIn() {
       });
     });
   }
-  if (new Date().getHours() > 15 || new Date().getHours() < 8) return;
+  const h = new Date().getHours();
+  if (h > 20 || h < 8) return;
 
   return (
     <>
@@ -43,15 +44,9 @@ export function PunchIn() {
           className="tracking-widest uppercase text-4xl font-extrabold"
           disabled={loading}
           onPress={handlePunchIn}
+          isLoading={loading}
         >
-          punch in{" "}
-          {loading ? (
-            <Loading inline={true} />
-          ) : (
-            <>
-              <GiExitDoor />
-            </>
-          )}
+          punch in {!loading && <GiExitDoor />}
         </Button>
         <p className="text-red-500">
           Please Turn On Location Service Before Processed Further
@@ -109,15 +104,9 @@ export function PunchOut() {
           className="tracking-widest uppercase text-4xl font-extrabold"
           disabled={loading}
           onPress={handlePunchOut}
+          isLoading={loading}
         >
-          {loading ? (
-            <Loading inline={true} />
-          ) : (
-            <>
-              <GiEntryDoor />
-            </>
-          )}{" "}
-          punch out
+          {!loading && <GiEntryDoor />}punch out
         </Button>
         <p className="text-red-500">
           Please Turn On Location Service Before Processed Further

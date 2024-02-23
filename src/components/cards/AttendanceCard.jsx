@@ -14,16 +14,22 @@ function AttendanceCard({ date, point, from, to, ot, leave, holiday }) {
   return (
     <Card
       isFooterBlurred
-      className={`bg-${
-        holiday ? "purple" : leave ? "red" : point === 1 ? "green" : "orange"
-      }-500 w-fit text-slate-800`}
+      className={`${
+        holiday
+          ? "bg-purple-900"
+          : leave
+          ? "bg-red-900"
+          : point === 1
+          ? "bg-green-900"
+          : "bg-orange-900"
+      }`}
     >
       <CardHeader className="text-xl font-extrabold max-md:text-base max-md:font-semibold">
         {new Date(date).toDateString()}
       </CardHeader>
       <Divider />
       <CardBody className="font-medium max-md:font-normal max-md:text-xs">
-        {(!holiday && !leave) && (
+        {!holiday && !leave && (
           <>
             {new Date(from).toLocaleTimeString()} &rarr;
             {new Date(to).toLocaleTimeString()}

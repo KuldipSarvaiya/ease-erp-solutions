@@ -18,6 +18,7 @@ import { MdNotificationsActive } from "react-icons/md";
 import { FaSignOutAlt } from "react-icons/fa";
 import SideBarButton from "./SideBarButton";
 import Image from "next/image";
+import NotifyModel from "./NotifyModel";
 
 function DashBoardNavBar({ menuItems }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,8 +57,8 @@ function DashBoardNavBar({ menuItems }) {
         <NavbarItem>
           <Avatar radius="lg" isBordered color="secondary" about="kuldip" />
         </NavbarItem>
-        <NavbarItem className="sm:ml-5">
-          <span className="cursor-pointer">
+        <NavbarItem>
+          {/* <span className="cursor-pointer">
             <Badge
               color="secondary"
               content={1}
@@ -65,9 +66,10 @@ function DashBoardNavBar({ menuItems }) {
               shape="circle"
               isOneChar
             >
-              <MdNotificationsActive className="scale-[2] " />
+              <MdNotificationsActive className="scale-[2]" />
             </Badge>
-          </span>
+          </span> */}
+          <NotifyModel />
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>

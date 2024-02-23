@@ -17,6 +17,7 @@ const incomeSchema = new Schema(
           "loan",
           "liecense",
           "joint_ventures",
+          "income",
         ],
         message: "Given Income Method is not supported / valid",
       },

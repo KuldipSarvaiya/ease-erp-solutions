@@ -13,6 +13,7 @@ const expenseSchema = new Schema(
           "marketing",
           "royalti",
           "accident",
+          "other",
         ],
         message: "Given Expense Method is not supported / valid",
       },
