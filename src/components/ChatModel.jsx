@@ -74,7 +74,7 @@ function ChatModel() {
         color="secondary"
         onPress={onOpen}
         isIconOnly
-        className="cursor-pointer absolute right-10 bottom-10"
+        className="cursor-pointer fixed right-10 bottom-10"
       >
         <HiMiniChatBubbleLeftRight className="scale-[2] " />
       </Button>

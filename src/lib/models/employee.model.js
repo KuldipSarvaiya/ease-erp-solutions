@@ -112,9 +112,20 @@ const employeeSchema = new Schema(
       type: String,
       required: false,
     },
-    pan_no: {
+    rezorpay_contact_id: {
       type: String,
-      required: true,
+      required: [
+        true,
+        "\n\n**********RAZORPAY contact id is required, get is by creating contact in razorpay for this employee",
+      ],
+      immutable: true,
+    },
+    rezorpay_fund_id: {
+      type: String,
+      required: [
+        true,
+        "\n\n**********RAZORPAY fund id is required, get is by creating fund in razorpay for this employee",
+      ],
       immutable: true,
     },
     salary_id: {

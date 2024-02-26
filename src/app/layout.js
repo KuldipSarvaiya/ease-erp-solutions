@@ -1,6 +1,6 @@
 import "./globals.css";
 import NextUiProvider from "./NextUiProvider"; 
-import AuthProvider from "@/components/AuthProvider";
+import AuthProvider from "@/lib/utils/AuthProvider";
 // import { Provider } from "react-redux";
 // import store from "@/redux/store";
 

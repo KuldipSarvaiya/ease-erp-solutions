@@ -8,6 +8,11 @@ const salarySchema = new Schema(
       required: true,
       immutable: true,
     },
+    rezorpay_payout_id: {
+      type: String,
+      required: [true, "\n\n*****please enter razorpay payment payout id*****"],
+      immutable: true,
+    },
     salary_month: {
       type: Date,
       required: true,

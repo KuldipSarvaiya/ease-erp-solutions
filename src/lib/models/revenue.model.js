@@ -2,6 +2,19 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const revenueSchema = new Schema(
   {
+    title: {
+      type: String,
+      required: [true, "give a better name to revenue"],
+    },
+    type: {
+      type: String,
+      enum: {
+        values: ["WEEKLY", "MONTHLY", "YEARLY"],
+        message: "give proper type of revenue",
+      },
+      required: [true, "give type of revenue"],
+      immutable: true,
+    },
     income_id: {
       type: [Schema.ObjectId],
       ref: "Income",

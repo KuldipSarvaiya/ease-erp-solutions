@@ -12,6 +12,7 @@ export default function EmployeeLayout({ children }) {
     "attendance",
     "tasks",
     "details",
+    "salary_slip",
     "leave_report",
   ];
   return (

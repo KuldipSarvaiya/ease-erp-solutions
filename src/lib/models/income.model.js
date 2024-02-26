@@ -5,7 +5,7 @@ const incomeSchema = new Schema(
     customer_order_id: {
       type: Schema.ObjectId,
       ref: "CustomerOrder",
-      required: false, 
+      required: false,
     },
     type: {
       type: String,
@@ -17,7 +17,7 @@ const incomeSchema = new Schema(
           "loan",
           "liecense",
           "joint_ventures",
-          "income",
+          "other",
         ],
         message: "Given Income Method is not supported / valid",
       },

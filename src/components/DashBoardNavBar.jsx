@@ -28,7 +28,7 @@ function DashBoardNavBar({ menuItems }) {
       isBlurred
       isBordered
       onMenuOpenChange={setIsMenuOpen}
-      className="bg-[#16202DE6] fixed"
+      className="bg-[#16202DE6] fixed z-[999999999999999]"
     >
       <NavbarContent justify="start">
         <NavbarMenuToggle

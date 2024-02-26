@@ -5,7 +5,7 @@ import Link from "next/link";
 
 function SideBarButton({ item, mainPath }) {
   return (
-    <Link href={mainPath + item}>
+    <Link href={mainPath + item} aria-label={mainPath + item}>
       <Button
         className="uppercase tracking-widest mt-2 font-bold text-lg w-full"
         color="secondary"

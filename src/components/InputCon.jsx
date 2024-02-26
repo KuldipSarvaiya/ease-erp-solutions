@@ -27,7 +27,8 @@ function InputCon({ controller, input }) {
             }}
             isRequired={input.isRequired || false}
             disabled={input.disabled || false}
-            className={input.className || ""} 
+            className={input.className || ""}
+            aria-label={input.name}
           />
         </>
       )}
