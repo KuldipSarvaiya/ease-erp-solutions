@@ -11,7 +11,7 @@ const expenseSchema = new Schema(
           "emi",
           "maintenance",
           "marketing",
-          "royalti",
+          "royalty",
           "accident",
           "other",
         ],

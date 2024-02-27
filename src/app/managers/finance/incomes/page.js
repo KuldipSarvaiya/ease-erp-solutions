@@ -2,8 +2,11 @@
 
 import InputCon from "@/components/InputCon";
 import {
+  Accordion,
+  AccordionItem,
   Button,
   Divider,
+  Input,
   Pagination,
   Select,
   SelectItem,
@@ -20,7 +23,9 @@ import { Controller, useForm } from "react-hook-form";
 import { VscGitPullRequest } from "react-icons/vsc";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { FaDownload } from "react-icons/fa";
+import { FaDownload, FaSearch } from "react-icons/fa";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie } from "react-chartjs-2";
 
 export default function IncomePage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +45,7 @@ export default function IncomePage() {
   const incomes = [
     {
       key: 1,
-      type: "liacense",
+      type: "sells",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description: "it was big income for the company",
@@ -48,7 +53,7 @@ export default function IncomePage() {
     },
     {
       key: 2,
-      type: "liacense",
+      type: "joint_ventures",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -57,7 +62,7 @@ export default function IncomePage() {
     },
     {
       key: 3,
-      type: "liacense",
+      type: "rental_income",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -66,7 +71,7 @@ export default function IncomePage() {
     },
     {
       key: 4,
-      type: "liacense",
+      type: "sells",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -75,7 +80,7 @@ export default function IncomePage() {
     },
     {
       key: 5,
-      type: "liacense",
+      type: "joint_ventures",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -84,7 +89,7 @@ export default function IncomePage() {
     },
     {
       key: 6,
-      type: "liacense",
+      type: "sells",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -93,7 +98,7 @@ export default function IncomePage() {
     },
     {
       key: 7,
-      type: "liacense",
+      type: "rental_income",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -102,7 +107,7 @@ export default function IncomePage() {
     },
     {
       key: 8,
-      type: "liacense",
+      type: "loan",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -120,7 +125,7 @@ export default function IncomePage() {
     },
     {
       key: 10,
-      type: "liacense",
+      type: "loan",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -129,7 +134,7 @@ export default function IncomePage() {
     },
     {
       key: 11,
-      type: "liacense",
+      type: "divident",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -138,7 +143,7 @@ export default function IncomePage() {
     },
     {
       key: 12,
-      type: "liacense",
+      type: "rental_income",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -147,7 +152,7 @@ export default function IncomePage() {
     },
     {
       key: 13,
-      type: "liacense",
+      type: "loan",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -156,7 +161,7 @@ export default function IncomePage() {
     },
     {
       key: 14,
-      type: "liacense",
+      type: "rental_income",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -165,7 +170,7 @@ export default function IncomePage() {
     },
     {
       key: 15,
-      type: "liacense",
+      type: "divident",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -174,7 +179,7 @@ export default function IncomePage() {
     },
     {
       key: 16,
-      type: "liacense",
+      type: "rental_income",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -192,7 +197,7 @@ export default function IncomePage() {
     },
     {
       key: 18,
-      type: "liacense",
+      type: "rental_income",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -201,7 +206,7 @@ export default function IncomePage() {
     },
     {
       key: 19,
-      type: "liacense",
+      type: "divident",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -210,7 +215,25 @@ export default function IncomePage() {
     },
     {
       key: 20,
-      type: "liacense",
+      type: "loan",
+      date: new Date().toLocaleDateString(),
+      amount: 100,
+      description:
+        "this is small or may be big income depends on future got from various places",
+      customer_order_id: "-",
+    },
+    {
+      key: 21,
+      type: "other",
+      date: new Date().toLocaleDateString(),
+      amount: 100,
+      description:
+        "this is small or may be big income depends on future got from various places",
+      customer_order_id: "-",
+    },
+    {
+      key: 22,
+      type: "other",
       date: new Date().toLocaleDateString(),
       amount: 100,
       description:
@@ -244,6 +267,84 @@ export default function IncomePage() {
 
     doc.save("income_records.pdf");
   }
+
+  function handleSearchSubmit(event) {
+    event.preventDefault();
+    const formdata = new FormData(event.target);
+    console.log(formdata.get("from_date"));
+    console.log(formdata.get("to_date"));
+  }
+
+  // =================================================================
+
+  ChartJS.register(ArcElement, Tooltip, Legend);
+
+  const chart_total = [0, 0, 0, 0, 0, 0, 0];
+  for (let i = 0; i < incomes.length; i++) {
+    switch (incomes[i].type) {
+      case "sells":
+        chart_total[0] += incomes[i].amount;
+        break;
+      case "divident":
+        chart_total[1] += incomes[i].amount;
+        break;
+      case "rental_income":
+        chart_total[2] += incomes[i].amount;
+        break;
+      case "loan":
+        chart_total[3] += incomes[i].amount;
+        break;
+      case "liecense":
+        chart_total[4] += incomes[i].amount;
+        break;
+      case "joint_ventures":
+        chart_total[5] += incomes[i].amount;
+        break;
+      case "other":
+        chart_total[6] += incomes[i].amount;
+        break;
+      default:
+        break;
+    }
+  }
+
+  const data = {
+    labels: [
+      "SELLS",
+      "DIVIDENT",
+      "RENTAL INCOME",
+      "LOAN",
+      "LIACENSE",
+      "JOINT VENTURES",
+      "OTHER",
+    ],
+    datasets: [
+      {
+        label: "Income -",
+        data: chart_total,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(200, 200, 200, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+          "rgba(200, 200, 200, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+  //
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -389,19 +490,63 @@ export default function IncomePage() {
       {/*  */}
       {/* old income records */}
       <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
-        <p className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
-          <span>income history</span>
-          <Button
-            className=""
-            size="sm"
-            variant="shadow"
-            color="secondary"
-            aria-label="download-pdf"
-            onClick={downloadPdf}
+        <Accordion>
+          <AccordionItem
+            title={
+              <span className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
+                <span>income history</span>
+                <Button
+                  size="sm"
+                  variant="shadow"
+                  color="secondary"
+                  aria-label="download-pdf"
+                  onClick={downloadPdf}
+                >
+                  <FaDownload /> PDF
+                </Button>
+              </span>
+            }
+            key={1}
           >
-            <FaDownload /> PDF
-          </Button>
-        </p>
+            <form onSubmit={handleSearchSubmit}>
+              <span className="flex gap-4 justify-start flex-row items-end flex-wrap">
+                <Input
+                  type="date"
+                  color="secondary"
+                  size="sm"
+                  variant="faded"
+                  name="from_date"
+                  label="Starting Date"
+                  placeholder="."
+                  labelPlacement="outside"
+                  className="max-w-60"
+                  isRequired
+                />
+                <Input
+                  isRequired
+                  type="date"
+                  color="secondary"
+                  size="sm"
+                  variant="faded"
+                  name="to_date"
+                  label="End Date"
+                  placeholder="."
+                  labelPlacement="outside"
+                  className="max-w-60"
+                />
+                <Button
+                  color="secondary"
+                  size="sm"
+                  variant="solid"
+                  type="submit"
+                  startContent={<FaSearch />}
+                >
+                  SEARCH
+                </Button>
+              </span>
+            </form>
+          </AccordionItem>
+        </Accordion>
         <Divider className="my-5" />
         <Table
           id="download-table"
@@ -437,6 +582,20 @@ export default function IncomePage() {
             )}
           </TableBody>
         </Table>
+      </div>
+
+      {/* chart */}
+      <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
+        <p className="uppercase text-2xl max-md:text-lg tracking-wider font-bold mb-5">
+          Categorize above incomes by its type of source
+        </p>
+        <center>
+          <Pie
+            data={data}
+            className=" max-h-[400px]"
+            options={{ responsive: true }}
+          />
+        </center>
       </div>
     </div>
   );

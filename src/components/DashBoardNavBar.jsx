@@ -13,8 +13,7 @@ import {
   Avatar,
   Badge,
   Button,
-} from "@nextui-org/react";
-import { MdNotificationsActive } from "react-icons/md";
+} from "@nextui-org/react"; 
 import { FaSignOutAlt } from "react-icons/fa";
 import SideBarButton from "./SideBarButton";
 import Image from "next/image";
@@ -28,7 +27,7 @@ function DashBoardNavBar({ menuItems }) {
       isBlurred
       isBordered
       onMenuOpenChange={setIsMenuOpen}
-      className="bg-[#16202DE6] fixed z-[999999999999999]"
+      className="bg-[#16202DE6] fixed z-[1001]"
     >
       <NavbarContent justify="start">
         <NavbarMenuToggle

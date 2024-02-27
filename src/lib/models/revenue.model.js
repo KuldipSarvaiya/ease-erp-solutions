@@ -9,7 +9,7 @@ const revenueSchema = new Schema(
     type: {
       type: String,
       enum: {
-        values: ["WEEKLY", "MONTHLY", "YEARLY"],
+        values: ["MONTHLY", "QUATERLY", "YEARLY"],
         message: "give proper type of revenue",
       },
       required: [true, "give type of revenue"],
