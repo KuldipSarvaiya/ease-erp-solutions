@@ -7,11 +7,11 @@ const supplierSchema = new Schema(
       ref: "RawMaterial",
       required: false,
     },
-    prev_material_orders: {
-      type: [Schema.ObjectId],
-      ref: "RawMaterialOrder",
-      required: false,
-    },
+    // prev_material_orders: {
+    //   type: [Schema.ObjectId],
+    //   ref: "RawMaterialOrder",
+    //   required: false,
+    // },
     total_completed_orders: {
       type: Number,
       required: true,

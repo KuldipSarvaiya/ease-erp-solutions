@@ -21,6 +21,7 @@ export default function AttendancePage() {
         <p className="uppercase text-2xl max-md:text-lg tracking-wider font-bold">
           today's attendance status
         </p>
+        <Divider className="my-5" />
         {attendance_status === "holiday" && <HoliDay />}
         {attendance_status === "onleave" && <OnLeave />}
         {attendance_status === "present" && <Present />}
@@ -43,7 +44,7 @@ export default function AttendancePage() {
           />
         </span>
         <Divider className="my-3" />
-        <div className="mt-2 flex gap-2 flex-row flex-wrap justify-between items-stretch">
+        <div className="mt-2 flex gap-3 flex-row flex-wrap justify-start items-stretch">
           <AttendanceCard
             date={Date.now()}
             point={1}

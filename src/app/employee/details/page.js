@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input, Textarea } from "@nextui-org/react";
+import { Button, Divider, Input, Textarea } from "@nextui-org/react";
 import { TbExchange } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -53,6 +53,7 @@ export default function DetailsPage() {
     <div className="relative w-full h-full max-h-full max-w-full">
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-3 flex-col">
         <p className="text-2xl font-bold tracking-wide">CHANGE YOUR DETAILS</p>
+        <Divider className="my-5" />
         <form
           onSubmit={handleSubmit(handleChange)}
           encType="multipart/form-data"

@@ -65,13 +65,11 @@ const employeeSchema = new Schema(
       required: true,
     },
     attendance_coordinates: {
-      type: [String],
-      required: [true, "\n*******Attendance Coordinates are required"],
-      validate: {
-        validator: (v) => v.lenth === 2,
-        message: (props) =>
-          `\n*******${props.name} :  is not a valid , invalid = ${props.value}`,
-        minlength: 2,
+      type: Object,
+      required: true,
+      properties: {
+        latitude: { type: String, required: true },
+        longitude: { type: String, required: true },
       },
     },
     attendance_radius: {
@@ -156,7 +154,7 @@ const employeeSchema = new Schema(
     username: {
       type: String,
       required: true,
-      default: "new_employee",
+      immutable: false,
     },
     password: {
       type: String,

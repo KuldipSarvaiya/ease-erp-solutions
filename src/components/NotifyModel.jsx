@@ -36,10 +36,10 @@ function NotifyModel() {
                 return (
                   <p
                     key={i}
-                    className={`bg-green-500 p-2 rounded-2xl text-md sm:text-base flex flex-col gap-[1px] max-w-90`}
+                    className={`bg-slate-800 text-slate-300 p-2 rounded-2xl text-md sm:text-base flex flex-col gap-[1px] max-w-90`}
                   >
                     <div className="flex justify-between">
-                      <span className="text-slate-50 text-sm place-self-start">
+                      <span className="text-slate-50 text-xs place-self-start">
                         {new Date().toLocaleString().split(",")[1]}
                       </span>
                       <Button

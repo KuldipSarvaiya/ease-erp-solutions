@@ -2,11 +2,20 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const chatroomSchema = new Schema({
   message: {
-    type: [String],
-    validate: {
-      validator: (v) => v.split(":").length === 2,
-      message: (prop) => `${prop.name} is not a valid formate -> ${prop.value}`,
-    },
+    type: String,
+    required: true,
+    immutable: true,
+  },
+  sent_by: {
+    type: Schema.ObjectId,
+    ref: "Employee",
+    immutable: true,
+  },
+  date_time: {
+    type: Date,
+    default: Date.now(),
+    required: true,
+    immutable: true,
   },
 });
 

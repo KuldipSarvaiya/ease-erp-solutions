@@ -353,6 +353,7 @@ export default function IncomePage() {
         <p className="uppercase text-2xl max-md:text-lg tracking-wider font-bold mb-5">
           create new income
         </p>
+        <Divider className="my-5" />
         <form onSubmit={handleSubmit(handleCreateIncome)}>
           <div className="flex flex-col flex-nowrap gap-5 md:flex-nowrap">
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">

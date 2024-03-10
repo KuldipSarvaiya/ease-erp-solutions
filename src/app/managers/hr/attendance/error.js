@@ -1,7 +1,7 @@
 'use client'
 
-function ErrorAttendace() {
+function Error() {
   return <div>ErrorAttendace Page</div>;
 }
 
-export default ErrorAttendace;
+export default Error;

@@ -24,9 +24,11 @@ const customerSchema = new Schema(
       required: false,
     },
     address_coordinates: {
-      type: [String],
-      validate: {
-        minlength: 2,
+      type: Object,
+      required: true,
+      properties: {
+        latitude: { type: String, required: true },
+        longitude: { type: String, required: true },
       },
     },
     order_id: {

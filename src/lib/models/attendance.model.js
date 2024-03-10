@@ -14,12 +14,11 @@ const attendanceSchema = new mongoose.Schema(
       immutable: true,
     },
     coordinates: {
-      type: [String],
-      required: false,
-      validate: {
-        validator: (v) => v.lenth === 2,
-        message: (props) =>
-          `\n*******${props.name} :  is not a valid , invalid = ${props.value}`,
+      type: Object,
+      required: true,
+      properties: {
+        latitude: { type: String, required: true },
+        longitude: { type: String, required: true },
       },
       immutable: true,
     },

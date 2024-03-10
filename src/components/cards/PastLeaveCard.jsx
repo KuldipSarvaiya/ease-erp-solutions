@@ -5,6 +5,7 @@ import {
   CardFooter,
   Divider,
 } from "@nextui-org/react";
+import { FaDotCircle } from "react-icons/fa";
 
 function PastLeaveCard({
   total_leave_days,
@@ -13,26 +14,29 @@ function PastLeaveCard({
   dates_of_leave,
 }) {
   const colors = {
-    pending: "bg-yellow-700",
-    accepted: "bg-emerald-700",
-    rejected: "bg-red-700",
+    pending: "text-yellow-500",
+    accepted: "text-emerald-500",
+    rejected: "text-red-500",
   };
   return (
     <Card
       isFooterBlurred
-      className={`${colors[leave_state]} backdrop:blur-3xl max-w-xs `}
+      className={`bg-slate-800 backdrop:blur-3xl max-w-xs `}
     >
-      <CardHeader className="text-lg font-extrabold max-md:text-base max-md:font-semibold">
+      <CardHeader className="text-lg font-extrabold flex justify-between flex-row flex-nowrap max-md:text-base max-md:font-semibold">
         {total_leave_days} Days of leave
+        <FaDotCircle className={colors[leave_state]} />
       </CardHeader>
       <Divider />
       <CardBody className="font-semibold max-md:font-medium max-md:text-lg flex gap-2 flex-row flex-wrap">
         {dates_of_leave.map((date) => (
-          <span className="p-1 border-2 rounded-md inline self-start">{new Date(date).toLocaleDateString()}</span>
+          <span className="p-1 border-2 rounded-md inline self-start">
+            {new Date(date).toLocaleDateString()}
+          </span>
         ))}
       </CardBody>
       <Divider />
-      <CardFooter>{reason.substr(0,80)+" . . ."}</CardFooter>
+      <CardFooter>{reason.substr(0, 80) + " . . ."}</CardFooter>
     </Card>
   );
 }

@@ -7,6 +7,7 @@ export default function TaskPage() {
       {/* pending tasks */}
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
         <p className="text-2xl font-bold tracking-wide w-full">PENDING TASKS</p>
+        <Divider className="my-5" />
         <TaskCard
           text={"hello  this is second task"}
           id={"123erfds"}
@@ -19,6 +20,7 @@ export default function TaskPage() {
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 mt-8">
         <span className="uppercase text-2xl  tracking-wider font-bold flex flex-wrap flex-row justify-between items-center">
           <span>previous tasks</span>
+          <Divider className="my-5" />
           <Input
             // onChange={handleDateChange}
             variant="faded"

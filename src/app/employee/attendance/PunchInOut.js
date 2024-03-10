@@ -17,7 +17,8 @@ export function PunchIn() {
       console.log("Longitute : " + a.coords.longitude);
       const res = isWithinRange(
         100,
-        { latitude: 23.0302, longitude: 72.5772 },
+        // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
+        { latitude: 23.0302, longitude: 72.5772 }, //home
         a.coords
       );
       console.log("Function responce = ", res);
@@ -31,7 +32,7 @@ export function PunchIn() {
     });
   }
   const h = new Date().getHours();
-  if (h > 20 || h < 8) return;
+  if (h > 15 || h < 8) return;
 
   return (
     <>

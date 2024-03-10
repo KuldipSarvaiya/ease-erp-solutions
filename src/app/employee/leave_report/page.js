@@ -56,9 +56,10 @@ export default function LeavePage() {
     <div className="relative w-full h-full max-h-full max-w-full">
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-3 flex-col">
         <p className="text-2xl font-bold tracking-wide">APPLY FOR LEAVE</p>
+        <Divider className="my-5" />
         <form onSubmit={handleSubmit(handleChange)}>
           <span className="uppercase text-base max-sm:text-sm tracking-wider font-normal">
-            Leave For &nbsp;&nbsp;
+            take Leave For &nbsp;&nbsp;
             <ButtonGroup size="sm">
               <Button
                 isDisabled={leaveDays === 1}
@@ -74,13 +75,13 @@ export default function LeavePage() {
             &nbsp;&nbsp;Days.
           </span>
           <div className="flex flex-col flex-nowrap gap-5 mt-3 md:flex-nowrap">
-            <span className=" flex gap-2 flex-wrap">
-              <span className="text-xl font-semibold">
+            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 row-auto gap-4">
+              <span className="text-xl font-semibold row-span-2">
                 Select Leave Dates :
               </span>
               <DatePicker />
             </span>
-            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
+            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Reason : </span>
 
               <Controller
@@ -145,7 +146,7 @@ export default function LeavePage() {
           />
         </p>
         <Divider className="my-3" />
-        <div className="mt-2 flex gap-2 flex-row flex-wrap justify-between items-stretch">
+        <div className="mt-2 flex gap-3 flex-row flex-wrap justify-start items-stretch">
           <PastLeaveCard
             total_leave_days={1}
             leave_state="pending"

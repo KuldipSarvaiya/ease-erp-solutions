@@ -17,7 +17,7 @@ const metadataSchema = new Schema({
     type: Number,
     required: true,
   },
-  salary_profession_tax: {
+  salary_professionl_tax: {
     type: Number,
     required: true,
   },
