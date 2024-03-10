@@ -12,8 +12,7 @@ export default function Page() {
         </p>
         <Divider className="my-5" />
         <div className="flex flex-nowrap flex-row gap-4">
-          <h1>it is testing for access token</h1>
-          {/* <Accordion>
+          <Accordion>
             <AccordionItem key="1" aria-label="Accordion 1" title="Accordion 1">
               {defaultContent}
             </AccordionItem>
@@ -23,7 +22,7 @@ export default function Page() {
             <AccordionItem key="3" aria-label="Accordion 3" title="Accordion 3">
               {defaultContent}
             </AccordionItem>
-          </Accordion> */}
+          </Accordion>
         </div>
       </div>
     </div>
