@@ -11,12 +11,11 @@ export const metadata = {
 export default function HrLayout({ children }) {
   const menuItems = [
     "tasks",
-    "employees",
+    // "employees",
+    "manage_employee", 
     "attendance",
     "leave_report",
-    "holiday",
-    "manage_employee",
-    "event",
+    "announcement",
     "reports",
   ];
   return (
