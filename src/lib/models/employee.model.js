@@ -126,21 +126,21 @@ const employeeSchema = new Schema(
       ],
       immutable: true,
     },
-    salary_id: {
-      type: [Schema.ObjectId],
-      ref: "Salary",
-      required: false,
-    },
+    // salary_id: {
+    //   type: [Schema.ObjectId],
+    //   ref: "Salary",
+    //   required: false,
+    // },
     salary_cut_per_day: {
       type: Number,
       required: true,
       default: 0,
     },
-    attendance_id: {
-      type: [Schema.ObjectId],
-      ref: "Attendance",
-      required: false,
-    },
+    // attendance_id: {
+    //   type: [Schema.ObjectId],
+    //   ref: "Attendance",
+    //   required: false,
+    // },
     ot_salary_per_hour: {
       type: Number,
       required: true,
@@ -165,11 +165,11 @@ const employeeSchema = new Schema(
       type: String,
       required: false,
     },
-    leave_report_id: {
-      type: [Schema.ObjectId],
-      ref: "LeaveReport",
-      required: false,
-    },
+    // leave_report_id: {
+    //   type: [Schema.ObjectId],
+    //   ref: "LeaveReport",
+    //   required: false,
+    // },
     is_ex_employee: {
       type: Boolean,
       required: true,
@@ -183,11 +183,11 @@ const employeeSchema = new Schema(
       type: String,
       required: false,
     },
-    task_id: {
-      type: [Schema.ObjectId],
-      ref: "Task",
-      required: false,
-    },
+    // task_id: {
+    //   type: [Schema.ObjectId],
+    //   ref: "Task",
+    //   required: false,
+    // },
     notice: { type: [String], required: false },
     updated_by: {
       type: Schema.ObjectId,

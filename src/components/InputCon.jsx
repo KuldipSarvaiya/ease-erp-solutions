@@ -7,6 +7,7 @@ function InputCon({ controller, input }) {
       name={controller.name}
       control={controller.control}
       rules={controller.rules}
+      // defaultValue={controller.value || ""}
       render={({ field }) => (
         <>
           <Input
@@ -29,6 +30,10 @@ function InputCon({ controller, input }) {
             disabled={input.disabled || false}
             className={input.className || ""}
             aria-label={input.name}
+            startContent={input.startContent || ""}
+            endContent={input.endContent || ""}
+            // accept={input.accept || ""}
+            // multiple={input.multiple || ""}
           />
         </>
       )}
