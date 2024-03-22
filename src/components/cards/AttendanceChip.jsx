@@ -1,5 +1,5 @@
 //  used with hr attendace
-import { changeAttendanceStatus } from "@/lib/utils/server_actions/attendance";
+ import { changeAttendanceStatus } from "@/lib/utils/server_actions/hr";
 import {
   Avatar,
   Button,

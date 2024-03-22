@@ -10,8 +10,7 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from "@nextui-org/react";
-import Confetti from "react-confetti";
+} from "@nextui-org/react"; 
 import { useForm } from "react-hook-form";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { GrMapLocation, GrPowerReset } from "react-icons/gr";

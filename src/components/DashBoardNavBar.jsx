@@ -41,7 +41,7 @@ function DashBoardNavBar({ menuItems }) {
               alt="Ease ERP Solutions"
               width={250}
               height={60}
-              className="scale-150 max-sm:translate-x-8 translate-y-2"
+              className="w-64 max-md:scale-150 max-sm:translate-x-7 max-md:translate-x-11 translate-y-2"
             />
           </p>
         </NavbarBrand>
@@ -54,7 +54,7 @@ function DashBoardNavBar({ menuItems }) {
           </p>
         </NavbarItem>
         <NavbarItem>
-          <Avatar radius="lg" isBordered color="secondary" about="kuldip" />
+          <Avatar radius="lg" className="max-md:scale-80" isBordered color="secondary" about="kuldip" />
         </NavbarItem>
         <NavbarItem>
           {/* <span className="cursor-pointer">

@@ -59,7 +59,7 @@ function EmployeeSmall() {
     >
       <div className="p-2 flex flex-row gap-3 bg-purple-100/10 backdrop-blur-2xl rounded-xl border-1 border-purple-400 min-w-80 max-w-[350px] flex-1 hover:bg-purple-200/20">
         <Image
-          alt="nextui logo"
+          alt="employee logo"
           height={60}
           radius="sm"
           src="/adminPage.svg"

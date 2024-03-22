@@ -18,11 +18,11 @@ function NotifyModel() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <Modal isOpen={isOpen} placement="top" onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} placement="bottom-center" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalHeader>Bussiness Notifications</ModalHeader>
           <ModalBody>
-            <div className="flex flex-col gap-3 text-foreground-700  max-h-[500px] overflow-x-auto">
+            <div className="flex flex-col gap-3 text-foreground-700  max-h-[485px] max-md::max-h-[550px] overflow-x-auto">
               {[
                 "hii ",
                 "how are you ",

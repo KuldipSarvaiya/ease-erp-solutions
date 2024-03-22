@@ -3,6 +3,7 @@
 // import { writeFile } from "node:fs";
 // import { join } from "node:path";
 // import { cwd } from "node:process";
+import { revalidatePath } from "next/cache";
 
 export async function declareHoliday(formdata) {
   console.log(formdata.get("date"));
@@ -31,4 +32,11 @@ export async function newEmployee(formdata) {
   // });
 
   return true;
+}
+
+
+export async function changeAttendanceStatus(formdata) {
+  console.log(formdata.get("id"));
+  console.log(formdata.get("status"));
+  revalidatePath("/managers/hr/attendance")
 }

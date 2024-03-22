@@ -54,7 +54,7 @@ export default function Page() {
                 input={{
                   type: "number",
                   name: "salary_da",
-                  size: "sm",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -83,7 +83,7 @@ export default function Page() {
                 input={{
                   type: "number",
                   name: "salary_hra",
-                  size: "sm",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -110,7 +110,7 @@ export default function Page() {
                 input={{
                   type: "number",
                   name: "salary_bonus",
-                  size: "sm",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -137,7 +137,7 @@ export default function Page() {
                 input={{
                   type: "number",
                   name: "salary_pf",
-                  size: "sm",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -164,7 +164,7 @@ export default function Page() {
                 input={{
                   type: "number",
                   name: "salary_professionl_tax",
-                  size: "sm",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",

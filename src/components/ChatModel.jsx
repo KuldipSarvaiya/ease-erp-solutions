@@ -18,11 +18,11 @@ function ChatModel() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} placement="bottom" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalHeader>Managerial Chats</ModalHeader>
           <ModalBody>
-            <div className="flex flex-col gap-3 text-foreground-700  max-h-[500px] overflow-x-auto">
+            <div className="flex flex-col gap-3 text-foreground-700  max-h-[485px] max-md::max-h-[550px] overflow-x-auto">
               {[
                 "hii ",
                 "how are you ",
@@ -76,7 +76,7 @@ function ChatModel() {
         isIconOnly
         className="cursor-pointer fixed right-10 bottom-10"
       >
-        <HiMiniChatBubbleLeftRight className="scale-[2] " />
+        <HiMiniChatBubbleLeftRight className="scale-[2]" />
       </Button>
     </>
   );
