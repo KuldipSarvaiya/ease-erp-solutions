@@ -1,13 +1,12 @@
 "use client";
 
-import { Button, Divider, Input, Textarea } from "@nextui-org/react";
+import { Avatar, Button, Divider, Input, Textarea } from "@nextui-org/react";
 import { TbExchange } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { GiCancel } from "react-icons/gi";
 import { GrUpdate } from "react-icons/gr";
-import InputCon from "@/components/InputCon";
-import Image from "next/image";
+import InputCon from "@/components/InputCon"; 
 
 export default function DetailsPage() {
   const [isEditable, setIsEditable] = useState(false);
@@ -15,8 +14,8 @@ export default function DetailsPage() {
   const {
     // register,
     setError,
-    handleSubmit,
     reset,
+    handleSubmit,
     control,
     formState: { errors },
   } = useForm();
@@ -30,13 +29,12 @@ export default function DetailsPage() {
       last_name: "saraviya",
       email: "kuldip@gmail.com",
       contact: 1234512345,
-      image: "okokok.png",
       address: "my home",
       account_number: 12345678989,
       bank_name: "world bank",
       ifsc_code: "WRLD00029",
     });
-  }, [isEditable]);
+  }, [isEditable, reset]);
 
   async function handleChange(formdata) {
     console.log(formdata);
@@ -54,10 +52,7 @@ export default function DetailsPage() {
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-3 flex-col">
         <p className="text-2xl font-bold tracking-wide">CHANGE YOUR DETAILS</p>
         <Divider className="my-5" />
-        <form
-          onSubmit={handleSubmit(handleChange)}
-          encType="multipart/form-data"
-        >
+        <form action={handleSubmit(handleChange)}>
           <div className="flex flex-col flex-nowrap gap-5 md:flex-nowrap">
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Username : </span>
@@ -70,6 +65,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   name: "username",
                   isRequired: true,
                   disabled: !isEditable,
@@ -99,6 +95,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   type: "password",
                   name: "password",
                   isRequired: true,
@@ -123,6 +120,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   name: "first_name",
                   isRequired: true,
                   disabled: !isEditable,
@@ -146,6 +144,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   name: "middle_name",
                   isRequired: true,
                   disabled: !isEditable,
@@ -169,6 +168,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   name: "last_name",
                   isRequired: true,
                   disabled: !isEditable,
@@ -189,6 +189,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   type: "email",
                   name: "email",
                   isRequired: true,
@@ -215,6 +216,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   type: "tel",
                   name: "contact",
                   isRequired: true,
@@ -224,46 +226,38 @@ export default function DetailsPage() {
               />
               <p className="text-red-500"> {errors?.contact?.message} </p>
             </span>
-            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
+            {/* profile image */}
+            {/* <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Profile Image : </span>
               <Controller
                 name={"image"}
                 control={control}
                 rules={{
                   required: "Please provide your image.",
-                  accept: "image/jpeg,image/png,image/gif",
+                  // validate: (v) =>
+                  //   v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
                 }}
                 render={({ field }) => (
-                  <>
-                    <Input
-                      type={"file"}
-                      accept="image/jpeg,image/png,image/gif"
-                      radius="sm"
-                      size="sm"
-                      variant="faded"
-                      color="secondary"
-                      name={"image"}
-                      value={field.file}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                      disabled={!isEditable}
-                      className="md:col-start-2 md:col-end-4"
-                      isRequired={true}
-                    />
-                    {field.file && (
-                      <Image
-                        src={URL.createObjectURL(field.file)}
-                        alt="Profile Preview"
-                        width={100}
-                        height={100}
-                      />
-                    )}
-                  </>
+                  <Input
+                    type={"file"}
+                    radius="sm" 
+                    size="sm"
+                    variant="faded"
+                    color="secondary"
+                    accept=".png, .jpg, .jpeg"
+                    name={"image"}
+                    value={field.file}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    disabled={!isEditable}
+                    className="md:col-start-2 md:col-end-4"
+                    isRequired={true} 
+                  />
                 )}
               />
               <p className="text-red-500"> {errors?.image?.message} </p>
-            </span>
+            </span> */}
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Address : </span>
               <Controller
@@ -281,7 +275,7 @@ export default function DetailsPage() {
                       cols={10}
                       rows={5}
                       radius="sm"
-                      size="sm"
+                      size="lg"
                       variant="faded"
                       color="secondary"
                       name={"address"}
@@ -314,6 +308,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   type: "number",
                   name: "account_number",
                   isRequired: true,
@@ -334,6 +329,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   name: "bank_name",
                   isRequired: true,
                   disabled: !isEditable,
@@ -353,6 +349,7 @@ export default function DetailsPage() {
                   },
                 }}
                 input={{
+                  size: "lg",
                   name: "ifsc_code",
                   isRequired: true,
                   disabled: !isEditable,

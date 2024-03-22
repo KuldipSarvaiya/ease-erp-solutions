@@ -1,5 +1,5 @@
 import Loading from "@/components/Loading";
 
-export default function Loading() {
+export default function LoadingAttendance() {
   return <Loading />;
 }

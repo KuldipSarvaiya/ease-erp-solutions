@@ -244,7 +244,7 @@ export default function PayrollPage() {
           </p>
           <Divider className="my-5" />
 
-          {/*  */}
+          {/* select all and next button */}
           <div className="flex flex-row justify-between gap-10 mr-2">
             <span>
               <Checkbox
@@ -272,7 +272,7 @@ export default function PayrollPage() {
 
           <br />
 
-          {/* selecet emp department wise */}
+          {/* select emp department wise */}
           <Accordion
             className="grid  grid-cols-1 row-auto gap-5"
             variant="splitted"
@@ -354,9 +354,14 @@ export default function PayrollPage() {
           <ModalHeader>CONFIRM EMPLOYEES</ModalHeader>
           <ModalBody>
             <div className="flex flex-wrap gap-2 text-foreground-700 max-h-[485px] max-md::max-h-[550px] overflow-x-auto">
-              {selectedEmps.map((emp) => {
+              {selectedEmps.map((emp, i) => {
                 return (
-                  <Chip variant="dot" color="secondary" size="sm">
+                  <Chip
+                    key={emp.id + i}
+                    variant="dot"
+                    color="secondary"
+                    size="sm"
+                  >
                     {emp.name}
                   </Chip>
                 );

@@ -110,7 +110,7 @@ function Page() {
               })}
               startContent={
                 <Avatar
-                  size="sm"
+                  size="md"
                   src={
                     getValues("image")?.[0]
                       ? URL.createObjectURL(getValues("image")[0])
@@ -119,7 +119,7 @@ function Page() {
                 />
               }
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="file"
               multiple={false}

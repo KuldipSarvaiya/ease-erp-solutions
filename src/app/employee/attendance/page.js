@@ -19,7 +19,7 @@ export default function AttendancePage() {
       {/* today */}
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
         <p className="uppercase text-2xl max-md:text-lg tracking-wider font-bold">
-          today's attendance status
+          today&apos;s attendance status
         </p>
         <Divider className="my-5" />
         {attendance_status === "holiday" && <HoliDay />}
@@ -30,7 +30,7 @@ export default function AttendancePage() {
       </div>
       {/* old attendance */}
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 mt-8">
-        <span className="uppercase text-2xl max-md:text-lg tracking-wider font-bold flex flex-wrap flex-row justify-between items-center">
+        <div className="uppercase text-2xl max-md:text-lg tracking-wider font-bold flex flex-wrap flex-row justify-between items-center">
           <span>previous attendances</span>
           <Input
             onChange={handleDateChange}
@@ -42,7 +42,7 @@ export default function AttendancePage() {
             value={date}
             className="w-52"
           />
-        </span>
+        </div>
         <Divider className="my-3" />
         <div className="mt-2 flex gap-3 flex-row flex-wrap justify-start items-stretch">
           <AttendanceCard

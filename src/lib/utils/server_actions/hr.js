@@ -22,7 +22,7 @@ export async function newEmployee(formdata) {
   const dept = formdata.get("department_id");
   console.log(image, typeof dept);
 
-  // **********file upload to own backend server
+  // todo : file upload to own backend server
   // const arrBuf = await image.arrayBuffer();
   // const buffer = new Buffer.from(arrBuf);
 

@@ -25,6 +25,7 @@ export default function Page() {
   function DatePicker() {
     return Array.from({ length: days }).map((d, i) => (
       <Input
+        key={i + Math.random()}
         variant="faded"
         color="secondary"
         type="date"

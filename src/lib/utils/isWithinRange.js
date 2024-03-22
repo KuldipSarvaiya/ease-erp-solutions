@@ -1,6 +1,4 @@
-// range = in meter
-// coords1 = company coords
-// coords2 = employee coords
+// range = in meter 
 function isWithinRange(range, office_coords, emp_coords) {
   // Radius of the Earth in kilometers
   const R = 6371.0;

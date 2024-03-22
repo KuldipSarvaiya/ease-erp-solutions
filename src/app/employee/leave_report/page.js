@@ -17,7 +17,7 @@ import InputCon from "@/components/InputCon";
 
 export default function LeavePage() {
   const {
-    // register,
+    register,
     // setError,
     handleSubmit,
     // reset,
@@ -96,8 +96,8 @@ export default function LeavePage() {
                 render={({ field }) => (
                   <>
                     <Textarea
-                      cols={16}
-                      rows={10}
+                      cols={5}
+                      rows={3}
                       radius="sm"
                       size="sm"
                       variant="faded"
@@ -132,7 +132,7 @@ export default function LeavePage() {
 
       {/* past leave reports */}
       <div className="border-4 rounded-3xl mx-10 my-8 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-3 flex-col">
-        <p className="text-2xl font-bold tracking-wide flex justify-between flex-wrap">
+        <div className="text-2xl font-bold tracking-wide flex justify-between flex-wrap">
           PREVIOUS LEAVE REPORTS
           <Input
             // onChange={handleDateChange}
@@ -144,7 +144,7 @@ export default function LeavePage() {
             // value={new Date()}
             className="w-52"
           />
-        </p>
+        </div>
         <Divider className="my-3" />
         <div className="mt-2 flex gap-3 flex-row flex-wrap justify-start items-stretch">
           <PastLeaveCard

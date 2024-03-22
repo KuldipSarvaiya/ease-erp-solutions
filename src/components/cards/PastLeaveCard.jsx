@@ -29,8 +29,11 @@ function PastLeaveCard({
       </CardHeader>
       <Divider />
       <CardBody className="font-semibold max-md:font-medium max-md:text-lg flex gap-2 flex-row flex-wrap">
-        {dates_of_leave.map((date) => (
-          <span className="p-1 border-2 rounded-md inline self-start">
+        {dates_of_leave.map((date, i) => (
+          <span
+            key={i + Date.now()}
+            className="p-1 border-2 rounded-md inline self-start"
+          >
             {new Date(date).toLocaleDateString()}
           </span>
         ))}

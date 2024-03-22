@@ -4,13 +4,12 @@ import { BsCircleFill } from "react-icons/bs";
 import { GrView } from "react-icons/gr";
 
 function ProductCard() {
-
-  function Details(){
-    
-  }
-
   return (
-    <Card isFooterBlurred radius="lg" className="shadow-lg border-2 border-slate-900" >
+    <Card
+      isFooterBlurred
+      radius="lg"
+      className="shadow-lg border-2 border-slate-900"
+    >
       <Image
         alt="Woman listing to music"
         className="object-cover"
@@ -22,8 +21,7 @@ function ProductCard() {
         <p className="text-base flex items-center flex-row justify-between w-full px-2 text-white/80 capitalize">
           <spna>my product name</spna>
           <spna className="underline text-sm flex items-center gap-3 flex-wrap">
-            <BsCircleFill className="text-red-500" />
-            2 inch
+            <BsCircleFill className="text-red-500" />2 inch
           </spna>
         </p>
         <Button

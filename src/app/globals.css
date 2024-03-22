@@ -7,7 +7,7 @@ body {
   padding: 0px 1px 1px;
 }
 html {
-  cursor: url("cursor.svg"), auto;
+  cursor: url("/cursor.svg"), auto !important;
 }
 
 @layer utilities {
