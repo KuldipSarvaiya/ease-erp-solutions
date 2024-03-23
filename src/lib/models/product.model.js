@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const productSchema = new Schema(
   {
+    product_id: {
+      type: String,
+      required: true,
+      immutable: true,
+    },
     name: {
       type: String,
       required: true,
@@ -20,12 +25,12 @@ const productSchema = new Schema(
     },
     color: {
       type: String,
-      required: true,
+      required: false,
       immutable: true,
     },
     size: {
       type: String,
-      required: true,
+      required: false,
       immutable: true,
     },
     unit_of_measurement: {
@@ -35,12 +40,17 @@ const productSchema = new Schema(
     },
     expiry_timing: {
       type: String,
-      required: true,
+      required: false,
     },
     available_stock_units: {
       type: Number,
       required: false,
       default: 0,
+    },
+    price: {
+      type: Number,
+      required: true,
+      default: 1,
     },
     discount: {
       type: Number,
