@@ -2,8 +2,11 @@
 const nextConfig = {
   // logging: {
   //   fetches: {
-  //     fullUrl: true,
+  //     fullUrl: true, // full url in request
   //   },
+  // },
+  // api: {
+  //   bodyParser: false, // this is used with form in api
   // },
 };
 

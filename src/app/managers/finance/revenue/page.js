@@ -444,18 +444,20 @@ export default function Page() {
         <Accordion>
           <AccordionItem
             title={
-              <span className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
-                <span>revenue history</span>
-                <Button
-                  size="sm"
-                  variant="shadow"
-                  color="secondary"
-                  aria-label="download-pdf"
-                  onClick={downloadPdf}
-                >
-                  <FaDownload /> PDF
-                </Button>
-              </span>
+              <>
+                <span className="uppercase flex justify-between flex-row flex-nowrap text-2xl max-md:text-lg tracking-wider font-bold">
+                  <span>revenue history</span>
+                  <Button
+                    size="sm"
+                    variant="shadow"
+                    color="secondary"
+                    aria-label="download-pdf"
+                    onClick={downloadPdf}
+                  >
+                    <FaDownload /> PDF
+                  </Button>
+                </span>
+              </>
             }
             key={1}
           >
@@ -486,9 +488,9 @@ export default function Page() {
                   labelPlacement="outside"
                   className="max-w-60"
                   aria-label="to_date"
-                  />
+                />
                 <Select
-                  name="type"  
+                  name="type"
                   size="sm"
                   variant="faded"
                   color="secondary"
@@ -497,7 +499,7 @@ export default function Page() {
                   labelPlacement="outside"
                   radius="sm"
                   isRequired={false}
-                  isDisabled={isLoading} 
+                  isDisabled={isLoading}
                   aria-label="type"
                   className="max-w-60"
                 >
@@ -509,10 +511,10 @@ export default function Page() {
                   </SelectItem>
                   <SelectItem key={"YEARLY"} value={"YEARLY"}>
                     YEARLY
-                  </SelectItem> 
+                  </SelectItem>
                   <SelectItem key={""} value={""}>
                     ALL
-                  </SelectItem> 
+                  </SelectItem>
                 </Select>
                 <Button
                   color="secondary"

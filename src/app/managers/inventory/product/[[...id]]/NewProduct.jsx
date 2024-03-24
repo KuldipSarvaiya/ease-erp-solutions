@@ -26,16 +26,25 @@ function NewProduct() {
     formdata.tags = formdata.tags.split(",");
     console.log(formdata);
 
-    // ! can not create new product with server action
-    // ? create api route for this new product
-    const res = await fetch("/api/inventory/product", {
+    const formData = new FormData();
+
+    for (const key in formdata) {
+      if (key === "image") formData.append(key, formdata[key][0]);
+      else formData.append(key, formdata[key]);
+    }
+
+    const result = await fetch("/api/inventory/product", {
       method: "POST",
-      body: JSON.stringify(formdata),
+      body: formData,
     });
+    if (!result.ok)
+      return alert("Failed To Create New Product.\n Please Try Again");
+
+    const res = await result.json();
 
     console.log(res);
 
-    if (res === true) return reset();
+    if (res.success === true) return reset();
 
     for (const key in res) {
       setError(key, { message: res[key] });

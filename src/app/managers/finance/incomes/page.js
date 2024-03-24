@@ -494,7 +494,7 @@ export default function IncomePage() {
         <Accordion>
           <AccordionItem
             title={
-              <span className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
+              <div className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold w-full">
                 <span>income history</span>
                 <Button
                   size="sm"
@@ -505,7 +505,7 @@ export default function IncomePage() {
                 >
                   <FaDownload /> PDF
                 </Button>
-              </span>
+              </div>
             }
             key={1}
           >

@@ -314,7 +314,6 @@ export default function ExpensePage() {
       },
     ],
   };
-  //
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -462,13 +461,12 @@ export default function ExpensePage() {
         </form>
       </div>
 
-      {/*  */}
       {/* old expense records */}
       <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
         <Accordion>
           <AccordionItem
             title={
-              <span className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
+              <div className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
                 <span>Expense history</span>
                 <Button
                   className=""
@@ -480,7 +478,7 @@ export default function ExpensePage() {
                 >
                   <FaDownload /> PDF
                 </Button>
-              </span>
+              </div>
             }
             key={1}
           >
