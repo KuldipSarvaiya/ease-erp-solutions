@@ -1,13 +1,14 @@
 "use client";
 
-import { createProduct } from "@/lib/utils/server_actions/inventory";
 import { Avatar, Button, Chip, Input, Textarea } from "@nextui-org/react";
-import { useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { VscInsert } from "react-icons/vsc";
 
-function NewProduct() {
+function NewProduct({ id, data }) {
+  const router = useRouter();
   const [colors, setColors] = useState([]);
   const {
     register,
@@ -16,7 +17,15 @@ function NewProduct() {
     setError,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: id ? data : {},
+  });
+
+  useEffect(() => {
+    if (id) {
+      setColors([data.color]);
+    }
+  }, [id]);
 
   async function createNewProduct(formdata) {
     formdata.color = colors;
@@ -34,7 +43,7 @@ function NewProduct() {
     }
 
     const result = await fetch("/api/inventory/product", {
-      method: "POST",
+      method: id ? "PUT" : "POST",
       body: formData,
     });
     if (!result.ok)
@@ -44,7 +53,8 @@ function NewProduct() {
 
     console.log(res);
 
-    if (res.success === true) return reset();
+    if (res.success === true)
+      return id ? router.push("/managers/inventory/product") : reset();
 
     for (const key in res) {
       setError(key, { message: res[key] });
@@ -62,6 +72,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Name : </span>
         <Input
+          defaultValue={getValues("name")}
           {...register("name", {
             required: "Please Specify Name Of the Product",
           })}
@@ -80,10 +91,13 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Image : </span>
         <Input
+          defaultValue={getValues("image")}
           {...register("image", {
-            required: "Please Drop a Product Image",
+            required: id ? false : "Please Drop a Product Image",
             validate: (v) =>
-              v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
+              id
+                ? true
+                : v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
           })}
           startContent={
             <Avatar
@@ -115,6 +129,7 @@ function NewProduct() {
         <div className="md:col-start-2 md:col-end-4 flex flex-col gap-5">
           <div className="flex gap-7 flex-row items-end">
             <Input
+              defaultValue={getValues("color")}
               {...register("color", {
                 required: "Please Select Colors Of the Product",
               })}
@@ -144,6 +159,7 @@ function NewProduct() {
                     return [...prev, getValues("color")];
                   });
               }}
+              isDisabled={id ? colors.length === 1 : false}
             >
               ADD COLOR
             </Button>
@@ -184,6 +200,7 @@ function NewProduct() {
           Product Sizes <sup>{"(opt)"}</sup> :{" "}
         </span>
         <Input
+          defaultValue={getValues("size")}
           {...register("size")}
           variant="faded"
           size="md"
@@ -201,6 +218,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Unit of Measurement : </span>
         <Input
+          defaultValue={getValues("unit_of_measurement")}
           {...register("unit_of_measurement", {
             required: "Please Specify Unit of Measurement Of the Product",
           })}
@@ -221,6 +239,7 @@ function NewProduct() {
           Expiry Timing <sup>{"(opt)"}</sup> :{" "}
         </span>
         <Input
+          defaultValue={getValues("expiry_timing")}
           {...register("expiry_timing")}
           variant="faded"
           size="md"
@@ -237,6 +256,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Description : </span>
         <Textarea
+          defaultValue={getValues("description")}
           {...register("description", {
             required: "Please Specify Description About Product",
           })}
@@ -255,6 +275,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Chemical Property : </span>
         <Textarea
+          defaultValue={getValues("chemical_property")}
           {...register("chemical_property", {
             required: "Please Specify Chemical Property of Product",
           })}
@@ -273,6 +294,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Price : </span>
         <Input
+          defaultValue={getValues("price")}
           {...register("price", {
             required: "Please Specify Product Price",
           })}
@@ -291,6 +313,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Discount : </span>
         <Input
+          defaultValue={getValues("discount")}
           {...register("discount", {
             required: "Please Specify Discount",
           })}
@@ -309,6 +332,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Available Units : </span>
         <Input
+          defaultValue={getValues("available_stock_units")}
           {...register("available_stock_units", {
             required: "Please Specify Available Units",
           })}
@@ -327,6 +351,7 @@ function NewProduct() {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Search Tags : </span>
         <Input
+          defaultValue={getValues("tags")}
           {...register("tags", {
             required: "Please Specify Search Tags",
           })}

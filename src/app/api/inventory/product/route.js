@@ -12,17 +12,46 @@ export async function POST(request) {
   // todo : add product_id
   // todo : create multiple product based on colors and sizes
 
-  const arrBuf = await data.get("image").arrayBuffer();
-  const buffer = new Buffer.from(arrBuf);
+  // const arrBuf = await data.get("image").arrayBuffer();
+  // const buffer = new Buffer.from(arrBuf);
 
-  const ulr = join(
-    cwd(),
-    "kuldip_upload",
-    `${Date.now()}__${data.get("image").name}`
-  );
-  writeFile(ulr, buffer, () => {
-    console.log("file saved");
+  // const ulr = join(
+  //   cwd(),
+  //   "kuldip_upload",
+  //   `${Date.now()}__${data.get("image").name}`
+  // );
+  // writeFile(ulr, buffer, () => {
+  //   console.log("file saved");
+  // });
+
+  // return NextResponse.json({ success: true });
+  return NextResponse.json({
+    name: "this is testing error from server",
+    tags: "this is testing error from server",
   });
+}
+
+export async function PUT(request) {
+  const data = await request.formData();
+
+  console.log("product put = ", data);
+  // todo : need to upload product image
+  // todo : add product_id
+  // todo : create multiple product based on colors and sizes
+
+  if (!!data.get("image")) return NextResponse.json({ success: true });
+
+  // const arrBuf = await data.get("image").arrayBuffer();
+  // const buffer = new Buffer.from(arrBuf);
+
+  // const ulr = join(
+  //   cwd(),
+  //   "kuldip_upload",
+  //   `${Date.now()}__${data.get("image").name}`
+  // );
+  // writeFile(ulr, buffer, () => {
+  //   console.log("file saved");
+  // });
 
   return NextResponse.json({
     name: "this is testing error from server",
