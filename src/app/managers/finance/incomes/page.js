@@ -494,18 +494,20 @@ export default function IncomePage() {
         <Accordion>
           <AccordionItem
             title={
-              <div className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold w-full">
-                <span>income history</span>
-                <Button
-                  size="sm"
-                  variant="shadow"
-                  color="secondary"
-                  aria-label="download-pdf"
-                  onClick={downloadPdf}
-                >
-                  <FaDownload /> PDF
-                </Button>
-              </div>
+              <>
+                <span className="uppercase flex justify-between flex-row flex-nowrap text-2xl max-md:text-lg tracking-wider font-bold w-full">
+                  <span>income history</span>
+                  <Button
+                    size="sm"
+                    variant="shadow"
+                    color="secondary"
+                    aria-label="download-pdf"
+                    onClick={downloadPdf}
+                  >
+                    <FaDownload /> PDF
+                  </Button>
+                </span>
+              </>
             }
             key={1}
           >
@@ -588,7 +590,7 @@ export default function IncomePage() {
       {/* chart */}
       <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
         <p className="uppercase text-2xl max-md:text-lg tracking-wider font-bold mb-5">
-          Categorize above incomes by its type of source
+          Categorized incomes by source
         </p>
         <center>
           <Pie

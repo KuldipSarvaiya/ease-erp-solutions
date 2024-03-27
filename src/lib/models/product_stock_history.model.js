@@ -8,11 +8,7 @@ const product_stock_historySchema = new Schema(
       required: true,
       immutable: true,
     },
-    stock_produced_date: {
-      type: Date,
-      required: true,
-      immutable: true,
-    },
+    product_group_id: { type: String, required: true, immutable: true },
     total_produced_units: {
       type: Number,
       required: true,
@@ -24,7 +20,11 @@ const product_stock_historySchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: {
+      createdAt: "stock_produced_date",
+    },
+  }
 );
 
 const ProductStockHistory =

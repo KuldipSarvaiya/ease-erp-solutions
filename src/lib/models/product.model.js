@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const productSchema = new Schema(
   {
-    product_id: {
+    product_group_id: {
       type: String,
       required: true,
       immutable: true,

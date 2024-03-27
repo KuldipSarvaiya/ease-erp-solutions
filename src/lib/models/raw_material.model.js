@@ -5,6 +5,11 @@ const raw_materialSchema = new Schema({
     type: String,
     required: true,
   },
+  raw_material_group_id: {
+    type: String,
+    required: true,
+    immutable: true,
+  },
   description: {
     type: [String],
     required: true,
@@ -37,11 +42,11 @@ const raw_materialSchema = new Schema({
     type: Number,
     required: true,
   },
-  supplier_id: {
-    type: [Schema.ObjectId],
-    ref: "Supplier",
-    required: false,
-  },
+  // supplier_id: {
+  //   type: [Schema.ObjectId],
+  //   ref: "Supplier",
+  //   required: false,
+  // },
   produced_by: {
     type: Schema.ObjectId,
     ref: "Department",
@@ -52,16 +57,16 @@ const raw_materialSchema = new Schema({
     ref: "Department",
     required: true,
   },
-  raw_material_order_id: {
-    type: [Schema.ObjectId],
-    ref: "RawMaterialOrder",
-    required: false,
-  },
-  raw_material_stock_id: {
-    type: Schema.ObjectId,
-    ref: "RawMaterailStock",
-    required: false,
-  },
+  // raw_material_order_id: {
+  //   type: [Schema.ObjectId],
+  //   ref: "RawMaterialOrder",
+  //   required: false,
+  // },
+  // raw_material_stock_id: {
+  //   type: Schema.ObjectId,
+  //   ref: "RawMaterailStock",
+  //   required: false,
+  // },
   updated_by: {
     type: Schema.ObjectId,
     ref: "Employee",

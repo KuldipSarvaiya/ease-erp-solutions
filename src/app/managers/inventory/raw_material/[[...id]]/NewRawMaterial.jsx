@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { VscInsert } from "react-icons/vsc";
 
-function NewProduct({ id, data }) {
+function NewRawMaterial({ id, data }) {
   const router = useRouter();
   const [colors, setColors] = useState([]);
   const {
@@ -27,7 +27,7 @@ function NewProduct({ id, data }) {
     }
   }, [id]);
 
-  async function createNewProduct(formdata) {
+  async function createNewRawMaterial(formdata) {
     formdata.color = colors;
     formdata.size = formdata.size.split(",");
     formdata.description = formdata.description.split("\n");
@@ -63,8 +63,8 @@ function NewProduct({ id, data }) {
 
   return (
     <form
-      onSubmit={handleSubmit(createNewProduct)}
-      // action={createNewProduct}
+      onSubmit={handleSubmit(createNewRawMaterial)}
+      // action={createNewRawMaterial}
       noValidate={false}
       encType="multipart/form-data"
       className="flex flex-col flex-nowrap gap-5 md:flex-nowrap w-full"
@@ -74,7 +74,7 @@ function NewProduct({ id, data }) {
         <Input
           defaultValue={getValues("name")}
           {...register("name", {
-            required: "Please Specify Name Of the Product",
+            required: "Please Specify Name Of the Raw Material",
           })}
           variant="faded"
           size="md"
@@ -91,22 +91,22 @@ function NewProduct({ id, data }) {
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Group ID : </span>
         <Input
-          defaultValue={getValues("product_group_id")}
-          {...register("product_group_id", {
-            required: "Please Specify Group Of the Product",
+          defaultValue={getValues("raw_material_group_id")}
+          {...register("raw_material_group_id", {
+            required: "Please Specify Group Of the Raw Material",
           })}
           isReadOnly={id}
           variant="faded"
           size="md"
           color="secondary"
           type="text"
-          name="product_group_id"
-          aria-label="product_group_id"
-          aria-labelledby="product_group_id"
+          name="raw_material_group_id"
+          aria-label="raw_material_group_id"
+          aria-labelledby="raw_material_group_id"
           title="Enter group id of the product"
           className="md:col-start-2 md:col-end-4"
         />
-        <p className="text-red-500"> {errors?.product_group_id?.message} </p>
+        <p className="text-red-500"> {errors?.raw_material_group_id?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Image : </span>
@@ -415,4 +415,4 @@ function NewProduct({ id, data }) {
   );
 }
 
-export default NewProduct;
+export default NewRawMaterial;

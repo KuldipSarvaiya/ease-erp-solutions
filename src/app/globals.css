@@ -24,3 +24,8 @@ html {
 ::-webkit-scrollbar-thumb {
   background-color: #202f42;
 }
+
+.manager_inventory_product_stock { 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 350px));
+  justify-content: center;
+}

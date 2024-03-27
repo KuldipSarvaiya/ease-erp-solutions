@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# vs code project config file
+/.vscode
+
 # testing image upload folder
 /kuldip_upload
 

@@ -20,7 +20,6 @@ export default function TaskPage() {
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 mt-8">
         <span className="uppercase text-2xl  tracking-wider font-bold flex flex-wrap flex-row justify-between items-center">
           <span>previous tasks</span>
-          <Divider className="my-5" />
           <Input
             // onChange={handleDateChange}
             variant="faded"
