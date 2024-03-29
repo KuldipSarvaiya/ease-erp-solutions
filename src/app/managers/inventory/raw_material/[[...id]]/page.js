@@ -51,14 +51,12 @@ export default async function Page({ params: { id } }) {
                 size: "m, l, xl, xxl",
                 description: "this is shirt\n short sleaves",
                 unit_of_measurement: "piece",
-                expiry_timing: "no expiry",
                 chemical_property: "cotton\n row color",
-                price: 1222,
-                discount: 12,
-                available_stock_units: 12,
-                tags: "ok,ok",
+                usage_process_level: 12,
                 color: "#ffffff",
-                product_group_id: "short sleave products",
+                raw_material_group_id: "short sleave products",
+                produced_by: ["hr"],
+                used_by: ["hr", "finance"],
               }}
             />
           </div>

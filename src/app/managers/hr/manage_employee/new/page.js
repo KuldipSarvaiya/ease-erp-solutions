@@ -10,7 +10,7 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from "@nextui-org/react"; 
+} from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { GrMapLocation, GrPowerReset } from "react-icons/gr";
@@ -514,7 +514,7 @@ function Page() {
                 "packing and labeling",
               ].map((item, i) => {
                 return (
-                  <SelectItem key={i} value={"lkdh3ewafgwg"}>
+                  <SelectItem key={i} value={item}>
                     {item.toUpperCase()}
                   </SelectItem>
                 );

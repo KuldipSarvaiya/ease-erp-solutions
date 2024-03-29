@@ -40,7 +40,7 @@ function RawMaterialCard() {
       </CardBody>
       <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
         <p className="text-base flex items-center flex-row justify-between w-full px-2 text-white/80 capitalize">
-          <span>my product name</span>
+          <span>raw material name</span>
           <span className="underline text-sm flex items-center gap-3 flex-wrap">
             <BsCircleFill className="text-red-500" />2 inch
           </span>

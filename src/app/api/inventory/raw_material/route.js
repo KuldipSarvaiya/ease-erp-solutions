@@ -1,3 +1,4 @@
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 // import { join } from "node:path";
 // import { cwd } from "node:process";
@@ -8,9 +9,9 @@ export async function POST(request) {
   const data = await request.formData();
 
   console.log("api = ", data);
-  // todo : need to upload product image
-  // todo : add product_id
-  // todo : create multiple product based on colors and sizes
+  // todo : need to upload raw naterial image
+  // todo : add raw_material_group_id
+  // todo : create multiple raw naterial based on colors and sizes
 
   // const arrBuf = await data.get("image").arrayBuffer();
   // const buffer = new Buffer.from(arrBuf);
@@ -23,22 +24,21 @@ export async function POST(request) {
   // writeFile(ulr, buffer, () => {
   //   console.log("file saved");
   // });
-  revalidateTag("products");
+  revalidateTag("raw_materials");
 
   // return NextResponse.json({ success: true });
   return NextResponse.json({
-    name: "this is testing error from server",
-    tags: "this is testing error from server",
+    name: "this is testing error from server", 
   });
 }
 
 export async function PUT(request) {
   const data = await request.formData();
 
-  console.log("product put = ", data);
-  // todo : need to upload product image
-  // todo : add product_id
-  // todo : create multiple product based on colors and sizes
+  console.log("raw naterial put = ", data);
+  // todo : need to upload raw naterial image
+  // todo : add raw_material_group_id
+  // todo : create multiple raw naterial based on colors and sizes
 
   if (!!data.get("image")) return NextResponse.json({ success: true });
 
@@ -56,7 +56,6 @@ export async function PUT(request) {
   revalidateTag("one_raw_material");
 
   return NextResponse.json({
-    name: "this is testing error from server",
-    tags: "this is testing error from server",
+    name: "this is testing error from server", 
   });
 }

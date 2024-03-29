@@ -1,6 +1,14 @@
 "use client";
 
-import { Avatar, Button, Chip, Input, Textarea } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Input,
+  Select,
+  SelectItem,
+  Textarea,
+} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,8 +39,7 @@ function NewRawMaterial({ id, data }) {
     formdata.color = colors;
     formdata.size = formdata.size.split(",");
     formdata.description = formdata.description.split("\n");
-    formdata.chemical_property = formdata.chemical_property.split("\n");
-    formdata.tags = formdata.tags.split(",");
+    formdata.chemical_property = formdata.chemical_property.split("\n"); 
     console.log(formdata);
 
     const formData = new FormData();
@@ -42,7 +49,7 @@ function NewRawMaterial({ id, data }) {
       else formData.append(key, formdata[key]);
     }
 
-    const result = await fetch("/api/inventory/product", {
+    const result = await fetch("/api/inventory/raw_material", {
       method: id ? "PUT" : "POST",
       body: formData,
     });
@@ -54,7 +61,7 @@ function NewRawMaterial({ id, data }) {
     console.log(res);
 
     if (res.success === true)
-      return id ? router.push("/managers/inventory/product") : reset();
+      return id ? router.push("/managers/inventory/raw_material") : reset();
 
     for (const key in res) {
       setError(key, { message: res[key] });
@@ -70,7 +77,7 @@ function NewRawMaterial({ id, data }) {
       className="flex flex-col flex-nowrap gap-5 md:flex-nowrap w-full"
     >
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Product Name : </span>
+        <span className="text-xl font-semibold">Raw Material Name : </span>
         <Input
           defaultValue={getValues("name")}
           {...register("name", {
@@ -89,7 +96,7 @@ function NewRawMaterial({ id, data }) {
         <p className="text-red-500"> {errors?.name?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Product Group ID : </span>
+        <span className="text-xl font-semibold">Raw Material Group ID : </span>
         <Input
           defaultValue={getValues("raw_material_group_id")}
           {...register("raw_material_group_id", {
@@ -106,10 +113,13 @@ function NewRawMaterial({ id, data }) {
           title="Enter group id of the product"
           className="md:col-start-2 md:col-end-4"
         />
-        <p className="text-red-500"> {errors?.raw_material_group_id?.message} </p>
+        <p className="text-red-500">
+          {" "}
+          {errors?.raw_material_group_id?.message}{" "}
+        </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Product Image : </span>
+        <span className="text-xl font-semibold">Raw Material Image : </span>
         <Input
           defaultValue={getValues("image")}
           {...register("image", {
@@ -144,12 +154,12 @@ function NewRawMaterial({ id, data }) {
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">
-          Product Color <sup>{"(opt)"}</sup> :
+          Raw Material Color <sup>{"(opt)"}</sup> :
         </span>
         <div className="md:col-start-2 md:col-end-4 flex flex-col gap-5">
           <div className="flex gap-7 flex-row items-end">
             <Input
-              defaultValue={getValues("color")}
+              // defaultValue={getValues("color")}
               {...register("color", {
                 required: "Please Select Colors Of the Product",
               })}
@@ -217,7 +227,7 @@ function NewRawMaterial({ id, data }) {
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">
-          Product Sizes <sup>{"(opt)"}</sup> :{" "}
+          Raw Material Sizes <sup>{"(opt)"}</sup> :{" "}
         </span>
         <Input
           defaultValue={getValues("size")}
@@ -255,26 +265,28 @@ function NewRawMaterial({ id, data }) {
         <p className="text-red-500"> {errors?.unit_of_measurement?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">
-          Expiry Timing <sup>{"(opt)"}</sup> :{" "}
-        </span>
+        <span className="text-xl font-semibold">Usage Process Level :</span>
         <Input
-          defaultValue={getValues("expiry_timing")}
-          {...register("expiry_timing")}
+          defaultValue={getValues("usage_process_level")}
+          {...register("usage_process_level", {
+            required: "Please Enter level of usage in manufacturing process",
+          })}
           variant="faded"
           size="md"
           color="secondary"
           type="text"
-          name="expiry_timing"
-          aria-label="expiry_timing"
-          aria-labelledby="expiry_timing"
-          title="Enter Lable Of Expiry Timing"
+          name="usage_process_level"
+          aria-label="usage_process_level"
+          aria-labelledby="usage_process_level"
+          title="Enter level of usage manufacturing in process"
           className="md:col-start-2 md:col-end-4"
         />
-        <p className="text-red-500"> {errors?.expiry_timing?.message} </p>
+        <p className="text-red-500"> {errors?.usage_process_level?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Product Description : </span>
+        <span className="text-xl font-semibold">
+          Raw Material Description :{" "}
+        </span>
         <Textarea
           defaultValue={getValues("description")}
           {...register("description", {
@@ -312,81 +324,78 @@ function NewRawMaterial({ id, data }) {
         <p className="text-red-500"> {errors?.chemical_property?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Product Price : </span>
-        <Input
-          defaultValue={getValues("price")}
-          {...register("price", {
-            required: "Please Specify Product Price",
+        <span className="text-xl font-semibold">
+          Raw Material Produced By :{" "}
+        </span>
+        <Select
+          defaultSelectedKeys={getValues("produced_by")}
+          {...register("produced_by", {
+            required: "Please select department that produces this material",
           })}
           variant="faded"
           size="md"
           color="secondary"
-          type="number"
-          name="price"
-          aria-label="price"
-          aria-labelledby="price"
-          title="Enter Product Price"
+          name="produced_by"
+          aria-label="select produced_by department"
+          aria-labelledby="select produced_by department"
           className="md:col-start-2 md:col-end-4"
-        />
-        <p className="text-red-500"> {errors?.price?.message} </p>
+        >
+          {[
+            "hr",
+            "finance",
+            "inventory",
+            "fabric manufacturing",
+            "cleaning and finishing",
+            "dying and printing",
+            "cutting",
+            "sewing",
+            "packing and labeling",
+          ].map((item, i) => {
+            return (
+              <SelectItem key={item} value={item}>
+                {item.toUpperCase()}
+              </SelectItem>
+            );
+          })}
+        </Select>
+        <p className="text-red-500"> {errors?.produced_by?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Discount : </span>
-        <Input
-          defaultValue={getValues("discount")}
-          {...register("discount", {
-            required: "Please Specify Discount",
-          })}
+        <span className="text-xl font-semibold">Raw Material Used By :</span>
+        <Select
+          defaultSelectedKeys={getValues("used_by")}
+          {...register("used_by", {
+            required: "Please select department that produces this material",
+          })} 
+          selectionMode="multiple"
+          isMultiline
           variant="faded"
           size="md"
           color="secondary"
-          type="number"
-          name="discount"
-          aria-label="discount"
-          aria-labelledby="discount"
-          title="Enter Discount"
+          name="used_by"
+          aria-label="select used_by department"
+          aria-labelledby="select used_by department"
           className="md:col-start-2 md:col-end-4"
-        />
-        <p className="text-red-500"> {errors?.discount?.message} </p>
-      </span>
-      <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Available Units : </span>
-        <Input
-          defaultValue={getValues("available_stock_units")}
-          {...register("available_stock_units", {
-            required: "Please Specify Available Units",
+        >
+          {[
+            "hr",
+            "finance",
+            "inventory",
+            "fabric manufacturing",
+            "cleaning and finishing",
+            "dying and printing",
+            "cutting",
+            "sewing",
+            "packing and labeling",
+          ].map((item, i) => {
+            return (
+              <SelectItem key={item} value={item}>
+                {item.toUpperCase()}
+              </SelectItem>
+            );
           })}
-          variant="faded"
-          size="md"
-          color="secondary"
-          type="number"
-          name="available_stock_units"
-          aria-label="available_stock_units"
-          aria-labelledby="available_stock_units"
-          title="Enter Available Units"
-          className="md:col-start-2 md:col-end-4"
-        />
-        <p className="text-red-500">{errors?.available_stock_units?.message}</p>
-      </span>
-      <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Search Tags : </span>
-        <Input
-          defaultValue={getValues("tags")}
-          {...register("tags", {
-            required: "Please Specify Search Tags",
-          })}
-          variant="faded"
-          size="md"
-          color="secondary"
-          placeholder="seperate multiple tags by comma sign ( , ) || e.g. = variety, smooth, latest, ..."
-          type="text"
-          name="tags"
-          aria-label="tags"
-          aria-labelledby="tags"
-          title="Enter Search Tags"
-          className="md:col-start-2 md:col-end-4"
-        />
-        <p className="text-red-500"> {errors?.tags?.message} </p>
+        </Select>
+        <p className="text-red-500"> {errors?.used_by?.message} </p>
       </span>
       <span className="grid grid-cols-6 gap-3 max-md:grid-cols-2 max-md:grid-rows-2 grid-rows-1">
         <Button
