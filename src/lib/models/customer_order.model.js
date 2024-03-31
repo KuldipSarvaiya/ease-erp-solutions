@@ -38,7 +38,7 @@ const customer_orderSchema = new Schema(
     order_state: {
       type: String,
       enum: {
-        values: ["none", "pending", "packed", "shiped", "complete"],
+        values: ["none", "canceled", "pending", "packed", "shiped", "complete"],
         message: (props) => `${props.name} is not set to ${props.value}`,
       },
       default: "none",
@@ -50,7 +50,7 @@ const customer_orderSchema = new Schema(
       default: 0,
       immutable: true,
     },
-    total_mrp: {
+    sub_total: {
       type: Number,
       required: true,
     },
@@ -66,7 +66,7 @@ const customer_orderSchema = new Schema(
       type: Number,
       required: true,
     },
-    net_price: {
+    net_total: {
       type: Number,
       required: true,
     },

@@ -17,6 +17,8 @@ function SideBarButton({ item, mainPath }) {
         className="uppercase tracking-widest mt-2 font-bold text-lg w-full"
         color="secondary"
         size="lg"
+        aria-label={mainPath + item}
+        aria-labelledby={mainPath + item}
         // variant={"shadow"}
         variant={isActive ? "flat" : "shadow"}
       >

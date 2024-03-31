@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const raw_material_orderSchema = new Schema(
   {
-    supplier_id: {
-      type: Schema.ObjectId,
-      ref: "Supplier",
-      required: true,
-      immutable: true,
-    },
     raw_material_id: {
       type: Schema.ObjectId,
       ref: "RawMaterial",
+      required: true,
+      immutable: true,
+    },
+    supplier_id: {
+      type: Schema.ObjectId,
+      ref: "Supplier",
       required: true,
       immutable: true,
     },
@@ -59,7 +59,7 @@ const raw_material_orderSchema = new Schema(
       type: Number,
       required: true,
     },
-    delivery_charges: {
+    delivery_charge: {
       type: Number,
       required: true,
     },

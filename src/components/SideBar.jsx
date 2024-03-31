@@ -24,6 +24,8 @@ function SideBar({ menuItems, mainPath }) {
           color="secondary"
           className="uppercase w-full mt-5"
           href="/api/auth/signout?callbackUrl=/"
+          aria-label="sign out"
+          aria-labelledby="sign out"
         >
           <FaSignOutAlt className="scale-125" /> sign Out
         </Button>

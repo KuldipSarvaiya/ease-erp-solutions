@@ -18,15 +18,23 @@ const raw_material_stock_historySchema = new Schema(
       required: true,
       immutable: true,
     },
-    produced_units: {
+    units: {
       type: Number,
       required: true,
       immutable: true,
     },
-    stock_over_date: {
-      type: Date,
-      required: false,
+    change_type: {
+      type: String,
+      enum: {
+        values: ["Increase", "Decrease"],
+      },
+      required: true,
+      immutable: true,
     },
+    // stock_over_date: {
+    //   type: Date,
+    //   required: false,
+    // },
     stock_process_level: {
       type: Number,
       required: true,

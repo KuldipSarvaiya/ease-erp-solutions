@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const supplierSchema = new Schema(
   {
+    image: {
+      type: String,
+      required: true,
+      immutable: true,
+    },
     supplied_material_id: {
       type: [Schema.ObjectId],
       ref: "RawMaterial",

@@ -1,7 +1,7 @@
 'use client'
 
-function ErrorSales() {
+function ErrorOrders() {
   return <div>ErrorSales Page</div>;
 }
 
-export default ErrorSales;
+export default ErrorOrders;

@@ -1,5 +1,5 @@
 import TaskCard from "@/components/cards/TaskCard";
-import { Input } from "@nextui-org/react";
+import { Divider, Input } from "@nextui-org/react";
 
 export default function TaskPage() {
   return (
@@ -7,6 +7,7 @@ export default function TaskPage() {
       {/* pending tasks */}
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
         <p className="text-2xl font-bold tracking-wide w-full">PENDING TASKS</p>
+        <Divider className="my-2" />
         <TaskCard
           text={"hello  this is second task"}
           id={"123erfds"}
@@ -31,6 +32,7 @@ export default function TaskPage() {
             className="w-52"
           />
         </span>
+        <Divider className="my-2" />
         <div className="mt-2 flex gap-2 flex-row flex-wrap justify-start items-stretch max-md:justify-around">
           <TaskCard
             text={"hello  this is first two task"}

@@ -25,16 +25,16 @@ const customerSchema = new Schema(
     },
     address_coordinates: {
       type: Object,
-      required: true,
+      required: false,
       properties: {
         latitude: { type: String, required: true },
         longitude: { type: String, required: true },
       },
     },
-    order_id: {
-      type: [Schema.ObjectId],
-      required: false,
-    },
+    // order_id: {
+    //   type: [Schema.ObjectId],
+    //   required: false,
+    // },
     updated_by: {
       type: Schema.ObjectId,
       ref: "Employee",

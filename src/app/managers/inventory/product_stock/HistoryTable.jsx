@@ -12,7 +12,7 @@ import {
 } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 
-function HistoryTable() {
+function HistoryTable({ id }) {
   const [page, setPage] = useState(1);
   const [history, setHistory] = useState([
     {
@@ -64,7 +64,7 @@ function HistoryTable() {
 
   return (
     <Table
-      id="download-table"
+      id={id}
       aria-label="expenses of company for the all time"
       bottomContent={
         <div className="flex w-full justify-center">

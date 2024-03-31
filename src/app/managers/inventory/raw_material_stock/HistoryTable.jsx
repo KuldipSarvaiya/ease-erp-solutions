@@ -12,43 +12,89 @@ import {
 } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 
+const Increase = () => {
+  return (
+    <span className="flex flex-row flex-nowrap gap-1">
+      <svg width="20px" height="20px">
+        <path
+          fill="#00FF00"
+          d="M 0,20 L 10,10 L 20,20 Z"
+          className="-translate-y-1"
+        />
+      </svg>
+      Increase
+    </span>
+  );
+};
+const Decrease = () => {
+  return (
+    <span className="flex flex-row flex-nowrap  gap-1">
+      <svg width="20px" height="20px">
+        <path
+          fill="#FF0000"
+          d="M 0,0 L 10,10 L 20,0 Z"
+          className="translate-y-2"
+        />
+      </svg>
+      Decrease
+    </span>
+  );
+};
+
 function HistoryTable() {
   const [page, setPage] = useState(1);
+  const change_type = {
+    Increase: <Increase />,
+    Decrease: <Decrease />,
+  };
   const [history, setHistory] = useState([
     {
       key: 1,
-      product: "product name color size",
-      product_group_id: "product group",
-      total_produced_units: 342,
+      raw_material: "raw material name color size",
+      raw_material_group_id: "raw material group",
+      units: 342,
       stock_produced_date: new Date().toDateString(),
+      change_type: change_type["Decrease"],
     },
     {
       key: 2,
-      product: "product name color size",
-      product_group_id: "product group",
-      total_produced_units: 342,
+      raw_material: "raw material name color size",
+      raw_material_group_id: "raw material group",
+      units: 342,
       stock_produced_date: new Date().toDateString(),
+      change_type: change_type["Increase"],
     },
     {
       key: 3,
-      product: "product name color size",
-      product_group_id: "product group",
-      total_produced_units: 342,
+      raw_material: "raw material name color size",
+      raw_material_group_id: "raw material group",
+      units: 342,
       stock_produced_date: new Date().toDateString(),
+      change_type: change_type["Decrease"],
     },
     {
       key: 4,
-      product: "product name color size",
-      product_group_id: "product group",
-      total_produced_units: 342,
+      raw_material: "raw material name color size",
+      raw_material_group_id: "raw material group",
+      units: 342,
       stock_produced_date: new Date().toDateString(),
+      change_type: change_type["Increase"],
     },
     {
       key: 5,
-      product: "product name color size",
-      product_group_id: "product group",
-      total_produced_units: 342,
+      raw_material: "raw material name color size",
+      raw_material_group_id: "raw material group",
+      units: 342,
       stock_produced_date: new Date().toDateString(),
+      change_type: change_type["Increase"],
+    },
+    {
+      key: 6,
+      raw_material: "raw material name color size",
+      raw_material_group_id: "raw material group",
+      units: 342,
+      stock_produced_date: new Date().toDateString(),
+      change_type: change_type["Decrease"],
     },
   ]);
 
@@ -66,6 +112,7 @@ function HistoryTable() {
     <Table
       id="download-table"
       aria-label="expenses of company for the all time"
+      aria-labelledby="expenses of company for the all time"
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
@@ -82,9 +129,12 @@ function HistoryTable() {
     >
       <TableHeader>
         <TableColumn key={"stock_produced_date"}>DATE</TableColumn>
-        <TableColumn key={"product"}>PRODUCT</TableColumn>
-        <TableColumn key={"product_group_id"}>PRODUCT GROUP</TableColumn>
-        <TableColumn key={"total_produced_units"}>PRODUCED UNIT</TableColumn>
+        <TableColumn key={"raw_material"}>RAW MATERIAL</TableColumn>
+        <TableColumn key={"raw_material_group_id"}>
+          RAW MATERIAL GROUP
+        </TableColumn>
+        <TableColumn key={"units"}>UNITS</TableColumn>
+        <TableColumn key={"change_type"}>CHANGE TYPE</TableColumn>
         {/* <TableColumn key={"description"}>DESCRIPTION</TableColumn> */}
       </TableHeader>
       <TableBody items={items} emptyContent={"NO DATA FOUND"}>

@@ -1,10 +1,11 @@
 "use client";
 
-import Loading from "@/components/Loading";
 import isWithinRange from "@/lib/utils/isWithinRange";
 import { Button } from "@nextui-org/react";
 import { startTransition, useState } from "react";
 import { GiEntryDoor, GiExitDoor } from "react-icons/gi";
+
+// todo : add dynamic employee's attendance coordinates
 
 export function PunchIn() {
   const [loading, setLoading] = useState(false);
