@@ -4,7 +4,7 @@ import { GrAdd } from "react-icons/gr";
 import { MdRemove } from "react-icons/md";
 import Loading from "../Loading";
 
-function RawMaterialSmall() {
+function RawMaterialSmall({ no_decrement, no_increment }) {
   function ToolTipDialog() {
     async function handleSubmit(formdata) {
       "use server";
@@ -48,24 +48,28 @@ function RawMaterialSmall() {
             variant="solid"
             className="grid grid-cols-2 gap-1"
           >
-            <Button
-              name="increase"
-              type="submit"
-              startContent={<GrAdd className="scale-125" />}
-              aria-label="increase"
-              aria-labelledby="increase"
-            >
-              INCREASE
-            </Button>
-            <Button
-              name="decrease"
-              type="submit"
-              startContent={<MdRemove className="scale-150" />}
-              aria-label="decrease"
-              aria-labelledby="decrease"
-            >
-              DECREASE
-            </Button>
+            {!no_increment && (
+              <Button
+                name="increase"
+                type="submit"
+                startContent={<GrAdd className="scale-125" />}
+                aria-label="increase"
+                aria-labelledby="increase"
+              >
+                INCREASE
+              </Button>
+            )}
+            {!no_decrement && (
+              <Button
+                name="decrease"
+                type="submit"
+                startContent={<MdRemove className="scale-150" />}
+                aria-label="decrease"
+                aria-labelledby="decrease"
+              >
+                DECREASE
+              </Button>
+            )}
           </ButtonGroup>
         </div>
       </form>
@@ -89,7 +93,7 @@ function RawMaterialSmall() {
           className="object-contain rounded-lg bg-slate-800"
           aria-label="photot of product"
           aria-labelledby="photot of product"
-         />
+        />
         <div className="flex flex-col">
           <p className="text-base capitalize text-default-800">indi shirt</p>
           <p className="text-xs text-default-500 capitalize text-nowrap">

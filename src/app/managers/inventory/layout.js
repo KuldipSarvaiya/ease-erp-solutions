@@ -11,6 +11,7 @@ export const metadata = {
 export default function InventoryLayout({ children }) {
   const menuItems = [
     "tasks",
+    "assign_task",
     "product",
     "product_stock",
     "raw_material",

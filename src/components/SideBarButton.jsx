@@ -16,6 +16,7 @@ function SideBarButton({ item, mainPath }) {
       <Button
         className="uppercase tracking-widest mt-2 font-bold text-lg w-full"
         color="secondary"
+        // isDisabled={isActive}
         size="lg"
         aria-label={mainPath + item}
         aria-labelledby={mainPath + item}

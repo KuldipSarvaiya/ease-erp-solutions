@@ -15,8 +15,7 @@ export default function GenManagerLayout({ children }) {
     "employees",
     "raw_material",
     "used_stock",
-    "produced_stock",
-    "send_notice",
+    "produced_stock", 
     "reports",
   ];
   return (

@@ -1,5 +1,5 @@
 //  used with hr attendace
- import { changeAttendanceStatus } from "@/lib/utils/server_actions/hr";
+import { changeAttendanceStatus } from "@/lib/utils/server_actions/hr";
 import {
   Avatar,
   Button,
@@ -17,7 +17,7 @@ function AttendanceChip({ id, status, role }) {
     pending: "text-yellow-500",
     present: "text-emerald-500",
     onleave: "text-red-500",
-    absent: "",
+    "": "",
   };
 
   function ChangeAttendance({ id, status }) {
@@ -28,11 +28,11 @@ function AttendanceChip({ id, status, role }) {
             <p>Punch In Time : {new Date().toLocaleTimeString()}</p>
             <p>Punch Out Time : {new Date().toLocaleTimeString()}</p>
             <p>
-              Total Hours :{" "}
+              Total Hours : 
               {new Date(new Date().setHours(14) - new Date()).getHours()}
             </p>
             <p>
-              Over Time Hours :{" "}
+              Over Time Hours : 
               {new Date(new Date().setHours(14) - new Date()).getHours()}
             </p>
           </div>

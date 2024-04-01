@@ -11,6 +11,7 @@ export const metadata = {
 export default function HrLayout({ children }) {
   const menuItems = [
     "tasks",
+    "assign_task",
     // "employees",
     "manage_employee", 
     "attendance",

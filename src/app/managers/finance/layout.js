@@ -11,6 +11,7 @@ export const metadata = {
 export default function FinanceLayout({ children }) {
   const menuItems = [
     "tasks",
+    "assign_task",
     "salary_metadata",
     "payroll",
     "incomes",

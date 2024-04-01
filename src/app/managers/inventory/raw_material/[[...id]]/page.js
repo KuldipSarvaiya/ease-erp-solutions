@@ -7,19 +7,20 @@ import Loading from "@/components/Loading";
 import RawMaterialCard from "@/components/cards/RawMaterialCard";
 
 export default async function Page({ params: { id } }) {
+  //  ! Fetch data of all raw materials here
   // ! Fetch data of given id when it is available and send to <NewProduct /> to display
   console.log(id);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
-      {/* display products  */}
-
+      {/* display raw materials  */}
       <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
         <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
           MANAGE RAW MATERIALS <Download />
         </p>
         <Divider className="my-2" />
-        <div className="flex flex-row flex-wrap justify-start gap-10 lg:px-14">
+        <div className="flex flex-row flex-wrap justify-start gap-7 lg:px-8">
+          <RawMaterialCard />
           <RawMaterialCard />
           <RawMaterialCard />
         </div>
