@@ -2,14 +2,11 @@
 
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 function SideBarButton({ item, mainPath }) {
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    setIsActive(window?.location?.pathname?.endsWith(item.toLowerCase()));
-  }, []);
+  const path = usePathname();
+  const isActive = path.endsWith(item.toLowerCase());
 
   return (
     <Link href={mainPath + item} aria-label={mainPath + item}>

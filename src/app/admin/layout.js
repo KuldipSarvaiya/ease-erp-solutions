@@ -9,12 +9,8 @@ export const metadata = {
 
 export default function AdminLayout({ children }) {
   const menuItems = [
-    "assign_tasks",
-    "finance",
-    "inventory",
-    "manage_employees",
-    "manage_managers",
-    "send_notice", 
+    "assign_task",
+    "managers",
     "reports",
   ];
   return (
