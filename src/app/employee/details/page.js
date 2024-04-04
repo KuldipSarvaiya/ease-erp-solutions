@@ -1,12 +1,12 @@
 "use client";
 
-import { Avatar, Button, Divider, Input, Textarea } from "@nextui-org/react";
+import { Button, Divider, Input, Textarea } from "@nextui-org/react";
 import { TbExchange } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { GiCancel } from "react-icons/gi";
 import { GrUpdate } from "react-icons/gr";
-import InputCon from "@/components/InputCon"; 
+import InputCon from "@/components/InputCon";
 
 export default function DetailsPage() {
   const [isEditable, setIsEditable] = useState(false);
@@ -17,12 +17,13 @@ export default function DetailsPage() {
     reset,
     handleSubmit,
     control,
+    getValues,
     formState: { errors },
   } = useForm();
 
   useEffect(() => {
     reset({
-      username: "kd",
+      username: "kd-saraviya",
       password: "password",
       first_name: "kuldip",
       middle_name: "father",
@@ -62,6 +63,12 @@ export default function DetailsPage() {
                   control: control,
                   rules: {
                     required: "username is required",
+                    pattern: {
+                      // value: /^([a-z]{1,}[A-Z]{1,}[0-9]{1,}){8,}/,
+                      value: /[A-Za-z0-9]{8,}.*/,
+                      message:
+                        "Username Does Not Match Required Pattern | a-z,A-Z,0-9",
+                    },
                   },
                 }}
                 input={{
@@ -88,7 +95,7 @@ export default function DetailsPage() {
                       message: "Password is not strong enough",
                     },
                     pattern: {
-                      source: /[A-Za-z0-9]{8,}.*/,
+                      value: /[A-Za-z0-9]{8,}.*/,
                       message:
                         "use Alphanumeric characters, small,capital letters, numbers...",
                     },
@@ -116,6 +123,7 @@ export default function DetailsPage() {
                     required: "Please provide your first name.",
                     pattern: {
                       value: /[a-z]*/i,
+                      message: "Please use only small letters",
                     },
                   },
                 }}
@@ -140,6 +148,7 @@ export default function DetailsPage() {
                     required: "Please provide your middle name.",
                     pattern: {
                       value: /[a-z]*/i,
+                      message: "Please use only small letters",
                     },
                   },
                 }}
@@ -164,6 +173,7 @@ export default function DetailsPage() {
                     required: "Please provide your last name.",
                     pattern: {
                       value: /[a-z]*/i,
+                      message: "Please use only small letters",
                     },
                   },
                 }}
@@ -226,21 +236,23 @@ export default function DetailsPage() {
               />
               <p className="text-red-500"> {errors?.contact?.message} </p>
             </span>
-            {/* profile image */}
-            {/* <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
+            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Profile Image : </span>
               <Controller
                 name={"image"}
                 control={control}
                 rules={{
-                  required: "Please provide your image.",
-                  // validate: (v) =>
-                  //   v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
+                  // required: "Please provide your image.",
+                  validate: (v) =>
+                    v?.[0]
+                      ? v[0]?.size < 500 * 1024 ||
+                        "Imgae Size is Large, max 500kb"
+                      : true,
                 }}
                 render={({ field }) => (
                   <Input
                     type={"file"}
-                    radius="sm" 
+                    radius="sm"
                     size="sm"
                     variant="faded"
                     color="secondary"
@@ -252,12 +264,12 @@ export default function DetailsPage() {
                     }}
                     disabled={!isEditable}
                     className="md:col-start-2 md:col-end-4"
-                    isRequired={true} 
+                    // isRequired={true}
                   />
                 )}
               />
               <p className="text-red-500"> {errors?.image?.message} </p>
-            </span> */}
+            </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Address : </span>
               <Controller

@@ -1,12 +1,13 @@
 import "./globals.css";
-import NextUiProvider from "./NextUiProvider"; 
+import NextUiProvider from "./NextUiProvider";
 import AuthProvider from "@/lib/utils/AuthProvider";
 // import { Provider } from "react-redux";
 // import store from "@/redux/store";
 
 export const metadata = {
   title: "Ease ERP Solutions",
-  description: "Entrprise Resource Planning Software for Enterprise created using NextJS",
+  description:
+    "Entrprise Resource Planning Software for Enterprise created using NextJS",
 };
 
 export default function RootLayout({ children }) {
@@ -14,7 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className="dark">
       <AuthProvider>
         <body>
-          <NextUiProvider> 
+          <NextUiProvider>
             <main>{children}</main>
           </NextUiProvider>
         </body>

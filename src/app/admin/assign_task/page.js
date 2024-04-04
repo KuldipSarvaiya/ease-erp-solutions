@@ -1,10 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Chip,
-  Divider, 
-  Textarea,
-} from "@nextui-org/react";
+import { Avatar, Button, Chip, Divider, Textarea } from "@nextui-org/react";
 import { FaDotCircle } from "react-icons/fa";
 import { GrPowerReset, GrTask } from "react-icons/gr";
 import { MdOutlineNotificationsActive } from "react-icons/md";
@@ -20,81 +14,66 @@ export default function Page() {
   const employees = [
     {
       _id: "fhmewew23",
+      department: "finance",
       name: "John",
       image: "/AdminPage.svg",
       attendance: "pending",
     },
     {
       _id: "fhmewew23",
+      department: "inventory",
       name: "kuldip",
       image: "/AdminPage.svg",
       attendance: "",
     },
     {
       _id: "fhmewew23",
+      department: "hr",
       name: "John",
       image: "/AdminPage.svg",
       attendance: "present",
     },
     {
       _id: "fhmewew23",
+      department: "fabric-manufacturing",
       name: "kuldips",
       image: "/AdminPage.svg",
       attendance: "present",
     },
     {
       _id: "fhmewew23",
+      department: "cleaning-and-finishing",
       name: "John",
       image: "/AdminPage.svg",
       attendance: "onleave",
     },
     {
       _id: "fhmewew23",
+      department: "dying-and-printing",
       name: "ramesh",
       image: "/AdminPage.svg",
       attendance: "present",
     },
     {
       _id: "fhmewew23",
+      department: "cutting",
       name: "John",
       image: "/AdminPage.svg",
       attendance: "pending",
     },
     {
       _id: "fhmewew23",
+      department: "sewing",
       name: "man",
       image: "/AdminPage.svg",
       attendance: "onleave",
     },
     {
       _id: "fhmewew23",
+      department: "packing-and-labeling",
       name: "mohan",
       image: "/AdminPage.svg",
       attendance: "pending",
-    },
-    {
-      _id: "fhmewew23",
-      name: "aarya",
-      image: "/AdminPage.svg",
-      attendance: "present",
-    },
-    {
-      _id: "fhmewew23",
-      name: "heer",
-      image: "/AdminPage.svg",
-      attendance: "pending",
-    },
-    {
-      _id: "fhmewew23",
-      name: "kush",
-      image: "/AdminPage.svg",
-      attendance: "onleave",
-    },
-    {
-      _id: "fhmewew23",
-      name: "ved",
-      image: "/AdminPage.svg",
-      attendance: "onleave",
     },
   ];
 
@@ -108,8 +87,7 @@ export default function Page() {
   }
 
   return (
-    <div className="relative w-full h-full max-h-full max-w-full">
-      {/* pending tasks */}
+    <div className="relative w-full h-full max-h-full max-w-full"> 
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
         <p className="text-2xl font-bold tracking-wide w-full">ASSIGN TASKS</p>
         <Divider className="my-3" />
@@ -151,14 +129,17 @@ export default function Page() {
                   }
                   className="h-fit p-1"
                 >
-                  <span className="flex gap-2 items-center capitalize">
+                  <span className="flex gap-3 justify-around items-center capitalize">
                     <Avatar
                       size="sm"
                       src={emp?.image}
                       aria-label="employee avatar"
                       aria-labelledby="employee avatar"
                     />
-                    {emp?.name}
+                    <span className="grid grid-rows-1">
+                      {emp?.name}
+                      <span className="text-xs">{emp?.department.replaceAll("-"," ")}</span>
+                    </span>
                   </span>
                 </Chip>
               ))}

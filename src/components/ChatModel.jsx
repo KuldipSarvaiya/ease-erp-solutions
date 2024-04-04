@@ -18,7 +18,7 @@ function ChatModel() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <Modal isOpen={isOpen} placement="bottom" onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} placement="bottom" backdrop="opaque" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalHeader>Managerial Chats</ModalHeader>
           <ModalBody>
@@ -75,7 +75,7 @@ function ChatModel() {
         color="secondary"
         onPress={onOpen}
         isIconOnly
-        className="cursor-pointer fixed right-10 bottom-10"
+        className="cursor-pointer fixed right-10 bottom-10 z-[99999]"
       >
         <HiMiniChatBubbleLeftRight className="scale-[2]" />
       </Button>

@@ -23,7 +23,7 @@ export default function Page() {
     Tooltip,
     Legend
   );
-  const options = { 
+  const options = {
     plugins: {
       title: {
         display: true,
@@ -47,12 +47,12 @@ export default function Page() {
     "hr",
     "finance",
     "inventory",
-    "fabric manufacturing",
-    "cleaning and finishing",
-    "dying and printing",
+    "fabri-manufacturing",
+    "cleaning-and-finishing",
+    "dying-and-printing",
     "cutting",
     "sewing",
-    "packing and labeling",
+    "packing-and-labeling",
   ];
   const data = {
     labels,
@@ -95,18 +95,18 @@ export default function Page() {
             "hr",
             "finance",
             "inventory",
-            "fabric manufacturing",
-            "cleaning and finishing",
-            "dying and printing",
+            "fabri-manufacturing",
+            "cleaning-and-finishing",
+            "dying-and-printing",
             "cutting",
             "sewing",
-            "packing and labeling",
+            "packing-and-labeling",
           ].map((dept) => {
             return (
               <AccordionItem
                 title={
                   <p className="text-lg font-bold tracking-wide w-full uppercase">
-                    {dept}
+                    {dept.replaceAll("-", " ")}
                   </p>
                 }
                 key={dept}

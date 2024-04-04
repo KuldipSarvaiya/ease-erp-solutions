@@ -10,7 +10,8 @@ const general_dept_managerSchema = new Schema(
     dept_name: {
       type: String,
       required: true,
-      immutable: true,
+      immutable: false,
+      unique: true,
     },
     used_material_id: {
       type: [Schema.ObjectId],

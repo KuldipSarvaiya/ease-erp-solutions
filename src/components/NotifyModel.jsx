@@ -18,7 +18,7 @@ function NotifyModel() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <Modal isOpen={isOpen} placement="bottom-center" onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} placement="bottom-center" backdrop="opaque" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalHeader>Bussiness Notifications</ModalHeader>
           <ModalBody>

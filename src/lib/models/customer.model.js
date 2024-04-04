@@ -31,10 +31,11 @@ const customerSchema = new Schema(
         longitude: { type: String, required: true },
       },
     },
-    // order_id: {
-    //   type: [Schema.ObjectId],
-    //   required: false,
-    // },
+    cart: {
+      type: [Schema.ObjectId],
+      ref: "CustomerOrder",
+      required: false,
+    },
     updated_by: {
       type: Schema.ObjectId,
       ref: "Employee",

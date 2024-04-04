@@ -34,6 +34,7 @@ export default function NavBar() {
 
   return (
     <Navbar
+      isBordered
       isBlurred
       isMenuOpen={isMenuOpen}
       className="bg-[#16202DE6]"
@@ -56,6 +57,7 @@ export default function NavBar() {
                 alt="Ease ERP Solutions"
                 width={250}
                 height={60}
+                className="scale-110 translate-y-1  max-md:scale-[3] max-md:translate-x-1/4"
               />
             </Link>
           </p>
@@ -77,7 +79,9 @@ export default function NavBar() {
                 }}
                 color="foreground"
                 aria-current="page"
-                href={`/customer/${item.toLowerCase()}`}
+                href={`/customer${
+                  item === "Home" ? "" : "/" + item.toLowerCase()
+                }`}
               >
                 {item}
               </UiLink>
@@ -91,7 +95,10 @@ export default function NavBar() {
         <NavbarItem>
           {session?.user ? (
             <>
-              <Button variant="flat">
+              <Button
+                variant="flat"
+                className="max-md:-scale-75 max-md:translate-x-1/2 max-md:rotate-180"
+              >
                 <UiLink
                   as={Link}
                   href="/customer/profile"
@@ -110,7 +117,10 @@ export default function NavBar() {
                 </UiLink>
               </Button>
               &nbsp;
-              <Button variant="flat">
+              <Button
+                variant="flat"
+                className="max-md:-scale-75 max-md:translate-x-1/3 max-md:rotate-180"
+              >
                 <UiLink
                   as={Link}
                   href="/api/auth/signout?callbackUrl=/"
