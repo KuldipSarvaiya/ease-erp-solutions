@@ -64,7 +64,7 @@ export default function DetailsPage() {
                   rules: {
                     required: "username is required",
                     pattern: {
-                      // value: /^([a-z]{1,}[A-Z]{1,}[0-9]{1,}){8,}/,
+                      // value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
                       value: /[A-Za-z0-9]{8,}.*/,
                       message:
                         "Username Does Not Match Required Pattern | a-z,A-Z,0-9",
@@ -95,7 +95,8 @@ export default function DetailsPage() {
                       message: "Password is not strong enough",
                     },
                     pattern: {
-                      value: /[A-Za-z0-9]{8,}.*/,
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                      // value: /[A-Za-z0-9]{8,}.*/,
                       message:
                         "use Alphanumeric characters, small,capital letters, numbers...",
                     },

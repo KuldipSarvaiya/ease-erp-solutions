@@ -162,7 +162,8 @@ function Page() {
               {...register("password", {
                 required: "Please enter password",
                 pattern: {
-                  value: /[a-zA-Z0-9]{8,}/,
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                  // value: /[a-zA-Z0-9]{8,}/,
                   message:
                     "Please use a valid alphanumeric password > 8 characters",
                 },
