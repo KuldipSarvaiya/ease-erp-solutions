@@ -2,6 +2,9 @@ import AdminNavBoll from "@/components/AdminNavBoll";
 import ChatModel from "@/components/ChatModel";
 import DashBoardNavBar from "@/components/DashBoardNavBar";
 import SideBar from "@/components/SideBar";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { options } from "../api/auth/[...nextauth]/options";
 
 export const metadata = {
   title: "ERP Admin Dashboard",
@@ -9,7 +12,17 @@ export const metadata = {
     "Dashboard for Admin for managing all the flow of work and activities",
 };
 
-export default function AdminLayout({ children }) {
+export default async function AdminLayout({ children }) {
+  const session = await getServerSession(options);
+
+  if (
+    !session ||
+    !session.user.designation ||
+    session?.user?.designation !== "Admin"
+  ) {
+    redirect("/api/auth/signin?callbackUrl=/");
+  }
+
   const menuItems = ["assign_task", "managers", "departments", "reports"];
   return (
     <section>

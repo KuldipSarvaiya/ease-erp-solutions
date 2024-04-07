@@ -189,16 +189,16 @@ const employeeSchema = new Schema(
     //   required: false,
     // },
     notice: { type: [String], required: false },
-    updated_by: {
-      type: Schema.ObjectId,
-      ref: "Employee",
-      required: true,
-    },
+    // updated_by: {
+    //   type: Schema.ObjectId,
+    //   ref: "Employee",
+    //   required: true,
+    // },
   },
   { timestamps: true }
 );
 
 const Employee =
-  mongoose.model.Employee || mongoose.model("Employee", employeeSchema);
+  mongoose.models.Employee || mongoose.model("Employee", employeeSchema);
 
 export default Employee;

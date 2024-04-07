@@ -8,10 +8,19 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 import { BsMenuButtonWideFill } from "react-icons/bs";
 function AdminNavBoll() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/employee/leave_report");
+    },
+  });
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [ballPosition, setBallPosition] = useState({ x: 10, y: 200 });
   const [depts, setDepts] = useState([
@@ -22,6 +31,15 @@ function AdminNavBoll() {
     "sewing",
     "packing-and-labeling",
   ]);
+
+  // do not show ball if he is employee
+  if (
+    !session ||
+    !session?.user?.designation ||
+    session?.user?.designation === "Employee"
+  ) {
+    return;
+  }
 
   // draggable button function
   const handleMouseDown = (e) => {

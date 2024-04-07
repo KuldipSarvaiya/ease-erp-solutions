@@ -1,5 +1,7 @@
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import Employee from "@/lib/models/employee.model";
+import connectDB from "@/lib/mongoose";
 
 export const options = {
   providers: [
@@ -36,38 +38,98 @@ export const options = {
           required: true,
           label: "Username ",
           name: "username",
-          placeholder: "@",
+          // placeholder: "Enter Username",
+          style: {
+            outline: "none",
+            margin: "10px auto 30px",
+            height: "50px",
+            border: "2px solid #cbd5e1",
+            borderBottom: "8px double #cbd5e1",
+            paddig: "3px",
+            color: "#cbd5e1",
+            fontSize: "20px",
+            backgroundColor:"#0c0a09"
+          },
         },
         password: {
           label: "Password ",
           type: "password",
           name: "password",
           required: true,
-          placeholder: "Enter Password",
+          // placeholder: "Enter Password",
+          style: {
+            outline: "none",
+            margin: "10px auto 30px",
+            height: "50px",
+            border: "2px solid #cbd5e1",
+            borderBottom: "8px double #cbd5e1",
+            paddig: "3px",
+            color: "#cbd5e1",
+            fontSize: "20px",
+            backgroundColor:"#0c0a09"
+          },
         },
       },
-      authorize(profile) {
-        let role = "manager";
-        if (profile.username === "kd") role = "admin";
+      async authorize(profile) {
+        // let role = "manager";
+        // if (profile.username === "kd") role = "admin";
+        try {
+          await connectDB();
 
-        return {
-          name: "Kuldip Sarvaiya",
-          role,
-          email: "admin@gmail.com",
-          image: "",
-          ...profile,
-        };
+          const emp = await Employee.findOne({
+            username: profile.username,
+            password: profile.password,
+            is_ex_employee: false,
+          })
+            .select(
+              "first_name _id middle_name last_name designation image email department_id"
+            )
+            .populate([
+              {
+                path: "department_id",
+                select: "dept_name _id",
+              },
+            ]);
+          console.log("\n*********from credential next auth = \t", {
+            ...profile,
+            ...emp._doc,
+          });
+
+          return {
+            ...profile,
+            ...emp?._doc,
+          };
+        } catch (error) {
+          console.log(error);
+          throw error.message;
+          // return new Error(error)
+        }
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = user.role;
+      if (user) {
+        token.userData = user;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (session?.user) session.user.role = token.role;
+      if (token.userData) {
+        session.user = token.userData;
+      }
       return session;
     },
   },
 };
+
+// callbacks: {
+//   async jwt({ token, user }) {
+//     if (user) token.designation = user.designation;
+//     return token;
+//   },
+//   async session({ session, token }) {
+//     if (session?.user) session.user.designation = token.designation;
+//     return session;
+//   },
+// },

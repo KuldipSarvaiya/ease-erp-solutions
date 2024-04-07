@@ -1,3 +1,4 @@
+import AdminNavBoll from "@/components/AdminNavBoll";
 import "./globals.css";
 import NextUiProvider from "./NextUiProvider";
 import AuthProvider from "@/lib/utils/AuthProvider";
@@ -16,7 +17,10 @@ export default function RootLayout({ children }) {
       <AuthProvider>
         <body>
           <NextUiProvider>
-            <main>{children}</main>
+            <main>
+              <AdminNavBoll />
+              {children}
+            </main>
           </NextUiProvider>
         </body>
       </AuthProvider>

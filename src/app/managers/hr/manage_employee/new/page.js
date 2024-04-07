@@ -1,7 +1,6 @@
 "use client";
 
 import InputCon from "@/components/InputCon";
-import { newEmployee } from "@/lib/utils/server_actions/hr";
 import {
   Avatar,
   Button,
@@ -9,8 +8,10 @@ import {
   Input,
   Select,
   SelectItem,
+  Snippet,
   Textarea,
 } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { GrMapLocation, GrPowerReset } from "react-icons/gr";
@@ -23,15 +24,47 @@ function Page() {
     control,
     setError,
     getValues,
+    handleSubmit,
     formState: { errors },
   } = useForm();
+  const [depts, setDepts] = useState([]);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    (async function () {
+      const res = await fetch("/api/hr/department", {
+        method: "GET",
+      });
+      if (!res.ok) return;
+
+      const depts = await res.json();
+      console.log(depts);
+      setDepts(depts);
+    })();
+  }, []);
 
   async function handelAction(formdata) {
-    const res = await newEmployee(formdata);
-    if (res) return reset();
-    res.forEach((item) => {
-      setError(item.field, { message: item.message });
+    const formData = new FormData();
+
+    for (const key in formdata) {
+      if (key === "image") formData.append(key, formdata[key][0]);
+      else formData.append(key, formdata[key]);
+    }
+
+    const res = await fetch("/api/hr/employee", {
+      method: "POST",
+      body: formData,
     });
+    if (res.ok)
+      return (() => {
+        setSuccess("Employee Has Been Registered Successfully");
+        reset();
+        setTimeout(() => setSuccess(false), [5000]);
+      })();
+    setError("allowed_leave_per_month", { message: "cannot create Employee" });
+    // res.forEach((item) => {
+    //   setError(item.field, { message: item.message });
+    // });
   }
 
   return (
@@ -42,8 +75,8 @@ function Page() {
         </p>
         <Divider className="my-5" />
         <form
-          action={handelAction}
-          noValidate={false}
+          onSubmit={handleSubmit(handelAction)}
+          // noValidate={false}
           className="flex flex-col flex-nowrap gap-5 md:flex-nowrap"
         >
           <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
@@ -53,7 +86,7 @@ function Page() {
                 required: "Please enter first name",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="text"
               name="first_name"
@@ -71,7 +104,7 @@ function Page() {
                 required: "Please enter middle name",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="text"
               name="middle_name"
@@ -89,7 +122,7 @@ function Page() {
                 required: "Please enter Last name",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="text"
               name="last_name"
@@ -139,13 +172,12 @@ function Page() {
                 required: "Please enter username",
                 pattern: {
                   value: /[a-zA-Z0-9]{8,}/,
-                  message:
-                    "Please use a valid alphanumeric username > 8 characters",
+                  message: "Please use A-Z, a-z, 0-9, 8+ characters",
                 },
               })}
               startContent="@"
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="text"
               name="username"
@@ -170,7 +202,7 @@ function Page() {
               })}
               startContent="#"
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="password"
               name="password"
@@ -191,7 +223,7 @@ function Page() {
                   "This person is not allowed to work as per GOV rules",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="date"
               name="dob"
@@ -209,7 +241,7 @@ function Page() {
                 required: "Please enter email address",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="mail"
               name="email"
@@ -236,7 +268,7 @@ function Page() {
               })}
               startContent="+91"
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="tel"
               name="contact_no"
@@ -255,7 +287,7 @@ function Page() {
                   required: "Please Select Gender",
                 })}
                 variant="faded"
-                size="sm"
+                size="md"
                 color="secondary"
                 type="radio"
                 // label="Male"
@@ -274,7 +306,7 @@ function Page() {
                 })}
                 variant="faded"
                 endContent="&nbsp;&nbsp;♀️&nbsp;&nbsp;FEMALE"
-                size="sm"
+                size="md"
                 color="secondary"
                 type="radio"
                 // label="Female"
@@ -297,7 +329,7 @@ function Page() {
                   required: "Please Select Employee Designation",
                 })}
                 variant="faded"
-                size="sm"
+                size="md"
                 color="secondary"
                 type="radio"
                 endContent="EMPLOYEE"
@@ -314,7 +346,7 @@ function Page() {
                   required: "Please Select Employee Designation",
                 })}
                 variant="faded"
-                size="sm"
+                size="md"
                 color="secondary"
                 type="radio"
                 endContent="MANAGER"
@@ -338,7 +370,7 @@ function Page() {
                 required: "Please fill in the previous experience",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               endContent="Months"
               color="secondary"
               type="text"
@@ -357,7 +389,7 @@ function Page() {
                 required: "Please fill in the expertiese part of job",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="text"
               name="expert_area"
@@ -376,7 +408,7 @@ function Page() {
                   "Please enter detail about course studied by employee",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               endContent="🎓"
               color="secondary"
               type="text"
@@ -472,7 +504,7 @@ function Page() {
                 min: 10,
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="number"
               name="attendance_radius"
@@ -494,7 +526,7 @@ function Page() {
                 required: "Please select department of the employee",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               name="department_id"
               aria-label="department_id"
@@ -503,20 +535,10 @@ function Page() {
               // isRequired
               className="md:col-start-2 md:col-end-4"
             >
-              {[
-                "hr",
-                "finance",
-                "inventory",
-                "fabric manufacturing",
-                "cleaning and finishing",
-                "dying and printing",
-                "cutting",
-                "sewing",
-                "packing and labeling",
-              ].map((item, i) => {
+              {depts?.map((item, i) => {
                 return (
-                  <SelectItem key={i} value={item}>
-                    {item.toUpperCase()}
+                  <SelectItem key={item._id} value={item._id}>
+                    {item.dept_name.toUpperCase()}
                   </SelectItem>
                 );
               })}
@@ -532,7 +554,7 @@ function Page() {
               })}
               variant="faded"
               endContent="💸"
-              size="sm"
+              size="md"
               color="secondary"
               type="number"
               name="basic_salary"
@@ -551,7 +573,7 @@ function Page() {
               })}
               variant="faded"
               endContent="📌"
-              size="sm"
+              size="md"
               color="secondary"
               name="home_address"
               aria-label="home_address"
@@ -568,7 +590,7 @@ function Page() {
                 required: "Please enter bank name",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="text"
               name="bank_name"
@@ -598,7 +620,7 @@ function Page() {
                 max: 99999999999,
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="number"
               name="bank_acc_no"
@@ -624,7 +646,7 @@ function Page() {
                 },
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="text"
               name="bank_ifsc_code"
@@ -645,12 +667,12 @@ function Page() {
                   "Please enter Amount of salary should cut per day for being absent without leave report",
                 validate: {
                   value: (v) =>
-                    v < getValues("basic_salary") ||
+                    +v < +getValues("basic_salary") ||
                     "Salary Cut Per Leave Can not be More Than Basic Salary",
                 },
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="number"
               name="salary_cut_per_day"
@@ -672,11 +694,11 @@ function Page() {
               {...register("ot_salary_per_hour", {
                 required: "Please enter amount to credit on overtime per hour",
                 validate: (v) =>
-                  v < getValues("basic_salary") ||
+                  +v < +getValues("basic_salary") ||
                   "Over Time Salary Per Hour Can not be More Than Basic Salary",
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="number"
               name="ot_salary_per_hour"
@@ -701,7 +723,7 @@ function Page() {
                 valueAsNumber: true,
               })}
               variant="faded"
-              size="sm"
+              size="md"
               color="secondary"
               type="number"
               name="allowed_leave_per_month"
@@ -737,6 +759,12 @@ function Page() {
             >
               RESET DETAILS
             </Button>
+            &nbsp; &nbsp; &nbsp;
+            {success !== false && (
+              <Snippet color="success" hideCopyButton hideSymbol>
+                {success}
+              </Snippet>
+            )}
           </span>
         </form>
       </div>

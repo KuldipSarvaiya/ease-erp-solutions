@@ -1,12 +1,26 @@
 import DashBoardNavBar from "@/components/DashBoardNavBar";
 import SideBar from "@/components/SideBar";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { options } from "../api/auth/[...nextauth]/options";
 
 export const metadata = {
   title: "Employee's Dashboard",
   description: "Dashboard for Employees for thier tasks and details",
 };
 
-export default function EmployeeLayout({ children }) {
+export default async function EmployeeLayout({ children }) {
+  const session = await getServerSession(options);
+
+  if (
+    !session?.user?.designation ||
+    session?.user?.designation !== "Employee"
+  ) {
+    if (session?.user?.designation === "Admin") {
+    }
+    redirect("/api/auth/signin?callbackUrl=/");
+  }
+
   const menuItems = [
     "profile",
     "attendance",

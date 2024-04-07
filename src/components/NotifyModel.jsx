@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -11,28 +11,60 @@ import {
   useDisclosure,
   Badge,
 } from "@nextui-org/react";
-import { MdCancel, MdNotificationsActive } from "react-icons/md";
-import { GrClear, GrClearOption } from "react-icons/gr";
+import { MdNotificationsActive } from "react-icons/md";
+import { GrClearOption } from "react-icons/gr";
+import { useSession } from "next-auth/react";
 
 function NotifyModel() {
+  const [notices, setNotices] = useState([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/");
+    },
+  });
+
+  useEffect(() => {
+    if (session?.user?._id)
+      (() => {
+        fetch("/api/notice?_id=" + session?.user?._id, {
+          method: "GET",
+          next: { tags: ["myNotice"] },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            setNotices(data.notice);
+          });
+      })();
+  }, [session]);
+
+  async function deleteNotice(notice) {
+    fetch("/api/notice", {
+      method: "PUT",
+      body: JSON.stringify({ _id: session?.user?._id, notice: notice }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data); // do something with the response
+        setNotices(notices.filter((n) => n !== notice));
+      });
+  }
+
   return (
     <>
-      <Modal isOpen={isOpen} placement="bottom-center" backdrop="opaque" onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        placement="bottom-center"
+        backdrop="opaque"
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           <ModalHeader>Bussiness Notifications</ModalHeader>
           <ModalBody>
             <div className="flex flex-col gap-3 text-foreground-700  max-h-[485px] max-md::max-h-[550px] overflow-x-auto">
-              {[
-                "hii ",
-                "how are you ",
-                "send me yesterday reports",
-                "i think we need to motive employees",
-                "what is last year revenue",
-                "can someone tell me what happend last week?",
-                "we need instant meeting",
-                "lets meet at meeting hall in half hour",
-              ].map((msg, i) => {
+              {notices?.map((msg, i) => {
                 return (
                   <p
                     key={i}
@@ -43,6 +75,7 @@ function NotifyModel() {
                         {new Date().toLocaleString().split(",")[1]}
                       </span>
                       <Button
+                        onPress={() => deleteNotice(msg)}
                         isIconOnly
                         variant="light"
                         className="text-red-500 p-1 m-0 place-self-end scale-100"
@@ -68,7 +101,7 @@ function NotifyModel() {
       >
         <Badge
           color="secondary"
-          content={1}
+          content={notices?.length}
           isInvisible={false}
           shape="circle"
           isOneChar

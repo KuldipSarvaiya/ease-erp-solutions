@@ -4,7 +4,7 @@
 /.vscode
 
 # testing image upload folder
-/kuldip_upload
+/public/kuldip_upload
 
 # project idx
 .idx

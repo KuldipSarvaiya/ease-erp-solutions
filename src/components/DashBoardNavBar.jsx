@@ -11,16 +11,25 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   Avatar,
-  Badge,
   Button,
-} from "@nextui-org/react"; 
+} from "@nextui-org/react";
 import { FaSignOutAlt } from "react-icons/fa";
 import SideBarButton from "./SideBarButton";
 import Image from "next/image";
 import NotifyModel from "./NotifyModel";
+import { useSession } from "next-auth/react";
 
 function DashBoardNavBar({ menuItems }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/");
+    },
+  });
+
+  // console.log("nav session = ", session);
 
   return (
     <Navbar
@@ -50,11 +59,18 @@ function DashBoardNavBar({ menuItems }) {
       <NavbarContent justify="end">
         <NavbarItem className="hidden md:flex">
           <p className="font-bold text-inherit uppercase text-2xl mb-1">
-            kuldip sarvaiya
+            {session?.user?.middle_name} {session?.user?.first_name}
           </p>
         </NavbarItem>
         <NavbarItem>
-          <Avatar radius="lg" className="max-md:scale-80" isBordered color="secondary" about="kuldip" />
+          <Avatar
+            radius="lg"
+            className="max-md:scale-80"
+            isBordered
+            color="secondary"
+            about="profile"
+            src={`/kuldip_upload/${session?.user?.image}`}
+          />
         </NavbarItem>
         <NavbarItem>
           {/* <span className="cursor-pointer">

@@ -28,7 +28,7 @@ const product_stock_historySchema = new Schema(
 );
 
 const ProductStockHistory =
-  mongoose.model.ProductStockHistory ||
+  mongoose.models.ProductStockHistory ||
   mongoose.model("ProductStockHistory", product_stock_historySchema);
 
 export default ProductStockHistory;

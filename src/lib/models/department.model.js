@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const general_dept_managerSchema = new Schema(
   {
-    manager_id: {
-      type: Schema.ObjectId,
-      ref: "Employee",
-      required: true,
-    },
+    // manager_id: {
+    //   type: Schema.ObjectId,
+    //   ref: "Employee",
+    //   required: true,
+    // },
     dept_name: {
       type: String,
       required: true,
@@ -55,7 +55,7 @@ const general_dept_managerSchema = new Schema(
 );
 
 const Department =
-  mongoose.model.Department ||
+  mongoose.models.Department ||
   mongoose.model("Department", general_dept_managerSchema);
 
 export default Department;

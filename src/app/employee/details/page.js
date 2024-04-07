@@ -1,18 +1,20 @@
 "use client";
 
-import { Button, Divider, Input, Textarea } from "@nextui-org/react";
+import { Avatar, Button, Divider, Input, Textarea } from "@nextui-org/react";
 import { TbExchange } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GiCancel } from "react-icons/gi";
 import { GrUpdate } from "react-icons/gr";
 import InputCon from "@/components/InputCon";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function DetailsPage() {
   const [isEditable, setIsEditable] = useState(false);
 
   const {
-    // register,
+    register,
     setError,
     reset,
     handleSubmit,
@@ -20,32 +22,50 @@ export default function DetailsPage() {
     getValues,
     formState: { errors },
   } = useForm();
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/employee/details");
+    },
+  });
+
+  const fetchEmpData = useCallback(async () => {
+    console.log("in callback");
+    const res = await fetch("/api/employee/details/" + session?.user?._id, {
+      method: "GET",
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+    return {};
+  }, [session]);
 
   useEffect(() => {
-    reset({
-      username: "kd-saraviya",
-      password: "password",
-      first_name: "kuldip",
-      middle_name: "father",
-      last_name: "saraviya",
-      email: "kuldip@gmail.com",
-      contact: 1234512345,
-      address: "my home",
-      account_number: 12345678989,
-      bank_name: "world bank",
-      ifsc_code: "WRLD00029",
-    });
-  }, [isEditable, reset]);
+    (async () => {
+      const data = await fetchEmpData();
+      console.log("api data ", data);
+      reset(data);
+    })();
+  }, [isEditable, session]);
 
-  async function handleChange(formdata) {
+  async function handleUpdate(formdata) {
     console.log(formdata);
-    for (let i in formdata)
-      if (!formdata[i])
-        setError(i, {
-          type: "Invalid Type",
-          message: "Please enter Valid Detail here",
-        });
-    setIsEditable(false);
+    const formData = new FormData();
+
+    for (const key in formdata) {
+      if (key === "image") formData.append(key, formdata[key][0]);
+      else formData.append(key, formdata[key]);
+    }
+
+    const result = await fetch("/api/employee/details/" + session?.user?._id, {
+      method: "PUT",
+      body: formData,
+    });
+    if (result.ok) setIsEditable(false);
+
+    alert("Failed To Update Details.\nTry Again Later...");
   }
 
   return (
@@ -53,7 +73,7 @@ export default function DetailsPage() {
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-3 flex-col">
         <p className="text-2xl font-bold tracking-wide">CHANGE YOUR DETAILS</p>
         <Divider className="my-5" />
-        <form action={handleSubmit(handleChange)}>
+        <form onSubmit={handleSubmit(handleUpdate)}>
           <div className="flex flex-col flex-nowrap gap-5 md:flex-nowrap">
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Username : </span>
@@ -212,10 +232,10 @@ export default function DetailsPage() {
               <p className="text-red-500"> {errors?.email?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
-              <span className="text-xl font-semibold">Contact : </span>
+              <span className="text-xl font-semibold">Contact No. : </span>
               <InputCon
                 controller={{
-                  name: "contact",
+                  name: "contact_no",
                   control: control,
                   rules: {
                     required: "Please provide your contect.",
@@ -229,55 +249,47 @@ export default function DetailsPage() {
                 input={{
                   size: "lg",
                   type: "tel",
-                  name: "contact",
+                  name: "contact_no",
                   isRequired: true,
                   disabled: !isEditable,
                   className: "md:col-start-2 md:col-end-4",
                 }}
               />
-              <p className="text-red-500"> {errors?.contact?.message} </p>
+              <p className="text-red-500"> {errors?.contact_no?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Profile Image : </span>
-              <Controller
-                name={"image"}
-                control={control}
-                rules={{
+              <Input
+                {...register("image", {
                   // required: "Please provide your image.",
                   validate: (v) =>
-                    v?.[0]
-                      ? v[0]?.size < 500 * 1024 ||
+                    getValues("image")[0]
+                      ? v[0].size < 500 * 1024 ||
                         "Imgae Size is Large, max 500kb"
                       : true,
-                }}
-                render={({ field }) => (
-                  <Input
-                    type={"file"}
-                    radius="sm"
-                    size="sm"
-                    variant="faded"
-                    color="secondary"
-                    accept=".png, .jpg, .jpeg"
-                    name={"image"}
-                    value={field.file}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    disabled={!isEditable}
-                    className="md:col-start-2 md:col-end-4"
-                    // isRequired={true}
-                  />
-                )}
+                })}
+                type={"file"}
+                radius="sm"
+                size="md"
+                variant="faded"
+                color="secondary"
+                accept=".png, .jpg, .jpeg"
+                disabled={!isEditable}
+                className="md:col-start-2 md:col-end-4"
+                // isRequired={true}
+                // startContent={
+                //   <Avatar src={"/kuldip_upload/" + getValues("image")} />
+                // }
               />
               <p className="text-red-500"> {errors?.image?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Address : </span>
               <Controller
-                name={"address"}
+                name={"home_address"}
                 control={control}
                 rules={{
-                  required: "Please provide your address.",
+                  required: "Please provide your home address.",
                   pattern: {
                     value: /[a-z0-9,-]*/i,
                   },
@@ -291,7 +303,7 @@ export default function DetailsPage() {
                       size="lg"
                       variant="faded"
                       color="secondary"
-                      name={"address"}
+                      name={"home_address"}
                       value={field.value}
                       onChange={(e) => {
                         field.onChange(e);
@@ -303,33 +315,7 @@ export default function DetailsPage() {
                   </>
                 )}
               />
-              <p className="text-red-500"> {errors?.address?.message} </p>
-            </span>
-            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
-              <span className="text-xl font-semibold">Account Number : </span>
-              <InputCon
-                controller={{
-                  name: "account_number",
-                  control: control,
-                  rules: {
-                    required: "Please provide your account number.",
-                    minLength: 11,
-                    valueAsNumber: true,
-                    pattern: {
-                      value: /[0-9]{11,}/,
-                    },
-                  },
-                }}
-                input={{
-                  size: "lg",
-                  type: "number",
-                  name: "account_number",
-                  isRequired: true,
-                  disabled: !isEditable,
-                  className: "md:col-start-2 md:col-end-4",
-                }}
-              />
-              <p className="text-red-500"> {errors?.account_number?.message}</p>
+              <p className="text-red-500"> {errors?.home_address?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Bank Name : </span>
@@ -350,12 +336,38 @@ export default function DetailsPage() {
                 }}
               />
               <p className="text-red-500"> {errors?.bank_name?.message} </p>
+            </span>{" "}
+            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
+              <span className="text-xl font-semibold">Account Number : </span>
+              <InputCon
+                controller={{
+                  name: "bank_acc_no",
+                  control: control,
+                  rules: {
+                    required: "Please provide your account number.",
+                    minLength: 11,
+                    valueAsNumber: true,
+                    pattern: {
+                      value: /[0-9]{11,}/,
+                    },
+                  },
+                }}
+                input={{
+                  size: "lg",
+                  type: "number",
+                  name: "bank_acc_no",
+                  isRequired: true,
+                  disabled: !isEditable,
+                  className: "md:col-start-2 md:col-end-4",
+                }}
+              />
+              <p className="text-red-500"> {errors?.bank_acc_no?.message}</p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Branch IFSC Code : </span>
               <InputCon
                 controller={{
-                  name: "ifsc_code",
+                  name: "bank_ifsc_code",
                   control: control,
                   rules: {
                     required: "ifsc code of branch is required",
@@ -363,13 +375,16 @@ export default function DetailsPage() {
                 }}
                 input={{
                   size: "lg",
-                  name: "ifsc_code",
+                  name: "bank_ifsc_code",
                   isRequired: true,
                   disabled: !isEditable,
                   className: "md:col-start-2 md:col-end-4",
                 }}
               />
-              <p className="text-red-500"> {errors?.ifsc_code?.message} </p>
+              <p className="text-red-500">
+                {" "}
+                {errors?.bank_ifsc_code?.message}{" "}
+              </p>
             </span>
             <span className="flex gap-3 ">
               {isEditable && (

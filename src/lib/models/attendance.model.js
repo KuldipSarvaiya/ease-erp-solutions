@@ -33,7 +33,7 @@ const attendanceSchema = new mongoose.Schema(
     },
     leave_report_id: {
       type: mongoose.Schema.ObjectId,
-      ref: "leave_report",
+      ref: "LeaveReport",
       required: false,
     },
     punch_in: {
@@ -78,6 +78,6 @@ const attendanceSchema = new mongoose.Schema(
 );
 
 const Attendance =
-  mongoose.model.Attendance || mongoose.model("Attendance", attendanceSchema);
+  mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
 
 export default Attendance;

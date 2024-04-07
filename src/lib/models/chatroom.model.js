@@ -20,6 +20,6 @@ const chatroomSchema = new Schema({
 });
 
 const Chatroom =
-  mongoose.model.Chatroom || mongoose.model("Chatroom", chatroomSchema);
+  mongoose.models.Chatroom || mongoose.model("Chatroom", chatroomSchema);
 
 export default Chatroom;

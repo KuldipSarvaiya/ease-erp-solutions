@@ -23,14 +23,30 @@ import Image from "next/image";
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [active, setActive] = useState("");
-  const menuItems = ["Home", "Products", "AboutUs"];
+  const menuItems = ["Home", "Products"];
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       redirect("/api/auth/signin?callbackUrl=/");
     },
   });
-  console.log("\n********* Nav Session = ", session);
+  // console.log("\n********* Nav Session = ", session);
+  if (session?.user?.designation)
+    redirect(
+      `/managers/${getDepartmentPath(session?.user?.department_id?.dept_name)}`
+    );
+  function getDepartmentPath(department) {
+    switch (department) {
+      case "hr":
+        return "hr";
+      case "finance":
+        return "finance";
+      case "inventory":
+        return "inventory";
+      default:
+        return "general_manager";
+    }
+  }
 
   return (
     <Navbar
@@ -92,7 +108,7 @@ export default function NavBar() {
 
       {/* account / login status*/}
       <NavbarContent justify="end">
-        <NavbarItem>
+        <NavbarItem className="flex">
           {session?.user ? (
             <>
               <Button
@@ -107,9 +123,13 @@ export default function NavBar() {
                   onClick={() => {
                     setActive("account");
                   }}
+                  className="md:text-base"
                 >
-                  {session?.user?.image ? (
-                    <Avatar src={session.user.image} />
+                  {session?.user?.picture ? (
+                    <Avatar
+                      size="sm"
+                      src={"/kuldip_upload/" + session.user.picture}
+                    />
                   ) : (
                     <VscAccount />
                   )}
