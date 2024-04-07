@@ -36,7 +36,7 @@ export function Present({ data }) {
   const total_minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
 
   const point_text = {
-    0: "WAS'T IT SHORT DAY ?",
+    0: <>WAS&apos;NT IT SHORT DAY ?</>,
     0.5: "THATS HALF DAY",
     1: "THATS FULL DAY",
   };

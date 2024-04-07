@@ -15,11 +15,7 @@ export const metadata = {
 export default async function AdminLayout({ children }) {
   const session = await getServerSession(options);
 
-  if (
-    !session ||
-    !session.user.designation ||
-    session?.user?.designation !== "Admin"
-  ) {
+  if (session?.user?.designation !== "Admin") {
     redirect("/api/auth/signin?callbackUrl=/");
   }
 

@@ -14,6 +14,7 @@ import {
 import { MdNotificationsActive } from "react-icons/md";
 import { GrClearOption } from "react-icons/gr";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 function NotifyModel() {
   const [notices, setNotices] = useState([]);

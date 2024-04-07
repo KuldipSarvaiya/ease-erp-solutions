@@ -17,7 +17,7 @@ function AdminNavBoll() {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect("/api/auth/signin?callbackUrl=/employee/leave_report");
+      // redirect("/api/auth/signin?callbackUrl=/");
     },
   });
 
@@ -34,7 +34,6 @@ function AdminNavBoll() {
 
   // do not show ball if he is employee
   if (
-    !session ||
     !session?.user?.designation ||
     session?.user?.designation === "Employee"
   ) {
@@ -78,6 +77,8 @@ function AdminNavBoll() {
     document.addEventListener("mouseup", handleMouseUp);
   };
 
+  const my_dept = session?.user?.department_id?.dept_name;
+
   return (
     <>
       <Button
@@ -118,61 +119,83 @@ function AdminNavBoll() {
                     E M P L O Y E E
                   </Button>
                   &nbsp; &nbsp;
-                  <Button
-                    className="font-semibold"
-                    as={Link}
-                    href="/admin"
-                    color="secondary"
-                    variant="shadow"
-                  >
-                    A D M I N
-                  </Button>
-                </p>
-                <h6 className="flex-1">MANAGERIAL DASHBOARD</h6>
-                <p className="flex flex-nowrap max-md:flex-wrap gap-3">
-                  <Button
-                    className="font-semibold"
-                    as={Link}
-                    href="/managers/finance"
-                    color="secondary"
-                    variant="shadow"
-                  >
-                    F I N A N A C E
-                  </Button>
-                  <Button
-                    className="font-semibold"
-                    as={Link}
-                    href="/managers/inventory"
-                    color="secondary"
-                    variant="shadow"
-                  >
-                    I N V E T O R Y
-                  </Button>
-                  <Button
-                    className="font-semibold"
-                    as={Link}
-                    href="/managers/hr"
-                    color="secondary"
-                    variant="shadow"
-                  >
-                    H U M A N &nbsp; R E S O U R C E
-                  </Button>
-                </p>
-                <h6 className="flex-1">GENERAL DEPARTMENT DASHBOARD</h6>
-                <p className="flex flex-wrap max-w-[500px] justify-stretch gap-3">
-                  {depts.map((dept) => (
+                  {session?.user?.designation === "Admin" && (
                     <Button
-                      key={dept}
-                      className="font-semibold tracking-[0.15rem] uppercase"
+                      className="font-semibold"
                       as={Link}
-                      href={"/managers/general_manager?department=" + dept}
+                      href="/admin"
                       color="secondary"
                       variant="shadow"
                     >
-                      {dept.replaceAll("-", " ")}
+                      A D M I N
                     </Button>
-                  ))}
+                  )}
                 </p>
+                {["hr", "inventory", "finance"].includes(my_dept) && (
+                  <>
+                    <h6 className="flex-1">MANAGERIAL DASHBOARD</h6>
+                    <p className="flex flex-nowrap max-md:flex-wrap gap-3">
+                      {my_dept === "finance" && (
+                        <Button
+                          className="font-semibold"
+                          as={Link}
+                          href="/managers/finance"
+                          color="secondary"
+                          variant="shadow"
+                        >
+                          F I N A N A C E
+                        </Button>
+                      )}
+                      {my_dept === "inventory" && (
+                        <Button
+                          className="font-semibold"
+                          as={Link}
+                          href="/managers/inventory"
+                          color="secondary"
+                          variant="shadow"
+                        >
+                          I N V E T O R Y
+                        </Button>
+                      )}
+                      {my_dept === "hr" && (
+                        <Button
+                          className="font-semibold"
+                          as={Link}
+                          href="/managers/hr"
+                          color="secondary"
+                          variant="shadow"
+                        >
+                          H U M A N &nbsp; R E S O U R C E
+                        </Button>
+                      )}
+                    </p>
+                  </>
+                )}
+                {depts.includes(my_dept) && (
+                  <>
+                    <h6 className="flex-1">GENERAL DEPARTMENT DASHBOARD</h6>
+                    <p className="flex flex-wrap max-w-[500px] justify-stretch gap-3">
+                      {depts.map((dept) => (
+                        <>
+                          {my_dept === dept && (
+                            <Button
+                              key={dept}
+                              className="font-semibold tracking-[0.15rem] uppercase"
+                              as={Link}
+                              href={
+                                "/managers/general_manager?department=" + dept
+                              }
+                              color="secondary"
+                              variant="shadow"
+                            >
+                              {dept.replaceAll("-", " ")}
+                            </Button>
+                          )}
+                        </>
+                      ))}
+                    </p>
+                  </>
+                )}
               </ModalBody>
             </>
           )}

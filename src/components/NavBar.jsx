@@ -27,11 +27,12 @@ export default function NavBar() {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect("/api/auth/signin?callbackUrl=/");
+      // redirect("/api/auth/signin?callbackUrl=/");
     },
   });
   // console.log("\n********* Nav Session = ", session);
-  if (session?.user?.designation)
+  if (session?.user?.designation === "Employee") redirect("/employee");
+  if (session?.user?.designation === "Manager")
     redirect(
       `/managers/${getDepartmentPath(session?.user?.department_id?.dept_name)}`
     );
@@ -159,7 +160,7 @@ export default function NavBar() {
             <Button variant="flat">
               <UiLink
                 as={Link}
-                href="/api/auth/signin?callbackUrl=/profile"
+                href="/api/auth/signin?callbackUrl=/customer/profile"
                 color="secondary"
                 size="sm"
                 onClick={() => {

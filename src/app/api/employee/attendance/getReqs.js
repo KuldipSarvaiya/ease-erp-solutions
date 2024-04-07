@@ -15,7 +15,7 @@ export async function myOld(id) {
   const res = await Attendance.find({
     employee_id: id,
     date: {
-      $gte: new Date(2024,3,6,4,5,3,1),
+      $gte: new Date(),
     },
     // state: { $ne: "pending" },
   });

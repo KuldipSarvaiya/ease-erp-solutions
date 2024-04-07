@@ -11,7 +11,9 @@ export default async function Home() {
 
     if (session?.user?.designation === "Manager")
       redirect(
-        `/managers/${getDepartmentPath(session?.user?.department_id?.dept_name)}`
+        `/managers/${getDepartmentPath(
+          session?.user?.department_id?.dept_name
+        )}`
       );
   }
 

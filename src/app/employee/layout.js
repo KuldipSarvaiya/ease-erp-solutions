@@ -12,14 +12,8 @@ export const metadata = {
 export default async function EmployeeLayout({ children }) {
   const session = await getServerSession(options);
 
-  if (
-    !session?.user?.designation ||
-    session?.user?.designation !== "Employee"
-  ) {
-    if (session?.user?.designation === "Admin") {
-    }
-    redirect("/api/auth/signin?callbackUrl=/");
-  }
+  if (!session?.user?.designation)
+    redirect("/api/auth/signin?callbackUrl=/employee");
 
   const menuItems = [
     "profile",

@@ -22,7 +22,7 @@ export default function LeavePage() {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      // redirect("/api/auth/signin?callbackUrl=/employee/leave_report");
+      redirect("/api/auth/signin?callbackUrl=/employee/leave_report");
     },
   });
 

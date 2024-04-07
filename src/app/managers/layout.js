@@ -12,12 +12,10 @@ export const metadata = {
 export default async function ManagersLayout({ children }) {
   const session = await getServerSession(options);
 
-  // if (
-  //   !session?.user?.designation ||
-  //   session?.user?.designation === "Employee"
-  // ) {
-  //   redirect("/api/auth/signin?callbackUrl=/");
-  // }
+  if (!session?.user?.designation) redirect("/api/auth/signin?callbackUrl=/");
+  if (session?.user?.designation === "Employee") {
+    redirect("/employee");
+  }
 
   return (
     <>
