@@ -46,6 +46,6 @@ const customerSchema = new Schema(
 );
 
 const Customer =
-  mongoose.model.Customer || mongoose.model("Customer", customerSchema);
+  mongoose.models.Customer || mongoose.model("Customer", customerSchema);
 
 export default Customer;

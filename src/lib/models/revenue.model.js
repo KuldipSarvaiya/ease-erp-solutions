@@ -59,6 +59,6 @@ const revenueSchema = new Schema(
 );
 
 const Revenue =
-  mongoose.model.Revenue || mongoose.model("Revenue", revenueSchema);
+  mongoose.models.Revenue || mongoose.model("Revenue", revenueSchema);
 
 export default Revenue;

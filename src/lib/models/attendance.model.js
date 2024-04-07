@@ -78,6 +78,6 @@ const attendanceSchema = new mongoose.Schema(
 );
 
 const Attendance =
-  mongoose.model.Attendance || mongoose.model("Attendance", attendanceSchema);
+  mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
 
 export default Attendance;

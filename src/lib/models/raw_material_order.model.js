@@ -87,7 +87,7 @@ const raw_material_orderSchema = new Schema(
 );
 
 const RawMaterialOrder =
-  mongoose.model.RawMaterialOrder ||
+  mongoose.models.RawMaterialOrder ||
   mongoose.model("RawMaterialOrder", raw_material_orderSchema);
 
 export default RawMaterialOrder;

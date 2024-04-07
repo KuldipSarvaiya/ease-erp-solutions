@@ -44,7 +44,7 @@ const leave_reportSchema = new Schema(
 );
 
 const LeaveReport =
-  mongoose.model.LeaveReport ||
+  mongoose.models.LeaveReport ||
   mongoose.model("LeaveReport", leave_reportSchema);
 
 export default LeaveReport;

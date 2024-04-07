@@ -29,6 +29,6 @@ const metadataSchema = new Schema({
 });
 
 const MetaData =
-  mongoose.model.MetaData || mongoose.model("MetaData", metadataSchema);
+  mongoose.models.MetaData || mongoose.model("MetaData", metadataSchema);
 
 export default MetaData;

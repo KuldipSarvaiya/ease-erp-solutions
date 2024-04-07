@@ -82,7 +82,7 @@ const customer_orderSchema = new Schema(
 );
 
 const CustomerOrder =
-  mongoose.model.CustomerOrder ||
+  mongoose.models.CustomerOrder ||
   mongoose.model("CustomerOrder", customer_orderSchema);
 
 export default CustomerOrder;

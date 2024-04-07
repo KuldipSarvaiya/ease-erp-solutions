@@ -76,6 +76,6 @@ const salarySchema = new Schema(
   { timestamps: true }
 );
 
-const Salary = mongoose.model.Salary || mongoose.model("Salary", salarySchema);
+const Salary = mongoose.models.Salary || mongoose.model("Salary", salarySchema);
 
 export default Salary;

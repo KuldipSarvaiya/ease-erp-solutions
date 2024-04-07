@@ -46,7 +46,7 @@ const raw_material_stockSchema = new Schema(
 );
 
 const RawMaterialStock =
-  mongoose.model.RawMaterialStock ||
+  mongoose.models.RawMaterialStock ||
   mongoose.model("RawMaterialStock", raw_material_stockSchema);
 
 export default RawMaterialStock;

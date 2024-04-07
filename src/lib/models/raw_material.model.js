@@ -75,7 +75,7 @@ const raw_materialSchema = new Schema({
 });
 
 const RawMaterial =
-  mongoose.model.RawMaterial ||
+  mongoose.models.RawMaterial ||
   mongoose.model("RawMaterial", raw_materialSchema);
 
 export default RawMaterial;

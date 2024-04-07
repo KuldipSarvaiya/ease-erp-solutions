@@ -55,7 +55,7 @@ const general_dept_managerSchema = new Schema(
 );
 
 const Department =
-  mongoose.model.Department ||
+  mongoose.models.Department ||
   mongoose.model("Department", general_dept_managerSchema);
 
 export default Department;

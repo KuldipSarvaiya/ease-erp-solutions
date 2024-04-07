@@ -49,7 +49,7 @@ const raw_material_stock_historySchema = new Schema(
 );
 
 const RawMaterialStockHistory =
-  mongoose.model.RawMaterialStockHistory ||
+  mongoose.models.RawMaterialStockHistory ||
   mongoose.model("RawMaterialStockHistory", raw_material_stock_historySchema);
 
 export default RawMaterialStockHistory;
