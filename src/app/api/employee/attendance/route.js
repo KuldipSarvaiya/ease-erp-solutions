@@ -35,7 +35,10 @@ export async function POST(req) {
   const res = new Attendance({
     employee_id: data._id,
     date: new Date(),
-
+    coordinates: {
+      latitude: data.coordinates.latitude,
+      longitude: data.coordinates.longitude,
+    },
     updated_by: data._id,
     punch_in: new Date(),
   });

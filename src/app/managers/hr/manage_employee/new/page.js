@@ -11,12 +11,22 @@ import {
   Snippet,
   Textarea,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { GrMapLocation, GrPowerReset } from "react-icons/gr";
 
 function Page() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect(
+        "/api/auth/signin?callback_url=/managers/hr/manage_employee/new"
+      );
+    },
+  });
   const {
     register,
     reset,
@@ -50,6 +60,7 @@ function Page() {
       if (key === "image") formData.append(key, formdata[key][0]);
       else formData.append(key, formdata[key]);
     }
+    formData.append("updated_by", session?.user?._id);
 
     const res = await fetch("/api/hr/employee", {
       method: "POST",

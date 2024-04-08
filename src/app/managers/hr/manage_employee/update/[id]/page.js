@@ -1,7 +1,7 @@
 "use client";
 
 import InputCon from "@/components/InputCon";
-import { newEmployee, resignEmployee } from "@/lib/utils/server_actions/hr";
+import { resignEmployee } from "@/lib/utils/server_actions/hr";
 import {
   Avatar,
   Button,
@@ -17,55 +17,93 @@ import {
   Textarea,
   useDisclosure,
 } from "@nextui-org/react";
-import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { GrMapLocation, GrPowerReset } from "react-icons/gr";
 import { IoPersonRemoveSharp } from "react-icons/io5";
 
 function Page({ params: { id } }) {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/managers/hr/manage_employee");
+    },
+  });
+  const route = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [data, setData] = useState(false);
+  const [depts, setDepts] = useState([]);
   const {
     register,
     reset,
     setValue,
     control,
-    setError,
     getValues,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      first_name: "kuldip",
-      middle_name: "kishorbhai",
-      last_name: "sarvaiya",
-      image: "kd.png",
-      username: "username",
-      password: "password",
-      email: "kuldipsarvaiya95@gmail.com",
-      contact_no: "1234567890",
-      designation: "Manager",
-      expert_area: "code",
-      course_studied: "bca",
-      latitude: 34.234,
-      longitude: 43.2232,
-      attendance_radius: 11,
-      department_id: 3,
-      basic_salary: 12345,
-      home_address: "home is mine",
-      bank_name: "sbi",
-      bank_acc_no: 12345678909,
-      bank_ifsc_code: 12345678901,
-      salary_cut_per_day: 3,
-      ot_salary_per_hour: 2,
-      allowed_leave_per_month: 1,
-    },
-  });
+  } = useForm();
+
+  // fetch employee data
+  useEffect(() => {
+    if (!data) {
+      (async () => {
+        const res = await fetch("/api/employee/details/" + id, {
+          method: "GET",
+          next: { tags: "UpdateEmployees" },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("employee data = ", data);
+          setData(data);
+        } else {
+          alert("Can Not Get Employee Details Due To Network Error");
+          route.back();
+        }
+      })();
+    }
+  }, []);
+
+  // reset form with employee data
+  useEffect(() => {
+    if (data) {
+      data.latitude = data.attendance_coordinates.latitude;
+      data.longitude = data.attendance_coordinates.longitude;
+      reset(data);
+      // setValue("home_address", data.home_address );
+    }
+  }, [data]);
+
+  // fetch departments
+  useEffect(() => {
+    if (depts.length <= 0)
+      (async function () {
+        const res = await fetch("/api/hr/department", {
+          method: "GET",
+        });
+        if (!res.ok) return;
+
+        const depts = await res.json();
+        console.log(depts);
+        setDepts(depts);
+      })();
+  }, []);
 
   async function handelAction(formdata) {
-    const res = await newEmployee(formdata);
-    if (res) return reset();
-    res.forEach((item) => {
-      setError(item.field, { message: item.message });
+    formdata.append("id", id);
+    formdata.append("updated_by", session?.user?._id);
+
+    const res = await fetch("/api/hr/employee", {
+      method: "PUT",
+      body: formdata,
     });
+
+    if (res.ok) {
+      alert("Employee Details Has Updated Successfully");
+    } else alert("Faild To Update Employee Due to Network Issue");
   }
 
   return (
@@ -73,7 +111,13 @@ function Page({ params: { id } }) {
       <div className="relative w-full h-full max-h-full max-w-full">
         <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
           <p className="uppercase text-2xl max-md:text-lg tracking-wider font-bold mb-5 flex flex-row flex-nowrap justify-between">
-            update emplyee : {id}{" "}
+            update emplyee
+            {!data && (
+              <span className="flex gap-3 flex-row items-center text-base">
+                <AiOutlineLoading3Quarters className="animate-spin duration-75" />
+                Getting employee data
+              </span>
+            )}
             <Button
               size="md"
               color="secondary"
@@ -82,6 +126,7 @@ function Page({ params: { id } }) {
               aria-label="resign employee"
               aria-labelledby="resign employee"
               onPress={onOpen}
+              isDisabled={!data}
             >
               RESIGN EMPLOYEE
             </Button>
@@ -94,58 +139,76 @@ function Page({ params: { id } }) {
           >
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">First Name : </span>
-              <Input
-                {...register("first_name", {
-                  required: "Please enter first name",
-                })}
-                defaultValue={getValues("first_name")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="text"
-                name="first_name"
-                aria-label="first_name"
-                aria-labelledby="first_name"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "first_name",
+                  control: control,
+                  rules: {
+                    required: "Please enter first name",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("first_name"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "first_name",
+                  "aria-label": "first_name",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.first_name?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Middle Name : </span>
-              <Input
-                {...register("middle_name", {
-                  required: "Please enter middle name",
-                })}
-                defaultValue={getValues("middle_name")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="text"
-                name="middle_name"
-                aria-label="middle_name"
-                aria-labelledby="middle_name"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "middle_name",
+                  control: control,
+                  rules: {
+                    required: "Please enter middle name",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("middle_name"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "middle_name",
+                  "aria-label": "middle_name",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.middle_name?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Last Name : </span>
-              <Input
-                {...register("last_name", {
-                  required: "Please enter Last name",
-                })}
-                defaultValue={getValues("last_name")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="text"
-                name="last_name"
-                aria-label="last_name"
-                aria-labelledby="last_name"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "last_name",
+                  control: control,
+                  rules: {
+                    required: "Please enter last name",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("last_name"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "last_name",
+                  "aria-label": "last_name",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.last_name?.message} </p>
             </span>
@@ -153,13 +216,19 @@ function Page({ params: { id } }) {
               <span className="text-xl font-semibold">Profile Image : </span>
               <Input
                 {...register("image", {
-                  required: "Please Select a Profile Image",
+                  // required: "Please Select a Profile Image",
                   validate: (v) =>
-                    v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
+                    getValues("image")[0]
+                      ? v[0].size < 500 * 1024 ||
+                        "Imgae Size is Large, max 500kb"
+                      : true,
                 })}
-                startContent={<Avatar size="sm" src={getValues("image")} />}
+                isDisabled={!data}
+                startContent={
+                  <Avatar size="md" src={"/kuldip_upload/" + data?.image} />
+                }
                 variant="faded"
-                size="sm"
+                size="md"
                 color="secondary"
                 type="file"
                 multiple={false}
@@ -174,103 +243,127 @@ function Page({ params: { id } }) {
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Username : </span>
-              <Input
-                {...register("username", {
-                  required: "Please enter username",
-                  pattern: {
-                    value: /[a-zA-Z0-9]{8,}/,
-                    message:
-                      "Please use a valid alphanumeric username > 8 characters",
+              <InputCon
+                controller={{
+                  name: "username",
+                  control: control,
+                  rules: {
+                    required: "Please enter username",
+                    pattern: {
+                      value: /[a-zA-Z0-9]{8,}/,
+                      message:
+                        "Please use a valid alphanumeric username > 8 characters",
+                    },
                   },
-                })}
-                defaultValue={getValues("username")}
-                startContent="@"
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="text"
-                name="username"
-                aria-label="username"
-                aria-labelledby="username"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+                }}
+                input={{
+                  disabled: !data,
+                  startContent: "@",
+                  // defaultValue: getValues("username"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "username",
+                  "aria-label": "username",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.username?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Password : </span>
-              <Input
-                {...register("password", {
-                  required: "Please enter password",
-                  pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-                    // value: /[a-zA-Z0-9]{8,}/,
-                    message:
-                      "Please use a valid alphanumeric password > 8 characters",
+              <InputCon
+                controller={{
+                  name: "password",
+                  control: control,
+                  rules: {
+                    required: "Please enter password",
+                    pattern: {
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                      // value: /[a-zA-Z0-9]{8,}/,
+                      message:
+                        "Please use a valid alphanumeric password > 8 characters",
+                    },
                   },
-                })}
-                defaultValue={getValues("password")}
-                startContent="#"
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="password"
-                name="password"
-                aria-label="password"
-                aria-labelledby="password"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+                }}
+                input={{
+                  disabled: !data,
+                  startContent: "#",
+                  // defaultValue: getValues("password"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "password",
+                  name: "password",
+                  "aria-label": "password",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.password?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Email : </span>
-              <Input
-                {...register("email", {
-                  required: "Please enter email address",
-                })}
-                defaultValue={getValues("email")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="mail"
-                name="email"
-                aria-label="email"
-                aria-labelledby="email"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "email",
+                  control: control,
+                  rules: {
+                    required: "Please enter email address",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("email"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "mail",
+                  name: "email",
+                  "aria-label": "email",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.email?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Contact : </span>
-              <Input
-                {...register("contact_no", {
-                  required: "Please enter contact Number of employee",
-                  max: {
-                    value: 9999999999,
-                    message: "Please enter valid 10 digit contact Number ",
+              <InputCon
+                controller={{
+                  name: "contact_no",
+                  control: control,
+                  rules: {
+                    required: "Please enter contact Number of employee",
+                    max: {
+                      value: 9999999999,
+                      message: "Please enter valid 10 digit contact Number ",
+                    },
+                    min: {
+                      value: 100000000,
+                      message: "Please enter valid 10 digit contact Number ",
+                    },
                   },
-                  min: {
-                    value: 100000000,
-                    message: "Please enter valid 10 digit contact Number ",
-                  },
-                })}
-                defaultValue={getValues("contact_no")}
-                startContent="+91"
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="tel"
-                name="contact_no"
-                aria-label="contact_no"
-                aria-labelledby="contact_no"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("contact_no"),
+                  startContent: "+91",
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "tel",
+                  name: "contact_no",
+                  "aria-label": "contact_no",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.contact_no?.message} </p>
             </span>
-            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
+            {/* <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Designation : </span>
               <div className="flex gap-5">
                 <Input
@@ -279,7 +372,7 @@ function Page({ params: { id } }) {
                   })}
                   defaultChecked={getValues("designation") === "Employee"}
                   variant="faded"
-                  size="sm"
+                  size="md"
                   color="secondary"
                   type="radio"
                   endContent="EMPLOYEE"
@@ -297,7 +390,7 @@ function Page({ params: { id } }) {
                   })}
                   defaultChecked={getValues("designation") === "Manager"}
                   variant="faded"
-                  size="sm"
+                  size="md"
                   color="secondary"
                   type="radio"
                   endContent="MANAGER"
@@ -311,49 +404,58 @@ function Page({ params: { id } }) {
                 />
               </div>
               <p className="text-red-500"> {errors?.designation?.message} </p>
-            </span>
+            </span> */}
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Expert Area : </span>
-              <Input
-                {...register("expert_area", {
-                  required: "Please fill in the expertiese part of job",
-                })}
-                defaultValue={getValues("expert_area")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="text"
-                name="expert_area"
-                aria-label="expert_area"
-                aria-labelledby="expert_area"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "expert_area",
+                  control: control,
+                  rules: {
+                    required: "Please fill in the expertiese part of job",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("expert_area"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "expert_area",
+                  "aria-label": "expert_area",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.expert_area?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Course Studied : </span>
-              <Input
-                {...register("course_studied", {
-                  required:
-                    "Please enter detail about course studied by employee",
-                })}
-                defaultValue={getValues("course_studied")}
-                variant="faded"
-                size="sm"
-                endContent="🎓"
-                color="secondary"
-                type="text"
-                name="course_studied"
-                aria-label="course_studied"
-                aria-labelledby="course_studied"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "course_studied",
+                  control: control,
+                  rules: {
+                    required:
+                      "Please enter detail about course studied by employee",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("course_studied"),
+                  endContent: "🎓",
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "course_studied",
+                  "aria-label": "course_studied",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
-              <p className="text-red-500">
-                {" "}
-                {errors?.course_studied?.message}{" "}
-              </p>
+              <p className="text-red-500">{errors?.course_studied?.message}</p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 gap-3">
               <span className="text-xl font-semibold">
@@ -372,6 +474,8 @@ function Page({ params: { id } }) {
                     },
                   }}
                   input={{
+                    disabled: !data,
+                    defaultValue: getValues("latitude"),
                     size: "lg",
                     variant: "faded",
                     isRequired: true,
@@ -396,6 +500,8 @@ function Page({ params: { id } }) {
                     },
                   }}
                   input={{
+                    disabled: !data,
+                    defaultValue: getValues("longitude"),
                     size: "lg",
                     variant: "faded",
                     isRequired: true,
@@ -411,6 +517,7 @@ function Page({ params: { id } }) {
                 <Button
                   variant="ghost"
                   isIconOnly
+                  isDisabled={!data}
                   size="lg"
                   title="use current coordinates"
                   color="secondary"
@@ -431,28 +538,33 @@ function Page({ params: { id } }) {
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Attendace Radius : </span>
-              <Input
-                {...register("attendance_radius", {
-                  required:
-                    "Please enter radius of attendance within which employee is allowed to attend in meters",
-                  max: 100,
-                  min: 10,
-                })}
-                defaultValue={getValues("attendance_radius")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="number"
-                name="attendance_radius"
-                aria-label="attendance_radius"
-                aria-labelledby="attendance_radius"
-                endContent="METERS"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "attendance_radius",
+                  control: control,
+                  rules: {
+                    required:
+                      "Please enter radius of attendance within which employee is allowed to attend in meters",
+                    max: 100,
+                    min: 10,
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("attendance_radius"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  endContent: "METERS",
+                  type: "text",
+                  name: "attendance_radius",
+                  "aria-label": "attendance_radius",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500">
-                {" "}
-                {errors?.attendance_radius?.message}{" "}
+                {errors?.attendance_radius?.message}
               </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
@@ -461,9 +573,15 @@ function Page({ params: { id } }) {
                 {...register("department_id", {
                   required: "Please select department of the employee",
                 })}
-                aria-selected={getValues("department_id")}
+                defaultSelectedKeys={[data?.department_id?.toString()]}
+                label={
+                  depts.filter((item) => item._id === data?.department_id)?.[0]
+                    ?.dept_name
+                }
+                isDisabled={!data}
+                labelPlacement="outside"
                 variant="faded"
-                size="sm"
+                size="md"
                 color="secondary"
                 name="department_id"
                 aria-label="department_id"
@@ -472,20 +590,13 @@ function Page({ params: { id } }) {
                 // isRequired
                 className="md:col-start-2 md:col-end-4"
               >
-                {[
-                  "hr",
-                  "finance",
-                  "inventory",
-                  "fabric manufacturing",
-                  "cleaning and finishing",
-                  "dying and printing",
-                  "cutting",
-                  "sewing",
-                  "packing and labeling",
-                ].map((item, i) => {
+                {depts?.map((item, i) => {
                   return (
-                    <SelectItem key={i} value={+i}>
-                      {item.toUpperCase()}
+                    <SelectItem
+                      key={item._id.toString()}
+                      value={item._id.toString()}
+                    >
+                      {item.dept_name.toUpperCase()}
                     </SelectItem>
                   );
                 })}
@@ -494,60 +605,83 @@ function Page({ params: { id } }) {
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Basic Salary : </span>
-              <Input
-                {...register("basic_salary", {
-                  required: "Please enter basic salary of employee",
-                  min: 1,
-                })}
-                defaultValue={getValues("basic_salary")}
-                variant="faded"
-                endContent="💸"
-                size="sm"
-                color="secondary"
-                type="number"
-                name="basic_salary"
-                aria-label="basic_salary"
-                aria-labelledby="basic_salary"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "basic_salary",
+                  control: control,
+                  rules: {
+                    required: "Please enter first name",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("basic_salary"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  endContent: "💸",
+                  type: "text",
+                  name: "basic_salary",
+                  "aria-label": "basic_salary",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.basic_salary?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Home Address : </span>
-              <Textarea
-                {...register("home_address", {
+              <Controller
+                name={"home_address"}
+                control={control}
+                rules={{
                   required: "Please fill in the home address",
-                })}
-                defaultValue={getValues("home_address")}
-                variant="faded"
-                endContent="📌"
-                size="sm"
-                color="secondary"
-                name="home_address"
-                aria-label="home_address"
-                aria-labelledby="home_address"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+                }}
+                render={({ field }) => (
+                  <>
+                    <Textarea
+                      isDisabled={!data}
+                      defaultValue={getValues("home_address")}
+                      radius={"sm"}
+                      size={"lg"}
+                      variant={"faded"}
+                      color={"secondary"}
+                      name={"home_address"}
+                      value={field.value}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        // handleChange(e);
+                        // onChanged(e);
+                      }}
+                      className="md:col-start-2 md:col-end-4"
+                    />
+                  </>
+                )}
               />
               <p className="text-red-500"> {errors?.home_address?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Bank Name : </span>
-              <Input
-                {...register("bank_name", {
-                  required: "Please enter bank name",
-                })}
-                defaultValue={getValues("bank_name")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="text"
-                name="bank_name"
-                aria-label="bank_name"
-                aria-labelledby="bank_name"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "bank_name",
+                  control: control,
+                  rules: {
+                    required: "Please enter bank name",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("bank_name"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "bank_name",
+                  "aria-label": "bank_name",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.bank_name?.message} </p>
             </span>
@@ -555,141 +689,166 @@ function Page({ params: { id } }) {
               <span className="text-xl font-semibold">
                 Bank Account Number :{" "}
               </span>
-              <Input
-                {...register("bank_acc_no", {
-                  required: "Please enter bank account number",
-                  maxLength: {
-                    value: 11,
-                    message: "Bank Account Number Must be 11 Digit Number",
+              <InputCon
+                controller={{
+                  name: "bank_acc_no",
+                  control: control,
+                  rules: {
+                    required: "Please enter bank account number",
+                    maxLength: {
+                      value: 11,
+                      message: "Bank Account Number Must be 11 Digit Number",
+                    },
+                    minLength: {
+                      value: 11,
+                      message: "Bank Account Number Must be 11 Digit Number",
+                    },
+                    min: 10000000000,
+                    max: 99999999999,
                   },
-                  minLength: {
-                    value: 11,
-                    message: "Bank Account Number Must be 11 Digit Number",
-                  },
-                  min: 10000000000,
-                  max: 99999999999,
-                })}
-                defaultValue={getValues("bank_acc_no")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="number"
-                name="bank_acc_no"
-                aria-label="bank_acc_no"
-                aria-labelledby="bank_acc_no"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("bank_acc_no"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "number",
+                  name: "bank_acc_no",
+                  "aria-label": "bank_acc_no",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500"> {errors?.bank_acc_no?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Bank IFSC Code : </span>
-              <Input
-                {...register("bank_ifsc_code", {
-                  required: "Please enter bank branch IFSC code",
-                  maxLength: {
-                    value: 11,
-                    message: "Bank Branch IFSC Code Must be 11 Digit",
+              <InputCon
+                controller={{
+                  name: "bank_ifsc_code",
+                  control: control,
+                  rules: {
+                    required: "Please enter bank branch IFSC code",
+                    maxLength: {
+                      value: 11,
+                      message: "Bank Branch IFSC Code Must be 11 Digit",
+                    },
+                    minLength: {
+                      value: 11,
+                      message: "Bank Branch IFSC Code Must be 11 Digit",
+                    },
                   },
-                  minLength: {
-                    value: 11,
-                    message: "Bank Branch IFSC Code Must be 11 Digit",
-                  },
-                })}
-                defaultValue={getValues("bank_ifsc_code")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="text"
-                name="bank_ifsc_code"
-                aria-label="bank_ifsc_code"
-                aria-labelledby="bank_ifsc_code"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("bank_ifsc_code"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "bank_ifsc_code",
+                  "aria-label": "bank_ifsc_code",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
-              <p className="text-red-500">
-                {" "}
-                {errors?.bank_ifsc_code?.message}{" "}
-              </p>
+              <p className="text-red-500">{errors?.bank_ifsc_code?.message}</p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">
                 Salary Cut Per Leave Day :{" "}
               </span>
-              <Input
-                {...register("salary_cut_per_day", {
-                  required:
-                    "Please enter Amount of salary should cut per day for being absent without leave report",
-                  validate: {
-                    value: (v) =>
-                      v < getValues("basic_salary") ||
-                      "Salary Cut Per Leave Can not be More Than Basic Salary",
+              <InputCon
+                controller={{
+                  name: "salary_cut_per_day",
+                  control: control,
+                  rules: {
+                    required:
+                      "Please enter Amount of salary should cut per day for being absent without leave report",
+                    validate: {
+                      value: (v) =>
+                        v < getValues("basic_salary") ||
+                        "Salary Cut Per Leave Can not be More Than Basic Salary",
+                    },
                   },
-                })}
-                defaultValue={getValues("salary_cut_per_day")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="number"
-                name="salary_cut_per_day"
-                aria-label="salary_cut_per_day"
-                aria-labelledby="salary_cut_per_day"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("salary_cut_per_day"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "number",
+                  name: "salary_cut_per_day",
+                  "aria-label": "salary_cut_per_day",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500">
-                {" "}
-                {errors?.salary_cut_per_day?.message}{" "}
+                {errors?.salary_cut_per_day?.message}
               </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">
-                OverTime Salary Per Hour :{" "}
+                OverTime Salary Per Hour :
               </span>
-              <Input
-                {...register("ot_salary_per_hour", {
-                  required:
-                    "Please enter amount to credit on overtime per hour",
-                  validate: (v) =>
-                    v < getValues("basic_salary") ||
-                    "Over Time Salary Per Hour Can not be More Than Basic Salary",
-                })}
-                defaultValue={getValues("ot_salary_per_hour")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="number"
-                name="ot_salary_per_hour"
-                aria-label="ot_salary_per_hour"
-                aria-labelledby="ot_salary_per_hour"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "ot_salary_per_hour",
+                  control: control,
+                  rules: {
+                    required:
+                      "Please enter amount to credit on overtime per hour",
+                    validate: (v) =>
+                      v < getValues("basic_salary") ||
+                      "Over Time Salary Per Hour Can not be More Than Basic Salary",
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("ot_salary_per_hour"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "number",
+                  name: "ot_salary_per_hour",
+                  "aria-label": "ot_salary_per_hour",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500">
-                {" "}
-                {errors?.ot_salary_per_hour?.message}{" "}
+                {errors?.ot_salary_per_hour?.message}
               </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">
                 Allowed Leave Per Month :{" "}
               </span>
-              <Input
-                {...register("allowed_leave_per_month", {
-                  required: "Please enter Number of days allowed for leave",
-                  max: 25,
-                  valueAsNumber: true,
-                })}
-                defaultValue={getValues("allowed_leave_per_month")}
-                variant="faded"
-                size="sm"
-                color="secondary"
-                type="number"
-                name="allowed_leave_per_month"
-                aria-label="allowed_leave_per_month"
-                aria-labelledby="allowed_leave_per_month"
-                // isRequired
-                className="md:col-start-2 md:col-end-4"
+              <InputCon
+                controller={{
+                  name: "allowed_leave_per_month",
+                  control: control,
+                  rules: {
+                    required: "Please enter Number of days allowed for leave",
+                    max: 28,
+                    valueAsNumber: true,
+                  },
+                }}
+                input={{
+                  disabled: !data,
+                  // defaultValue: getValues("allowed_leave_per_month"),
+                  size: "lg",
+                  variant: "faded",
+                  isRequired: true,
+                  color: "secondary",
+                  type: "text",
+                  name: "allowed_leave_per_month",
+                  "aria-label": "allowed_leave_per_month",
+                  className: "md:col-start-2 md:col-end-4",
+                }}
               />
               <p className="text-red-500">
                 {" "}
@@ -704,17 +863,24 @@ function Page({ params: { id } }) {
                 type="submit"
                 endContent={<BsPersonFillAdd className="scale-125" />}
                 aria-label="submit"
+                isLoading={!data}
               >
-                CREATE EMPLOYEE
+                UPDATE EMPLOYEE
               </Button>
               &nbsp; &nbsp; &nbsp;
               <Button
+                isLoading={!data}
                 size="md"
                 color="secondary"
                 variant="shadow"
                 type="reset"
                 endContent={<GrPowerReset className="scale-125" />}
                 aria-label="submit"
+                onClick={() => {
+                  data.latitude = data.attendance_coordinates.latitude;
+                  data.longitude = data.attendance_coordinates.longitude;
+                  reset(data);
+                }}
               >
                 RESET DETAILS
               </Button>
@@ -727,7 +893,20 @@ function Page({ params: { id } }) {
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
-            <form action={resignEmployee}>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+
+                const formdata = new FormData(e.target);
+                formdata.append("updated_by", session?.user?._id);
+                const res = await resignEmployee(formdata);
+                console.log(res);
+                if (res.success) {
+                  onClose();
+                  route.push("/managers/hr/manage_employee");
+                }
+              }}
+            >
               <ModalHeader className="flex flex-col gap-1">
                 CONFIRM RESIGNATION
               </ModalHeader>
@@ -741,6 +920,13 @@ function Page({ params: { id } }) {
                   isRequired
                   aria-label="reason_for_resign"
                   aria-labelledby="reason_for_resign"
+                />
+                <input
+                  label="employee"
+                  name="id"
+                  value={id}
+                  type="text"
+                  hidden
                 />
               </ModalBody>
               <ModalFooter>

@@ -1,110 +1,121 @@
-import {
-  Avatar,
-  Button,
-  Chip,
-  Divider, 
-  Textarea,
-} from "@nextui-org/react";
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import Employee from "@/lib/models/employee.model";
+import connectDB from "@/lib/mongoose";
+import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
+import { Avatar, Chip, Divider, Textarea } from "@nextui-org/react";
 import { FaDotCircle } from "react-icons/fa";
-import { GrPowerReset, GrTask } from "react-icons/gr";
-import { MdOutlineNotificationsActive } from "react-icons/md";
+import { revalidateTag } from "next/cache";
+import Task from "@/lib/models/task.model";
+import SubmitBtn from "./SubmitBtn";
 
-export default function Page() {
+export default async function Page() {
   const colors = {
     pending: "text-yellow-500",
     present: "text-emerald-500",
     onleave: "text-red-500",
     "": "text-white",
   };
+  const session = await getServerSession(options);
+  if (!session?.user?.department_id) {
+    return;
+  }
+  await connectDB();
+  const employees = await Employee.aggregate([
+    {
+      $match: {
+        designation: "Employee",
+        department_id: new mongoose.Types.ObjectId(
+          session.user.department_id._id
+        ),
+      },
+    },
+    {
+      $lookup: {
+        from: "attendances",
+        let: {
+          employeeId: "$_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$employee_id", "$$employeeId"],
+                  },
+                  {
+                    $eq: [
+                      {
+                        $dayOfYear: "$createdAt",
+                      },
+                      {
+                        $dayOfYear: new Date(),
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          {
+            $project: {
+              state: 1,
+              _id: 0,
+            },
+          },
+        ],
+        as: "attendance",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        first_name: 1,
+        middle_name: 1,
+        image: 1,
+        attendance: 1,
+      },
+    },
+  ]);
 
-  const employees = [
-    {
-      _id: "fhmewew23",
-      name: "John",
-      image: "/AdminPage.svg",
-      attendance: "pending",
-    },
-    {
-      _id: "fhmewew23",
-      name: "kuldip",
-      image: "/AdminPage.svg",
-      attendance: "",
-    },
-    {
-      _id: "fhmewew23",
-      name: "John",
-      image: "/AdminPage.svg",
-      attendance: "present",
-    },
-    {
-      _id: "fhmewew23",
-      name: "kuldips",
-      image: "/AdminPage.svg",
-      attendance: "present",
-    },
-    {
-      _id: "fhmewew23",
-      name: "John",
-      image: "/AdminPage.svg",
-      attendance: "onleave",
-    },
-    {
-      _id: "fhmewew23",
-      name: "ramesh",
-      image: "/AdminPage.svg",
-      attendance: "present",
-    },
-    {
-      _id: "fhmewew23",
-      name: "John",
-      image: "/AdminPage.svg",
-      attendance: "pending",
-    },
-    {
-      _id: "fhmewew23",
-      name: "man",
-      image: "/AdminPage.svg",
-      attendance: "onleave",
-    },
-    {
-      _id: "fhmewew23",
-      name: "mohan",
-      image: "/AdminPage.svg",
-      attendance: "pending",
-    },
-    {
-      _id: "fhmewew23",
-      name: "aarya",
-      image: "/AdminPage.svg",
-      attendance: "present",
-    },
-    {
-      _id: "fhmewew23",
-      name: "heer",
-      image: "/AdminPage.svg",
-      attendance: "pending",
-    },
-    {
-      _id: "fhmewew23",
-      name: "kush",
-      image: "/AdminPage.svg",
-      attendance: "onleave",
-    },
-    {
-      _id: "fhmewew23",
-      name: "ved",
-      image: "/AdminPage.svg",
-      attendance: "onleave",
-    },
-  ];
-
-  async function handleSubit(formdata) {
+  console.log("employee = ", session?.user?.department_id._id, employees);
+  async function handleSubmit(formdata) {
     "use server";
 
-    console.log("task clicked = ", formdata.get("task") !== null);
-    console.log("notice clicked = ", formdata.get("notice") !== null);
-    console.log(formdata.get("text"));
-    console.log(formdata.getAll("employees"));
+    const isTask = formdata.get("task") !== null;
+    const isNotice = formdata.get("notice") !== null;
+    const text = formdata.get("text");
+    const employee_ids = formdata.getAll("employees");
+
+    await connectDB();
+    // send notice
+    if (isNotice) {
+      const res = await Employee.updateMany(
+        { _id: { $in: employee_ids } },
+        {
+          $push: {
+            notice: text,
+          },
+        }
+      );
+
+      console.log(res);
+      if (res.acknowledged) revalidateTag("myNotice");
+    }
+    // assign task
+    if (isTask) {
+      const data = employee_ids.map((item) => ({
+        date: new Date(),
+        assigned_employee_id: item,
+        text: text,
+        updated_by: session.user.department_id._id,
+      }));
+
+      const res = await Task.insertMany(data);
+
+      console.log(res);
+    }
   }
 
   return (
@@ -114,7 +125,7 @@ export default function Page() {
         <p className="text-2xl font-bold tracking-wide w-full">ASSIGN TASKS</p>
         <Divider className="my-3" />
         <div>
-          <form action={handleSubit} className="flex flex-col gap-5">
+          <form action={handleSubmit} className="flex flex-col gap-5">
             <Textarea
               label="Task / Notice   Text"
               labelPlacement="inside"
@@ -129,7 +140,7 @@ export default function Page() {
             />
             <span className="text-lg font-semibold">Select Employees : </span>
             <div className="flex flex-row flex-wrap gap-4 ">
-              {employees.map((emp, i) => (
+              {employees?.map((emp, i) => (
                 <Chip
                   key={emp?._id + i}
                   variant="faded"
@@ -140,7 +151,7 @@ export default function Page() {
                     <input
                       type="checkbox"
                       name="employees"
-                      value={emp?._id}
+                      value={emp?._id.toString()}
                       className="accent-purple-500 cursor-pointer"
                       aria-label="employee checkbox"
                       aria-labelledby="employee checkbox"
@@ -154,53 +165,17 @@ export default function Page() {
                   <span className="flex gap-2 items-center capitalize">
                     <Avatar
                       size="sm"
-                      src={emp?.image}
+                      src={"/kuldip_upload/" + emp?.image}
                       aria-label="employee avatar"
                       aria-labelledby="employee avatar"
                     />
-                    {emp?.name}
+                    {emp?.middle_name}&nbsp;
+                    {emp?.first_name}
                   </span>
                 </Chip>
               ))}
             </div>
-            <span>
-              <Button
-                type="submit"
-                variant="shadow"
-                name="notice"
-                size="md"
-                color="secondary"
-                className="max-w-max"
-                endContent={
-                  <MdOutlineNotificationsActive className="scale-125" />
-                }
-              >
-                SEND NOTICE
-              </Button>
-              &nbsp; &nbsp;
-              <Button
-                type="submit"
-                name="task"
-                variant="shadow"
-                size="md"
-                color="secondary"
-                className="max-w-max"
-                endContent={<GrTask />}
-              >
-                ASSIGN TASK
-              </Button>
-              &nbsp; &nbsp;
-              <Button
-                type="reset"
-                variant="shadow"
-                size="md"
-                color="secondary"
-                className="max-w-max"
-                endContent={<GrPowerReset />}
-              >
-                RESET
-              </Button>
-            </span>
+            <SubmitBtn />
           </form>
         </div>
       </div>

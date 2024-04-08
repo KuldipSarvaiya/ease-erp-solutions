@@ -19,7 +19,7 @@ const taskSchema = new Schema(
       immutable: true,
     },
     is_complete: {
-      type: String,
+      type: Boolean,
       required: true,
       default: false,
     },

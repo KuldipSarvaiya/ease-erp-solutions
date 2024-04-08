@@ -155,6 +155,7 @@ const employeeSchema = new Schema(
       type: String,
       required: true,
       immutable: false,
+      unique: true,
     },
     password: {
       type: String,
@@ -189,11 +190,11 @@ const employeeSchema = new Schema(
     //   required: false,
     // },
     notice: { type: [String], required: false },
-    // updated_by: {
-    //   type: Schema.ObjectId,
-    //   ref: "Employee",
-    //   required: true,
-    // },
+    updated_by: {
+      type: Schema.ObjectId,
+      ref: "Employee",
+      required: true,
+    },
   },
   { timestamps: true }
 );

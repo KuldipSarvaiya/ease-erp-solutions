@@ -12,6 +12,7 @@ export default function AttendancePage() {
   const [attendance, setAttendance] = useState({});
   const [oldAttendance, setOldAttendance] = useState([]);
   const [date, setDate] = useState("2024-01-10");
+  const [myCoords, setMyCoords] = useState({ nodata: true });
 
   const { data: session } = useSession({
     required: true,
@@ -30,6 +31,7 @@ export default function AttendancePage() {
         .then((data) => {
           console.log(data);
           setAttendance(data);
+          setMyCoords(data.employee_id);
         })
         .catch((err) => console.log(err));
   }, [session]);
@@ -67,9 +69,9 @@ export default function AttendancePage() {
       case "present":
         return <Present data={attendance} />;
       case "pending":
-        return <PunchOut data={attendance} />;
+        return <PunchOut myCoords={myCoords} data={attendance} />;
       default:
-        return <PunchIn id={session?.user?._id} />;
+        return <PunchIn myCoords={myCoords} id={session?.user?._id} />;
     }
   }
 

@@ -10,9 +10,7 @@ export async function GET(req, { params: { id } }) {
 
   if (!!!id) return NextResponse.error("No Data Found");
 
-  const emp = await Employee.findOne({ _id: id }).select(
-    "username password first_name last_name middle_name email contact_no home_address bank_acc_no bank_name bank_ifsc_code"
-  );
+  const emp = await Employee.findOne({ _id: id });
 
   if (!emp) return NextResponse.error("No Data Found");
   console.log(emp);

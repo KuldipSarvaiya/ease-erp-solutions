@@ -18,6 +18,7 @@ import SideBarButton from "./SideBarButton";
 import Image from "next/image";
 import NotifyModel from "./NotifyModel";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 function DashBoardNavBar({ menuItems }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

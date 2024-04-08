@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MdUpdate } from "react-icons/md";
 
-function EmployeeSmall() {
+function EmployeeSmall({ emp }) {
   function ToolTipDialog() {
     return (
       <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-3 rounded-xl border-1 border-purple-900">
@@ -11,33 +11,34 @@ function EmployeeSmall() {
           alt="profile image"
           height={100}
           radius="sm"
-          src="/AdminPage.svg"
+          src={"/kuldip_upload/" + emp.image}
           width={250}
-          className="object-cover overflow-hidden rounded-lg bg-slate-800"
+          className="object-contain overflow-hidden rounded-lg bg-slate-800"
         />
         <div className="flex flex-col">
           <p className="text-lg capitalize text-default-800">
-            sarvaiya kuldip kishorbhai
+            {emp.first_name} {emp.middle_name} {emp.lasst_name}
           </p>
           <p className="text-sm text-default-600 capitalize">
             {" "}
-            DOB : {new Date().toDateString()}
+            DOB : {new Date(emp.dob).toDateString()}
             <br />
-            male
+            {emp.gender}
           </p>
           <p className="text-sm text-default-600 capitalize">
-            <a href="mailto:kuldipsarvaiya94@gmail.com">
-              kuldipsarvaiya94@gmail.com
-            </a>
+            <a href="mailto:kuldipsarvaiya94@gmail.com">{emp.email}</a>
           </p>
-          <p className="text-sm text-default-600 capitalize">+91 97249 24494</p>
           <p className="text-sm text-default-600 capitalize">
-            coords : 72.323 , 21.432
-            <br /> radius : 100 meters
+            +91 {emp.contact_no}
+          </p>
+          <p className="text-sm text-default-600 capitalize">
+            coords : {emp.attendance_coordinates.latitude} ,{" "}
+            {emp.attendance_coordinates.longitude}
+            <br /> radius : {emp.attendance_radius} meters
           </p>
         </div>
         <Button
-          href={`/managers/hr/manage_employee/update/${"zfsdf"}`}
+          href={`/managers/hr/manage_employee/update/${emp._id.toString()}`}
           as={Link}
           size="sm"
           color="secondary"
@@ -62,19 +63,19 @@ function EmployeeSmall() {
           alt="employee logo"
           height={60}
           radius="sm"
-          src="/adminPage.svg"
+          src={"/kuldip_upload/" + emp.image}
           width={60}
-          className="object-contain rounded-lg bg-slate-800"
+          className="object-cover rounded-lg bg-slate-800"
         />
         <div className="flex flex-col">
           <p className="text-lg capitalize text-default-800">
-            sarvaiya kuldip kishorbhai
+            {emp.first_name} {emp.middle_name} {emp.lasst_name}
           </p>
           <p className="text-small text-default-500 lowercase">
-            Employee &rarr; kd_sarvaiya_
+            {emp.designation} &rarr; {emp.username}
           </p>
           <p className="text-sm text-default-600 capitalize">
-            Serving Since {new Date().toDateString()}
+            Serving Since {new Date(emp.doj).toDateString()}
           </p>
         </div>
       </div>

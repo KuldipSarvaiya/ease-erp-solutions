@@ -1,11 +1,31 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import EmployeeSmall from "@/components/cards/EmployeeSmall";
 import { Accordion, AccordionItem, Button, Divider } from "@nextui-org/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BsPersonVcardFill } from "react-icons/bs";
 
 export default function ManageEmpAdmin() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (data.length === 0) {
+      (async () => {
+        const res = await fetch("/api/hr/employee", { method: "GET" });
+
+        if (!res.ok)
+          return alert("Can Not Get Employee Details Due To Network Error");
+
+        const json = await res.json();
+        console.log(json);
+
+        setData(json);
+      })();
+    }
+  }, []);
+
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
@@ -26,43 +46,29 @@ export default function ManageEmpAdmin() {
           </Button>
         </p>
         <Divider className="my-5" />
+        {data.length === 0 && <Loading />}
 
         <Accordion
           className="grid  grid-cols-1 row-auto gap-5"
           variant="splitted"
         >
-          {[
-            "hr",
-            "finance",
-            "inventory",
-            "fabri-manufacturing",
-            "cleaning-and-finishing",
-            "dying-and-printing",
-            "cutting",
-            "sewing",
-            "packing-and-labeling",
-          ].map((dept) => {
+          {data?.map((dept) => {
             return (
               <AccordionItem
                 title={
                   <p className="text-lg font-bold tracking-wide w-full uppercase">
-                    {dept.replaceAll("-", " ")}
+                    {dept?.dept_name?.replaceAll("-", " ")}
                   </p>
                 }
-                key={dept}
-                aria-label={dept}
+                key={dept.dept_name}
+                aria-label={dept.dept_name}
               >
                 <Divider className="my-5" />
                 {/* person attendance chips */}
                 <div className="flex flex-wrap flex-row justify-items-stretch gap-3 max-md:justify-center ">
-                  <EmployeeSmall />
-                  <EmployeeSmall />
-                  <EmployeeSmall />
-                  <EmployeeSmall />
-                  <EmployeeSmall />
-                  <EmployeeSmall />
-                  <EmployeeSmall />
-                  <EmployeeSmall />
+                  {dept.employees?.map((emp) => (
+                    <EmployeeSmall emp={emp} />
+                  ))}
                 </div>
               </AccordionItem>
             );

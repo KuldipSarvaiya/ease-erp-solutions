@@ -11,6 +11,7 @@ function InputCon({ controller, input }) {
       render={({ field }) => (
         <>
           <Input
+            defaultValue={input.defaultValue || ""}
             type={input.type || "text"}
             label={input.label || ""}
             radius={input.radius || "sm"}
@@ -27,7 +28,7 @@ function InputCon({ controller, input }) {
               // onChanged(e);
             }}
             isRequired={input.isRequired || false}
-            disabled={input.disabled || false}
+            isDisabled={input.disabled || false}
             className={input.className || ""}
             aria-label={input.name}
             startContent={input.startContent || ""}

@@ -7,7 +7,7 @@ import { GiEntryDoor, GiExitDoor } from "react-icons/gi";
 
 // todo : add dynamic employee's attendance coordinates
 
-export function PunchIn({ id }) {
+export function PunchIn({ id, myCoords }) {
   // if time is ealry or too late
   const h = new Date().getHours();
   if (h > 15 || h < 8) return;
@@ -21,9 +21,11 @@ export function PunchIn({ id }) {
       console.log("Latitude : " + a.coords.latitude);
       console.log("Longitute : " + a.coords.longitude);
       const res = isWithinRange(
-        100,
+        myCoords.attendance_radius,
+        // 100,
         // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
-        { latitude: 23.0302, longitude: 72.5772 }, //home
+        // { latitude: 23.0302, longitude: 72.5772 }, //home
+        myCoords.attendance_coordinates,
         a.coords
       );
 
@@ -79,9 +81,11 @@ export function PunchIn({ id }) {
   );
 }
 
-export function PunchOut({ data }) {
+export function PunchOut({ data, myCoords }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  console.log("punch out = ", myCoords);
 
   // punchin time
   const date1 = new Date();
@@ -97,8 +101,11 @@ export function PunchOut({ data }) {
       console.log("Latitude : " + a.coords.latitude);
       console.log("Longitute : " + a.coords.longitude);
       const res = isWithinRange(
-        100,
-        { latitude: 23.0302, longitude: 72.5772 },
+        myCoords.attendance_radius,
+        // 100,
+        // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
+        // { latitude: 23.0302, longitude: 72.5772 }, //home
+        myCoords.attendance_coordinates,
         a.coords
       );
       console.log("Function responce = ", res);

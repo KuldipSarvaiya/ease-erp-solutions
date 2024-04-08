@@ -1,3 +1,5 @@
+import Task from "@/lib/models/task.model";
+import connectDB from "@/lib/mongoose";
 import {
   Card,
   CardHeader,
@@ -6,9 +8,30 @@ import {
   Divider,
   Button,
 } from "@nextui-org/react";
+import { revalidatePath } from "next/cache";
 import { FaCheck, FaDotCircle } from "react-icons/fa";
 
 function TaskCard({ date, text, is_complete, id, updated_date }) {
+  console.log("Task card = ", { date, text, is_complete, id, updated_date });
+  async function completeTask(formdata) {
+    "use server";
+
+    const id = formdata.get("id");
+
+    if (!!!id) return false;
+
+    await connectDB();
+    const update = await Task.updateOne(
+      { _id: id },
+      { $set: { is_complete: true } }
+    );
+
+    if (update.acknowledged) {
+      console.log("task completed = ", id);
+      revalidatePath("/app/**/*.tasks", "page");
+    }
+  }
+
   return (
     <Card isFooterBlurred className="bg-slate-800 backdrop:blur-3xl max-w-xs">
       <CardHeader className="text-lg font-extrabold max-md:text-base max-md:font-semibold">
@@ -36,10 +59,18 @@ function TaskCard({ date, text, is_complete, id, updated_date }) {
               &nbsp;Pending
             </i>
             &nbsp; &nbsp; &nbsp;
-            <Button variant="shadow" size="sm" color="secondary">
-              <FaCheck />
-              Mark as Complete
-            </Button>
+            <form action={completeTask}>
+              <input hidden value={id.toString()} name="id" type="text" />
+              <Button
+                type="submit"
+                variant="shadow"
+                size="sm"
+                color="secondary"
+              >
+                <FaCheck />
+                Mark as Complete
+              </Button>
+            </form>
           </>
         )}
       </CardFooter>

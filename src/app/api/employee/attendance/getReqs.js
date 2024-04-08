@@ -7,6 +7,9 @@ export async function myToday(id) {
       $gte: new Date(new Date().setHours(0, 0, 0, 0)),
       $lte: new Date(new Date().setHours(24, 0, 0, 0)),
     },
+  }).populate({
+    path: "employee_id",
+    select: "attendance_coordinates attendance_radius",
   });
   return res;
 }
