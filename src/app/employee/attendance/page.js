@@ -31,7 +31,7 @@ export default function AttendancePage() {
         .then((data) => {
           console.log(data);
           setAttendance(data);
-          setMyCoords(data.employee_id);
+          setMyCoords(data?.employee_id);
         })
         .catch((err) => console.log(err));
   }, [session]);
@@ -114,6 +114,7 @@ export default function AttendancePage() {
               ot={item.overtime_hours}
             />
           ))}
+          {oldAttendance.length === 0 && <center className="w-full py-10 font-semibold text-base">You Have No Any Previous Attendances {":("}</center>}
         </div>
       </div>
     </div>

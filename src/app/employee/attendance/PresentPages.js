@@ -53,7 +53,7 @@ export function Present({ data }) {
       </p>
       {total_hours > 8 && (
         <p>
-          Over Time Hours : {total_hours - 8} hours&nbsp;|&nbsp;
+          Over Time : {total_hours - 8} hours&nbsp;|&nbsp;
           {total_minutes - 60} minutes
         </p>
       )}

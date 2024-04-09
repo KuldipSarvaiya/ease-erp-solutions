@@ -1,3 +1,5 @@
+"use client";
+
 //  used with hr attendace
 import { changeAttendanceStatus } from "@/lib/utils/server_actions/hr";
 import {
@@ -12,38 +14,93 @@ import {
 import { FaDotCircle } from "react-icons/fa";
 import { GrUpdate } from "react-icons/gr";
 
-function AttendanceChip({ id, status, role }) {
+async function AttendanceChip({ status, emp, session }) {
   const colors = {
     pending: "text-yellow-500",
     present: "text-emerald-500",
     onleave: "text-red-500",
-    "": "",
+    absent: "",
   };
 
-  function ChangeAttendance({ id, status }) {
+  function ChangeAttendance() {
+    console.log("this employee att = ", emp?.attendance);
+    const date1 = emp?.attendance?.punch_out
+      ? new Date(emp?.attendance?.punch_out)
+      : new Date();
+    const date2 = new Date(emp?.attendance?.punch_in) || new Date();
+    const diffInMs = Math.abs(date2 - date1);
+    const total_hours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const total_minutes = Math.floor(
+      (diffInMs % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    const point = total_hours >= 8 ? 1 : total_hours >= 4 ? 0.5 : 0;
+    const overtime_hours =
+      total_hours > 8
+        ? total_hours - 8
+        : total_hours > 4
+        ? total_hours - 4
+        : total_hours;
+
     return (
-      <form action={changeAttendanceStatus}>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const formdata = new FormData(e.target);
+          formdata.append("_id", emp?.attendance?._id);
+          formdata.append("overtime_hours", overtime_hours);
+          formdata.append("point", point);
+          formdata.append("updated_by", session?.user?._id);
+          // if (formdata.get("state") === "pending") return alert("You Can Not Fill Proxy Of Employee")
+          if (session?.user?._id) {
+            const res = await changeAttendanceStatus(formdata);
+            if (res) return alert("Attendance is Changed Successfully");
+            alert("Failed To Change Attendance of Employee");
+          }
+        }}
+      >
         <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-5 rounded-xl border-1 border-purple-900">
-          <div>
-            <p>Punch In Time : {new Date().toLocaleTimeString()}</p>
-            <p>Punch Out Time : {new Date().toLocaleTimeString()}</p>
-            <p>
-              Total Hours : 
-              {new Date(new Date().setHours(14) - new Date()).getHours()}
-            </p>
-            <p>
-              Over Time Hours : 
-              {new Date(new Date().setHours(14) - new Date()).getHours()}
-            </p>
-          </div>
-          <Divider className="my-2" />
+          {status === "absent" || status === "onleave" ? (
+            <></>
+          ) : (
+            <>
+              <div>
+                <p>
+                  Punch In Time :{" "}
+                  {new Date(emp?.attendance?.punch_in).toLocaleTimeString()}
+                </p>
+                {status === "present" && (
+                  <>
+                    <p>
+                      Punch Out Time :{" "}
+                      {new Date(
+                        emp?.attendance?.punch_out
+                      ).toLocaleTimeString()}
+                    </p>
+                    <p>Point : {emp?.attendance?.point}</p>
+                  </>
+                )}
+                <p>
+                  Total Time : {total_hours} hours&nbsp;|&nbsp;
+                  {total_minutes} minutes
+                </p>
+                {total_hours > 8 && (
+                  <p>
+                    Over Time : {total_hours - 8} hours&nbsp;|&nbsp;
+                    {total_minutes - 60} minutes
+                  </p>
+                )}
+              </div>
+              <Divider className="my-2" />
+            </>
+          )}
           <Select
-            name="status"
+            name="state"
             color="primary"
             size="sm"
             // placeholder="Change Attendance Status"
-            placeholder={status}
+            defaultSelectedKeys={[status]}
             isRequired
+            aria-label="change attendance status"
             className="uppercase"
           >
             <SelectItem key={"pending"} value={"pending"}>
@@ -59,7 +116,6 @@ function AttendanceChip({ id, status, role }) {
               absent
             </SelectItem>
           </Select>
-          <input type="text" value={id} hidden readOnly name="id" />
           <Button
             type="submit"
             color="primary"
@@ -67,6 +123,7 @@ function AttendanceChip({ id, status, role }) {
             variant="shadow"
             className="uppercase"
             endContent={<GrUpdate />}
+            isDisabled={!emp.attendance}
           >
             Change Attendance
           </Button>
@@ -80,23 +137,18 @@ function AttendanceChip({ id, status, role }) {
       color="secondary"
       placement="top"
       // delay={500}
-      content={<ChangeAttendance id={id} status={status} />}
+      content={<ChangeAttendance />}
       className="bg-transparent border-none shadow-none"
     >
       <Chip
-        variant={role === "manager" ? "solid" : "faded"}
+        variant={emp.designation === "Manager" ? "solid" : "faded"}
         color="default"
         size="lg"
         // className="min-w-48 uppercase"
-        avatar={
-          <Avatar
-            src="https://i.pravatar.cc/300?u=a042581f4e29026709d"
-            size="lg"
-          />
-        }
+        avatar={<Avatar src={"/kuldip_upload/" + emp.image} size="lg" />}
       >
         <span className="flex justify-between w-full gap-1 items-center uppercase">
-          Kuldip Sarvaiya
+          {emp.middle_name} {emp.first_name}
           <FaDotCircle className={colors[status]} />
         </span>
       </Chip>

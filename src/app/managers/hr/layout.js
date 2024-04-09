@@ -1,4 +1,3 @@
-import ChatModel from "@/components/ChatModel";
 import DashBoardNavBar from "@/components/DashBoardNavBar";
 import SideBar from "@/components/SideBar";
 
@@ -13,7 +12,7 @@ export default function HrLayout({ children }) {
     "tasks",
     "assign_task",
     // "employees",
-    "manage_employee", 
+    "manage_employee",
     "attendance",
     "leave_report",
     "announcement",
@@ -26,7 +25,6 @@ export default function HrLayout({ children }) {
         <SideBar mainPath="/managers/hr/" menuItems={menuItems} />
       </div>
       <div className="md:pl-[241px]  relative pt-16">{children}</div>
-      <ChatModel />
     </section>
   );
 }

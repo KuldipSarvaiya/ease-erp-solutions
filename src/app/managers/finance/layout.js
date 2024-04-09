@@ -1,4 +1,3 @@
-import ChatModel from "@/components/ChatModel";
 import DashBoardNavBar from "@/components/DashBoardNavBar";
 import SideBar from "@/components/SideBar";
 
@@ -26,7 +25,6 @@ export default function FinanceLayout({ children }) {
         <SideBar mainPath={"/managers/finance/"} menuItems={menuItems} />
       </div>
       <main className="md:pl-[241px]  relative pt-16">{children}</main>
-      <ChatModel />
     </section>
   );
 }

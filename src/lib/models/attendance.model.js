@@ -45,12 +45,12 @@ const attendanceSchema = new mongoose.Schema(
     punch_out: {
       type: Date,
       required: false,
-      validate: {
-        validator: (v) =>
-          new Date(v).getDay() === new Date(this.punch_in).getDate(),
-        message: (props) =>
-          `${props.name} can not be ${props.value} | punch_in & punch_out must be same`,
-      },
+      // validate: {
+      //   validator: (v) =>
+      //     new Date(v).getDay() === new Date(this.punch_in).getDate(),
+      //   message: (props) =>
+      //     `${props.name} can not be ${props.value} | punch_in & punch_out must be same`,
+      // },
     },
     overtime_hours: {
       type: Number,

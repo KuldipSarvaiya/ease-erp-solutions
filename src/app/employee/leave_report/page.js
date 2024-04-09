@@ -19,6 +19,7 @@ import { redirect } from "next/navigation";
 export default function LeavePage() {
   const [leaveDays, setLeaveDays] = useState(1);
   const [myLeaves, setMyLeave] = useState([]);
+  // const [validDate, setValidDate] = useState(false);
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -54,6 +55,13 @@ export default function LeavePage() {
     }
   }
 
+  const today =
+    new Date().getFullYear() +
+    "-" +
+    (new Date().getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    (new Date().getUTCDate() + 1).toString().padStart(2, "0");
+
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
       {/* leave report form */}
@@ -77,8 +85,8 @@ export default function LeavePage() {
             </ButtonGroup>
             &nbsp;&nbsp;Days.
           </span>
-          <input name="total_leave_days" value={leaveDays} hidden />
-          <input name="emp" value={session?.user?._id} hidden />
+          <input name="total_leave_days" value={leaveDays} readOnly hidden />
+          <input name="emp" value={session?.user?._id} hidden readOnly />
           <div className="flex flex-col flex-nowrap gap-5 mt-3 md:flex-nowrap">
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 row-auto gap-4">
               <span className="text-xl font-semibold row-span-2">
@@ -91,7 +99,9 @@ export default function LeavePage() {
                   name="dates_of_leave"
                   variant="faded"
                   size="md"
+                  color="secondary"
                   isRequired
+                  min={today}
                 />
               ))}
             </span>

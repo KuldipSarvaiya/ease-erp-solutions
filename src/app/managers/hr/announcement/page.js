@@ -11,8 +11,16 @@ import {
 import { useState } from "react";
 import { FaMinus } from "react-icons/fa";
 import { GrAdd, GrAnnounce } from "react-icons/gr";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Page() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/managers/hr/attendance");
+    },
+  });
   const [days, setDays] = useState(1);
 
   async function handelDeclareHoliday(formdata) {
@@ -31,10 +39,18 @@ export default function Page() {
         type="date"
         name={`date${i + 1}`}
         isRequired
+        min={today}
         className="w-52"
       />
     ));
   }
+
+  const today =
+    new Date().getFullYear() +
+    "-" +
+    (new Date().getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    (new Date().getUTCDate() + 1).toString().padStart(2, "0");
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -49,15 +65,22 @@ export default function Page() {
             <span className="flex flex-nowrap gap-5 flex-col">
               <p>Date : </p>
               <div>
+                <input
+                  type="text"
+                  readOnly
+                  value={session?.user?._id.toString()}
+                  name="updated_by"
+                  hidden
+                />
                 <Input
                   variant="faded"
                   type="date"
                   color="secondary"
                   name="date"
                   size="md"
-                  // label="Holiday Date"
-                  // labelPlacement="outside-left"
+                  aria-label="Holiday Date"
                   isRequired
+                  min={today}
                   className="max-w-96"
                 />
               </div>
@@ -118,6 +141,7 @@ export default function Page() {
                 variant="faded"
                 color="secondary"
                 type="time"
+                size="lg"
                 name="start_time"
                 label="Event Start Time"
                 labelPlacement="outside"
@@ -126,6 +150,7 @@ export default function Page() {
               />
               <Input
                 variant="faded"
+                size="lg"
                 color="secondary"
                 type="time"
                 name="end_time"
@@ -133,57 +158,57 @@ export default function Page() {
                 labelPlacement="outside"
                 isRequired
                 className="md:col-start-3 md:col-end-4"
-              />
-              {/* <p className="text-red-500"> {errors?.date?.message} </p> */}
-            </span>
-            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
-              <span className="text-xl font-semibold">Subject : </span>
-              <Input
-                variant="faded"
-                color="secondary"
-                type="text"
-                name="subject"
-                isRequired
-                className="md:col-start-2 md:col-end-4"
-              />
-              {/* <p className="text-red-500"> {errors?.date?.message} </p> */}
+              /> 
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Title : </span>
               <Input
+                size="lg"
                 variant="faded"
                 color="secondary"
                 type="text"
                 name="title"
                 isRequired
                 className="md:col-start-2 md:col-end-4"
-              />
-              {/* <p className="text-red-500"> {errors?.date?.message} </p> */}
+              /> 
             </span>
+            <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
+              <span className="text-xl font-semibold">Subject : </span>
+              <Textarea
+                size="lg"
+                variant="faded"
+                color="secondary"
+                type="text"
+                name="subject"
+                isRequired
+                className="md:col-start-2 md:col-end-4"
+              /> 
+            </span>
+
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Details : </span>
               <Textarea
+                size="lg"
                 variant="faded"
                 color="secondary"
                 name="details"
                 isRequired
                 className="md:col-start-2 md:col-end-4"
-              />
-              {/* <p className="text-red-500"> {errors?.date?.message} </p> */}
+              /> 
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">
                 Formalities To Follow :{" "}
               </span>
-              <Input
+              <Textarea
+                size="lg"
                 variant="faded"
                 color="secondary"
-                type="text"
                 name="formalities"
                 isRequired
                 className="md:col-start-2 md:col-end-4"
               />
-              <p className="text-orange-500"> Put (*) Sign For New Line </p>
+              <p className="text-orange-500"> Press Enter↩️  For New Line </p>
             </span>
             <span className="flex w-full">
               <Button

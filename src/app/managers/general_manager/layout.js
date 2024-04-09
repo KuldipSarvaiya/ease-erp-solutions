@@ -1,4 +1,3 @@
-import ChatModel from "@/components/ChatModel";
 import DashBoardNavBar from "@/components/DashBoardNavBar";
 import SideBar from "@/components/SideBar";
 
@@ -15,7 +14,7 @@ export default function GenManagerLayout({ children }) {
     "employees",
     "raw_material",
     "used_stock",
-    "produced_stock", 
+    "produced_stock",
     "reports",
   ];
   return (
@@ -25,7 +24,6 @@ export default function GenManagerLayout({ children }) {
         <SideBar mainPath="/managers/general_manager/" menuItems={menuItems} />
       </div>
       <div className="md:pl-[241px]  relative pt-16">{children}</div>
-      <ChatModel />
     </section>
   );
 }

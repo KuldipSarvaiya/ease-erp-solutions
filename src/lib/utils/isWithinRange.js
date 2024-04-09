@@ -4,8 +4,8 @@ function isWithinRange(range, office_coords, emp_coords) {
   const R = 6371.0;
 
   // Convert degrees to radians
-  const lat1_rad = office_coords.latitude * (Math.PI / 180);
-  const lon1_rad = office_coords.longitude * (Math.PI / 180);
+  const lat1_rad = +office_coords.latitude * (Math.PI / 180);
+  const lon1_rad = +office_coords.longitude * (Math.PI / 180);
   const lat2_rad = emp_coords.latitude * (Math.PI / 180);
   const lon2_rad = emp_coords.longitude * (Math.PI / 180);
 

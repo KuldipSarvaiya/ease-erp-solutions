@@ -2,7 +2,7 @@ import Attendance from "@/lib/models/attendance.model";
 import connectDB from "@/lib/mongoose";
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
-import { myOld, myToday } from "./getReqs";
+import { allEmpGroupDept, myOld, myToday } from "./getReqs";
 
 export async function GET(req) {
   const job = new URL(req.url).searchParams.get("job");
@@ -21,6 +21,9 @@ export async function GET(req) {
     case "myOld":
       const res2 = await myOld(id);
       return NextResponse.json(res2);
+    case "allEmpGroupDept":
+      const res3 = await allEmpGroupDept();
+      return NextResponse.json(res3);
 
     default:
       break;

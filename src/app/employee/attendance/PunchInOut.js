@@ -2,56 +2,88 @@
 
 import isWithinRange from "@/lib/utils/isWithinRange";
 import { Button } from "@nextui-org/react";
-import { startTransition, useState } from "react";
+import { useEffect, useState } from "react";
 import { GiEntryDoor, GiExitDoor } from "react-icons/gi";
 
 // todo : add dynamic employee's attendance coordinates
 
-export function PunchIn({ id, myCoords }) {
+export function PunchIn({ id }) {
   // if time is ealry or too late
   const h = new Date().getHours();
-  if (h > 15 || h < 8) return;
+  if (h > 15 || h < 8)
+    return (
+      <center className="text-red-500 w-full py-10 font-semibold text-base">
+        Please punch in between 8am to 3pm
+      </center>
+    );
 
+  const [myCoords, setMyCoords] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!!!myCoords.attendance_coordinates && id) {
+      (async () => {
+        const res = await fetch("/api/employee/details/" + id, {
+          method: "GET",
+        });
+        if (!res.ok) {
+          setError(
+            "Sorry, Failed To Get Your Attendance Details\nTry Refreshing This Page"
+          );
+          return;
+        }
+        const json = await res.json();
+        const dt = {
+          attendance_coordinates: json.attendance_coordinates,
+          attendance_radius: json.attendance_radius,
+        };
+        console.log("my coords = ", dt);
+        setMyCoords(dt);
+      })();
+    }
+  }, [id]);
 
   function handlePunchIn() {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(async (a) => {
       console.log("Latitude : " + a.coords.latitude);
       console.log("Longitute : " + a.coords.longitude);
-      const res = isWithinRange(
-        myCoords.attendance_radius,
-        // 100,
-        // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
-        // { latitude: 23.0302, longitude: 72.5772 }, //home
-        myCoords.attendance_coordinates,
-        a.coords
-      );
+      try {
+        const res = isWithinRange(
+          myCoords.attendance_radius,
+          // 100,
+          // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
+          // { latitude: 23.0302, longitude: 72.5772 }, //home
+          myCoords.attendance_coordinates,
+          a.coords
+        );
 
-      if (res) {
-        const res = await fetch("/api/employee/attendance", {
-          method: "POST",
-          body: JSON.stringify({
-            _id: id,
-            coordinates: {
-              latitude: a.coords.latitude,
-              longitude: a.coords.longitude,
-            },
-          }),
-        });
+        if (res) {
+          const res = await fetch("/api/employee/attendance", {
+            method: "POST",
+            body: JSON.stringify({
+              _id: id,
+              coordinates: {
+                latitude: a.coords.latitude,
+                longitude: a.coords.longitude,
+              },
+            }),
+          });
 
-        if (res.ok) alert("success attendace");
-      }
+          if (res.ok) alert("success attendace");
+        }
 
-      console.log("Function responce = ", res);
-      startTransition(() => {
-        setLoading(false);
+        console.log("Function responce = ", res);
         !res &&
           setError(
             "******Sorry, Failed To Verify Location. Please Try Again...******"
           );
-      });
+      } catch (error) {
+        console.warn(error);
+        setError("******Sorry, Failed To Punch In. Please Try Again...******");
+      }
+      setLoading(false);
     });
   }
 
@@ -66,7 +98,7 @@ export function PunchIn({ id, myCoords }) {
           className="tracking-widest uppercase text-4xl font-extrabold"
           disabled={loading}
           onPress={handlePunchIn}
-          isLoading={loading}
+          isLoading={loading || !!!myCoords.attendance_coordinates}
         >
           punch in {!loading && <GiExitDoor />}
         </Button>
@@ -74,6 +106,8 @@ export function PunchIn({ id, myCoords }) {
           Please Turn On Location Service Before Processed Further
           <br />
           <br />
+          {!!!myCoords.attendance_coordinates &&
+            "Getting Your Coordinates Details..."}
           {error}
         </p>
       </center>
@@ -100,50 +134,50 @@ export function PunchOut({ data, myCoords }) {
     navigator.geolocation.getCurrentPosition(async (a) => {
       console.log("Latitude : " + a.coords.latitude);
       console.log("Longitute : " + a.coords.longitude);
-      const res = isWithinRange(
-        myCoords.attendance_radius,
-        // 100,
-        // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
-        // { latitude: 23.0302, longitude: 72.5772 }, //home
-        myCoords.attendance_coordinates,
-        a.coords
-      );
-      console.log("Function responce = ", res);
+      try {
+        const res = isWithinRange(
+          myCoords.attendance_radius,
+          // 100,
+          // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
+          // { latitude: 23.0302, longitude: 72.5772 }, //home
+          myCoords.attendance_coordinates,
+          a.coords
+        );
+        console.log("Function responce = ", res);
 
-      if (res) {
-        const point = total_hours >= 8 ? 1 : total_hours >= 4 ? 0.5 : 0;
-        const overtime_hours =
-          total_hours > 8
-            ? total_hours - 8
-            : total_hours > 4
-            ? total_hours - 4
-            : total_hours;
+        if (res) {
+          const point = total_hours >= 8 ? 1 : total_hours >= 4 ? 0.5 : 0;
+          const overtime_hours =
+            total_hours > 8
+              ? total_hours - 8
+              : total_hours > 4
+              ? total_hours - 4
+              : total_hours;
 
-        const response = await fetch("/api/employee/attendance", {
-          method: "PUT",
-          body: JSON.stringify({
-            _id: data._id,
-            employee_id: data.employee_id,
-            point: point,
-            overtime_hours: overtime_hours,
-            state: "present",
-            coordinates: {
-              latitude: a.coords.latitude,
-              longitude: a.coords.longitude,
-            },
-          }),
-        });
+          const response = await fetch("/api/employee/attendance", {
+            method: "PUT",
+            body: JSON.stringify({
+              _id: data._id,
+              employee_id: data.employee_id,
+              point: point,
+              overtime_hours: overtime_hours,
+              state: "present",
+              coordinates: {
+                latitude: a.coords.latitude,
+                longitude: a.coords.longitude,
+              },
+            }),
+          });
 
-        if (response.ok) alert("success attendace");
+          if (response.ok) alert("success attendace");
+        }
+      } catch (error) {
+        console.warn(error);
+        setError(
+          "******Sorry, Failed To Verify Location. Please Try Again...******"
+        );
       }
-
-      startTransition(() => {
-        setLoading(!res);
-        !res &&
-          setError(
-            "******Sorry, Failed To Verify Location. Please Try Again...******"
-          );
-      });
+      setLoading(false);
     });
   }
 

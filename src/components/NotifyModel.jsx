@@ -27,7 +27,7 @@ function NotifyModel() {
   });
 
   useEffect(() => {
-    if (session?.user?._id)
+    if (session?.user?._id && notices.length === 0)
       (() => {
         fetch("/api/notice?_id=" + session?.user?._id, {
           method: "GET",
