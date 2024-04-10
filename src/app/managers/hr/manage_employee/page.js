@@ -69,6 +69,7 @@ export default function ManageEmpAdmin() {
                   {dept.employees?.map((emp) => (
                     <EmployeeSmall emp={emp} />
                   ))}
+                  {dept?.employees.length === 0 && <h1>This Department Is <b>ABANDON</b>, No Employee Works Here</h1>}
                 </div>
               </AccordionItem>
             );

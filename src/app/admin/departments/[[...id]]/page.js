@@ -2,133 +2,65 @@ import { Button, Divider } from "@nextui-org/react";
 import Link from "next/link";
 import { MdCreate, MdDelete, MdUpdate } from "react-icons/md";
 import NewDepartment from "./NewDepartment";
+import Department from "@/lib/models/department.model";
 
-export default function Page({ params: { id } }) {
+export default async function Page({ params: { id } }) {
   console.log(id);
-  // ! fetch data of this id[0] here and send it to the update department componnet
 
-  const departments = [
+  // ? this pipeline only gets details of manager not about materials
+  const departments = await Department.aggregate([
     {
-      _id: "asfwe32wafgr34swf4as",
-      manager: { name: "kuldip", _id: "efdsf34a" },
-      dept_name: "fabric-manufacturing",
-      used_material_id: [{ name: "rajapuri keri" }, { name: "kesar keri" }],
-      produced_material_id: [
-        { name: "ready made keri ras" },
-        { name: "keri no ras kadho" },
-      ],
-      produced_product_id: [
-        { name: "gokul no ras" },
-        { name: "gir ni special keri" },
-        { name: "laal desi keri" },
-      ],
-      production_process_level: 1,
-      raw_material_used_level: 1,
-      produced_material_level: 2,
-      prev_managers_id: [
-        { name: "kuldip", _id: "efdsf34a" },
-        { name: "rajdeep", _id: "efdsf34asd3" },
-      ],
+      $lookup: {
+        from: "employees",
+        localField: "_id",
+        foreignField: "department_id",
+        as: "manager",
+      },
     },
     {
-      _id: "asfwe32w3rweafswf4as",
-      manager: { name: "kuldip", _id: "efdsf34a" },
-      dept_name: "cleaning-&-finishing",
-      used_material_id: [
-        { name: "hafus keri" },
-        { name: "rajapuri keri" },
-        { name: "kesar keri" },
-      ],
-      produced_material_id: [
-        { name: "ready made keri ras" },
-        { name: "keri no ras kadho" },
-      ],
-      produced_product_id: [
-        { name: "gokul no ras" },
-        { name: "gir ni special keri" },
-      ],
-      production_process_level: 1,
-      raw_material_used_level: 1,
-      produced_material_level: 2,
-      prev_managers_id: [
-        { name: "kuldip", _id: "efdsf34a" },
-        { name: "rajdeep", _id: "efdsf34asd3" },
-      ],
+      $project: {
+        manager: {
+          $filter: {
+            input: "$manager",
+            cond: {
+              $eq: ["$$this.designation", "Manager"],
+            },
+          },
+        },
+        prev_managers_id: 1,
+        _id: 1,
+        production_process_level: 1,
+        dept_name: 1,
+        raw_material_used_level: 1,
+        produced_material_level: 1,
+      },
     },
     {
-      _id: "asfwe345f2wafswf4as",
-      manager: { name: "kuldip", _id: "efdsf34a" },
-      dept_name: "Dying-&-printing",
-      used_material_id: [
-        { name: "hafus keri" },
-        { name: "rajapuri keri" },
-        { name: "kesar keri" },
-      ],
-      produced_material_id: [
-        { name: "ready made keri ras" },
-        { name: "keri no ras kadho" },
-      ],
-      produced_product_id: [
-        { name: "gokul no ras" },
-        { name: "gir ni special keri" },
-      ],
-      production_process_level: 1,
-      raw_material_used_level: 1,
-      produced_material_level: 2,
-      prev_managers_id: [
-        { name: "kuldip", _id: "efdsf34a" },
-        { name: "rajdeep", _id: "efdsf34asd3" },
-      ],
+      $unwind: {
+        path: "$manager",
+        preserveNullAndEmptyArrays: true,
+      },
     },
     {
-      _id: "asfwe32wadggfgs3fswf4as",
-      manager: { name: "kuldip", _id: "efdsf34a" },
-      dept_name: "cutting",
-      used_material_id: [
-        { name: "hafus keri" },
-        { name: "rajapuri keri" },
-        { name: "dasheri keri" },
-        { name: "kesar keri" },
-      ],
-      produced_material_id: [
-        { name: "ready made keri ras" },
-        { name: "keri no ras kadho" },
-      ],
-      produced_product_id: [
-        { name: "gokul no ras" },
-        { name: "gir ni special keri" },
-      ],
-      production_process_level: 1,
-      raw_material_used_level: 1,
-      produced_material_level: 2,
-      prev_managers_id: [
-        { name: "kuldip", _id: "efdsf34a" },
-        { name: "rajdeep", _id: "efdsf34asd3" },
-      ],
+      $unwind: {
+        path: "$prev_managers_id",
+        preserveNullAndEmptyArrays: true,
+      },
     },
     {
-      _id: "asfwe32wafsew322wf4as",
-      manager: { name: "kuldip", _id: "efdsf34a" },
-      dept_name: "sewing",
-      used_material_id: [{ name: "hafus keri" }, { name: "rajapuri keri" }],
-      produced_material_id: [
-        { name: "ready made keri ras" },
-        { name: "keri no ras kadho" },
-        { name: "galle thi leta aavo" },
-      ],
-      produced_product_id: [
-        { name: "gokul no ras" },
-        { name: "gir ni special keri" },
-      ],
-      production_process_level: 1,
-      raw_material_used_level: 1,
-      produced_material_level: 2,
-      prev_managers_id: [
-        { name: "kuldip", _id: "efdsf34a" },
-        { name: "rajdeep", _id: "efdsf34asd3" },
-      ],
+      $lookup: {
+        from: "employees",
+        localField: "prev_managers_id",
+        foreignField: "_id",
+        as: "prev_managers",
+      },
     },
-  ];
+  ]);
+
+  console.log(departments);
+
+  const id_dept = departments?.find((d) => d?._id.toString() === id?.[0]);
+  console.log(id_dept);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -154,68 +86,86 @@ export default function Page({ params: { id } }) {
                 {dept?.production_process_level}
               </span>
               <span className="capitalize">
-                <b>MANAGER : </b> {dept?.manager?.name} / {dept?.manager?._id}
+                <b>MANAGER : </b> {dept?.manager?.first_name}{" "}
+                {dept?.manager?.middle_name} {/* {dept?.manager?._id}*/}
               </span>
-              <span className="flex  flex-row flex-nowrap gap-1">
-                <b>USED MATERIALS : </b>
-                <span className="flex flex-col">
-                  {dept?.used_material_id?.map((material) => (
-                    <span key={material?.name}>&rarr; {material?.name}</span>
-                  ))}
-                </span>
-              </span>
-              <span className="flex  flex-row flex-nowrap gap-1">
-                <b>PRODUCED MATERIALS : </b>
-                <span className="flex flex-col">
-                  {dept?.produced_material_id?.map((material) => (
-                    <span key={material?.name}>&rarr; {material?.name}</span>
-                  ))}
-                </span>
-              </span>
-              <span className="flex  flex-row flex-nowrap gap-1">
-                <b>PRODUCED PRODUCT : </b>
-                <span className="flex flex-col">
-                  {dept?.produced_product_id?.map((material) => (
-                    <span key={material?.name}>&rarr; {material?.name}</span>
-                  ))}
-                </span>
-              </span>
-              <span>
-                <b>MATERIAL USED LEVEL : </b> {dept?.raw_material_used_level}
-              </span>
-              <span>
-                <b>MATERIAL PRODUCED LEVEL : </b>{" "}
-                {dept?.produced_material_level}
-              </span>
+              {!["hr", "finance", "inventory"].includes(dept?.dept_name) && (
+                <>
+                  <span className="flex  flex-row flex-nowrap gap-1">
+                    <b>USED MATERIALS : </b>
+                    <span className="flex flex-col">
+                      {dept?.used_material_id?.map((material) => (
+                        <span key={material?.name}>
+                          &rarr; {material?.name}
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+                  <span className="flex  flex-row flex-nowrap gap-1">
+                    <b>PRODUCED MATERIALS : </b>
+                    <span className="flex flex-col">
+                      {dept?.produced_material_id?.map((material) => (
+                        <span key={material?.name}>
+                          &rarr; {material?.name}
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+                  <span className="flex  flex-row flex-nowrap gap-1">
+                    <b>PRODUCED PRODUCT : </b>
+                    <span className="flex flex-col">
+                      {dept?.produced_product_id?.map((material) => (
+                        <span key={material?.name}>
+                          &rarr; {material?.name}
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+                  <span>
+                    <b>MATERIAL USED LEVEL : </b>{" "}
+                    {dept?.raw_material_used_level}
+                  </span>
+                  <span>
+                    <b>MATERIAL PRODUCED LEVEL : </b>{" "}
+                    {dept?.produced_material_level}
+                  </span>
+                </>
+              )}
               <span className="flex  flex-row flex-nowrap gap-1">
                 <b>PREVIOUS MANAGERS : </b>
                 <span className="flex flex-col">
-                  {dept?.prev_managers_id?.map((manager) => (
-                    <span key={manager?._id}>&rarr; {manager?.name}</span>
+                  {dept?.prev_managers?.map((manager) => (
+                    <span key={manager?._id}>
+                      &rarr; {manager?.first_name + " " + manager?.middle_name}
+                    </span>
                   ))}
                 </span>
               </span>
-              <span>
-                <Button
-                  as={Link}
-                  href={"/admin/departments/" + dept?._id}
-                  variant="shadow"
-                  color="secondary"
-                  size="sm"
-                  startContent={<MdUpdate />}
-                >
-                  U P D A T E
-                </Button>
-                &nbsp; &nbsp;
-                <Button
-                  variant="shadow"
-                  color="secondary"
-                  size="sm"
-                  startContent={<MdDelete />}
-                >
-                  D E L E T E
-                </Button>
-              </span>
+              {!["hr", "finance", "inventory"].includes(dept?.dept_name) && (
+                <span>
+                  <Button
+                    as={Link}
+                    href={"/admin/departments/" + dept?._id}
+                    variant="shadow"
+                    color="secondary"
+                    size="sm"
+                    title="Updae Dept Details"
+                    startContent={<MdUpdate />}
+                  >
+                    U P D A T E
+                  </Button>
+                  &nbsp; &nbsp;
+                  <Button
+                    variant="shadow"
+                    color="secondary"
+                    size="sm"
+                    title="Make Sure To Shift Employees To Other Dept"
+                    startContent={<MdDelete />}
+                  >
+                    D E L E T E
+                  </Button>
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -223,7 +173,9 @@ export default function Page({ params: { id } }) {
 
       <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500 mt-10  gap-2 grid grid-cols-1 row-auto m-auto">
         <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
-          {id?.[0] ? "UPDATE DEPARTMENTS : " + id[0] : "CREATE DEPARTMENTS"}
+          {id?.[0]
+            ? "UPDATE DEPARTMENTS : " + id_dept?.dept_name
+            : "CREATE DEPARTMENTS"}
           {id?.[0] && (
             <Button
               as={Link}
@@ -241,19 +193,10 @@ export default function Page({ params: { id } }) {
         <NewDepartment
           id={id?.[0]}
           data={{
-            _id: "asfwe32wafgr34swf4as",
-            manager: { name: "kuldip", _id: "efdsf34a" },
-            dept_name: "fabric-manufacturing",
-            used_material_id: ["rajapuri keri", "kesar keri"],
-            produced_material_id: ["ready made keri ras", "keri no ras kadho"],
-            produced_product_id: [
-              "gokul no ras",
-              "gir ni special keri",
-              "laal desi keri",
-            ],
-            production_process_level: 1,
-            raw_material_used_level: 1,
-            produced_material_level: 2,
+            dept_name: id_dept?.dept_name?.replaceAll("-", " "),
+            production_process_level: id_dept?.production_process_level,
+            raw_material_used_level: id_dept?.raw_material_used_level,
+            produced_material_level: id_dept?.produced_material_level,
           }}
         />
       </div>

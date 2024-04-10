@@ -13,21 +13,21 @@ const general_dept_managerSchema = new Schema(
       immutable: false,
       unique: true,
     },
-    used_material_id: {
-      type: [Schema.ObjectId],
-      ref: "RawMaterial",
-      required: true,
-    },
-    produced_material_id: {
-      type: [Schema.ObjectId],
-      ref: "RawMaterial",
-      required: false,
-    },
-    produced_product_id: {
-      type: [Schema.ObjectId],
-      ref: "Product",
-      required: false,
-    },
+    // used_material_id: {
+    //   type: [Schema.ObjectId],
+    //   ref: "RawMaterial",
+    //   required: true,
+    // },
+    // produced_material_id: {
+    //   type: [Schema.ObjectId],
+    //   ref: "RawMaterial",
+    //   required: false,
+    // },
+    // produced_product_id: {
+    //   type: [Schema.ObjectId],
+    //   ref: "Product",
+    //   required: false,
+    // },
     production_process_level: {
       type: Number,
       required: true,

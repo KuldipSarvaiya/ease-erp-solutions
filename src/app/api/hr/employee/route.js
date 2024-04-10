@@ -5,6 +5,7 @@ import { writeFile } from "node:fs";
 import { join } from "node:path";
 import { cwd } from "node:process";
 import { revalidateTag } from "next/cache";
+import Department from "@/lib/models/department.model";
 
 // create new employees
 export async function POST(request) {
@@ -69,40 +70,29 @@ export async function POST(request) {
 
 export async function GET(req) {
   await connectDB();
-  const employees = await Employee.aggregate([
-    {
-      $match: {
-        is_ex_employee: false,
-      },
-    },
-    {
-      $group: {
-        _id: "$department_id",
-        employees: {
-          $push: "$$ROOT",
-        },
-      },
-    },
+  const employees = await Department.aggregate([
     {
       $lookup: {
-        from: "departments",
+        from: "employees",
         localField: "_id",
-        foreignField: "_id",
-        as: "department",
+        foreignField: "department_id",
+        as: "employees",
       },
     },
     {
       $project: {
-        _id: 1,
-        dept_name: {
-          $arrayElemAt: ["$department.dept_name", 0],
+        employees: {
+          $filter: {
+            input: "$employees",
+            cond: {
+              $ne: ["$$this.designation", "Admin"],
+            },
+          },
         },
-        employees: 1,
-      },
-    },
-    {
-      $sort: {
-        dept_namw: 1,
+        prev_managers_id: 1,
+        _id: 1,
+        production_process_level: 1,
+        dept_name: 1,
       },
     },
   ]);

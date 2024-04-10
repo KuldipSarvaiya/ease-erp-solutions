@@ -1,92 +1,51 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import EmployeeSmall from "@/components/cards/EmployeeSmall";
+import { changeManager } from "@/lib/utils/server_actions/admin";
 import { Button, Divider, Select, SelectItem } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function ManagersAdminPage() {
-  const data = {
-    hr: [
-      { name: "kuldip", _id: "2323rjneo32jk" },
-      { name: "aarya", _id: "23r3jneo32jk" },
-      { name: "man", _id: "23rjne3o32jk" },
-      { name: "kush", _id: "23rjne3o32jk" },
-      { name: "ved", _id: "23rjneo332jfe3k" },
-      { name: "heer", _id: "23rjneo332jk" },
-    ],
-    finance: [
-      { name: "kuldip", _id: "423rjneo32jk" },
-      { name: "aarya", _id: "234rjneo32jk" },
-      { name: "man", _id: "23rjn4eo32jk" },
-      { name: "kush", _id: "23rjn4eo32jk" },
-      { name: "ved", _id: "23rjneo432jfe3k" },
-      { name: "heer", _id: "23rjneo432jk" },
-    ],
-    inventory: [
-      { name: "kuldip", _id: "523rjneo32jk" },
-      { name: "aarya", _id: "235rjneo32jk" },
-      { name: "man", _id: "23rjn5eo32jk" },
-      { name: "kush", _id: "23rjn5eo32jk" },
-      { name: "ved", _id: "23rjneo532jfe3k" },
-      { name: "heer", _id: "23rjneo532jk" },
-    ],
-    "fabri-manufacturing": [
-      { name: "kuldip", _id: "623rjneo32jk" },
-      { name: "aarya", _id: "236rjneo32jk" },
-      { name: "man", _id: "23rjn6eo32jk" },
-      { name: "kush", _id: "23rjn6eo32jk" },
-      { name: "ved", _id: "23rjneo6632jfe3k" },
-      { name: "heer", _id: "23rjneo362jk" },
-    ],
-    "cleaning-and-finishing": [
-      { name: "kuldip", _id: "723rjneo32jk" },
-      { name: "aarya", _id: "237rjneo32jk" },
-      { name: "man", _id: "23rjn7eo32jk" },
-      { name: "kush", _id: "23rjn7eo32jk" },
-      { name: "ved", _id: "23rjneo732jfe3k" },
-      { name: "heer", _id: "23rjneo732jk" },
-    ],
-    "dying-and-printing": [
-      { name: "kuldip", _id: "823rjneo32jk" },
-      { name: "aarya", _id: "238rjneo32jk" },
-      { name: "man", _id: "23rjn8eo32jk" },
-      { name: "kush", _id: "23rjn8eo32jk" },
-      { name: "ved", _id: "23rjneo832jfe3k" },
-      { name: "heer", _id: "23rjneo832jk" },
-    ],
-    cutting: [
-      { name: "kuldip", _id: "923rjneo32jk" },
-      { name: "aarya", _id: "239rjneo32jk" },
-      { name: "man", _id: "23rjn9eo32jk" },
-      { name: "kush", _id: "23rjn9eo32jk" },
-      { name: "ved", _id: "23rjneo932jfe3k" },
-      { name: "heer", _id: "23rjneo932jk" },
-    ],
-    sewing: [
-      { name: "kuldip", _id: "123rjneo32jk" },
-      { name: "aarya", _id: "231rjneo32jk" },
-      { name: "man", _id: "23rjn1eo32jk" },
-      { name: "kush", _id: "23rjn1eo32jk" },
-      { name: "ved", _id: "23rjneo132jfe3k" },
-      { name: "heer", _id: "23rjneo132jk" },
-    ],
-    "packing-and-labeling": [
-      { name: "kuldip", _id: "223rjneo32jk" },
-      { name: "aarya", _id: "232rjneo32jk" },
-      { name: "man", _id: "23rjn2eo32jk" },
-      { name: "kush", _id: "23rjn2eo32jk" },
-      { name: "ved", _id: "23rjneo232jfe3k" },
-      { name: "heer", _id: "23rjneo232jk" },
-    ],
-  };
+  const [data, setData] = useState([]);
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect(
+        "/api/auth/signin?callback_url=/managers/hr/manage_employee/new"
+      );
+    },
+  });
 
-  const departments = Object.keys(data);
+  useEffect(() => {
+    if (data.length === 0) {
+      (async () => {
+        const res = await fetch("/api/hr/employee", {
+          method: "GET",
+          next: { tags: "ManageManagers" },
+        });
 
-  function handleChangeManager(event) {
+        if (!res.ok)
+          return alert("Can Not Get Manager Details Due To Network Error");
+
+        const json = await res.json();
+        console.log(json);
+
+        setData(json);
+      })();
+    }
+  }, []);
+
+  async function handleChangeManager(event) {
     event.preventDefault();
-    const fromdata = new FormData(event.target);
+    const formdata = new FormData(event.target);
 
-    console.log(fromdata.get("department"));
-    console.log(fromdata.get("new_manager"));
+    const res = await changeManager(formdata);
+
+    if (res) alert("Manager Of The Department Has Changed Successfully");
+    else alert("Faild To Change Manager Due to Network Issue");
   }
 
   return (
@@ -96,17 +55,29 @@ export default function ManagersAdminPage() {
           MANAGE MANAGERS
         </p>
         <Divider className="my-3" />
-        {departments?.map((dept) => {
+        {data.length === 0 && (
+          <span>
+            <Loading />
+          </span>
+        )}
+        {data?.map((dept) => {
           return (
             <span
-              key={dept}
+              key={dept?._id}
               className="grid grid-cols-5 max-md:grid-cols-1 max-md:grid-rows-2 mt-5 items-end"
             >
               <span className="col-start-1 col-end-3 max-lg:col-start-1 max-lg:col-end-1">
                 <b className="uppercase tracking-widest">
-                  {dept.replaceAll("-", " ")} :
+                &nbsp;&nbsp;{dept?.dept_name?.replaceAll("-", " ")} :
                 </b>
-                <EmployeeSmall />
+                <EmployeeSmall
+                  emp={
+                    dept?.employees?.filter(
+                      (e) => e.designation === "Manager"
+                    )[0]
+                  }
+                  manager={true}
+                />
               </span>
               <form
                 onSubmit={handleChangeManager}
@@ -117,20 +88,52 @@ export default function ManagersAdminPage() {
                   readOnly
                   type="text"
                   name="department"
-                  value={dept}
+                  value={dept?._id}
+                />
+                <input
+                  hidden
+                  readOnly
+                  type="text"
+                  name="updated_by"
+                  value={session?.user?._id}
+                />
+                <input
+                  hidden
+                  readOnly
+                  type="text"
+                  name="current_manager"
+                  value={
+                    dept?.employees?.filter(
+                      (e) => e.designation === "Manager"
+                    )?.[0]?._id
+                  }
                 />
                 <Select
                   variant="faded"
                   color="secondary"
-                  size="md"
+                  size="sm"
                   name="new_manager"
                   aria-label="new manager"
                   aria-labelledby="new manager"
                   isRequired
+                  defaultSelectedKeys={[
+                    dept?.employees?.filter(
+                      (e) => e.designation === "Manager"
+                    )?.[0]?._id,
+                  ]}
                 >
-                  {data[dept]?.map((emp) => (
-                    <SelectItem key={emp?._id} value={dept?._id}>
-                      {emp?.name}
+                  {dept?.employees?.map((emp) => (
+                    <SelectItem
+                      key={emp?._id}
+                      value={dept?._id}
+                      className="capitalize"
+                    >
+                      {`
+                    ${emp?.middle_name} ${emp?.first_name} ${
+                        "DOJ : ".padStart(100, "‎ ") +
+                        new Date(emp?.doj).toLocaleDateString()
+                      } 
+                    `}
                     </SelectItem>
                   ))}
                 </Select>
@@ -140,7 +143,7 @@ export default function ManagersAdminPage() {
                   variant="shadow"
                   color="secondary"
                 >
-                  CHANGE {dept.replaceAll("-", " ")} MANAGER
+                  CHANGE {dept?.dept_name?.replaceAll("-", " ")} MANAGER
                 </Button>
               </form>
             </span>

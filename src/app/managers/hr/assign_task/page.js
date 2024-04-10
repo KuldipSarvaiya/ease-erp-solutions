@@ -109,7 +109,7 @@ export default async function Page() {
         date: new Date(),
         assigned_employee_id: item,
         text: text,
-        updated_by: session.user.department_id._id,
+        updated_by: session.user._id,
       }));
 
       const res = await Task.insertMany(data);

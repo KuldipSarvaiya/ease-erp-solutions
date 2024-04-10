@@ -33,6 +33,11 @@ export async function allEmpGroupDept() {
 
   const res = await Employee.aggregate([
     {
+      $match: {
+        designation: { $ne: "Admin" },
+      },
+    },
+    {
       $lookup: {
         from: "attendances",
         let: {

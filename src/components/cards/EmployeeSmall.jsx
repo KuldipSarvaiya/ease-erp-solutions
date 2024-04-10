@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MdUpdate } from "react-icons/md";
 
-function EmployeeSmall({ emp }) {
+function EmployeeSmall({ emp, manager }) {
   function ToolTipDialog() {
     return (
       <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-3 rounded-xl border-1 border-purple-900">
@@ -11,34 +11,34 @@ function EmployeeSmall({ emp }) {
           alt="profile image"
           height={100}
           radius="sm"
-          src={"/kuldip_upload/" + emp.image}
+          src={"/kuldip_upload/" + emp?.image}
           width={250}
           className="object-contain overflow-hidden rounded-lg bg-slate-800"
         />
         <div className="flex flex-col">
           <p className="text-lg capitalize text-default-800">
-            {emp.first_name} {emp.middle_name} {emp.lasst_name}
+            {emp?.first_name} {emp?.middle_name} {emp?.last_name}
           </p>
           <p className="text-sm text-default-600 capitalize">
             {" "}
-            DOB : {new Date(emp.dob).toDateString()}
+            DOB : {new Date(emp?.dob).toDateString()}
             <br />
-            {emp.gender}
+            {emp?.gender}
           </p>
           <p className="text-sm text-default-600 capitalize">
-            <a href="mailto:kuldipsarvaiya94@gmail.com">{emp.email}</a>
+            <a href="mailto:kuldipsarvaiya94@gmail.com">{emp?.email}</a>
           </p>
           <p className="text-sm text-default-600 capitalize">
-            +91 {emp.contact_no}
+            +91 {emp?.contact_no}
           </p>
           <p className="text-sm text-default-600 capitalize">
-            coords : {emp.attendance_coordinates.latitude} ,{" "}
-            {emp.attendance_coordinates.longitude}
-            <br /> radius : {emp.attendance_radius} meters
+            coords : {emp?.attendance_coordinates?.latitude} ,{" "}
+            {emp?.attendance_coordinates?.longitude}
+            <br /> radius : {emp?.attendance_radius} meters
           </p>
         </div>
         <Button
-          href={`/managers/hr/manage_employee/update/${emp._id.toString()}`}
+          href={`/managers/hr/manage_employee/update/${emp?._id?.toString()}`}
           as={Link}
           size="sm"
           color="secondary"
@@ -50,6 +50,13 @@ function EmployeeSmall({ emp }) {
       </div>
     );
   }
+
+  if (!emp)
+    return (
+      <div className="p-2 flex flex-row gap-3 bg-purple-100/10 backdrop-blur-2xl rounded-xl border-1 border-purple-400 min-w-80 max-w-[350px] flex-1 hover:bg-purple-200/20">
+        <h1>No {manager ? "Manager" : "Employee"} Assigned</h1>
+      </div>
+    );
 
   return (
     <Tooltip
@@ -63,19 +70,19 @@ function EmployeeSmall({ emp }) {
           alt="employee logo"
           height={60}
           radius="sm"
-          src={"/kuldip_upload/" + emp.image}
+          src={"/kuldip_upload/" + emp?.image}
           width={60}
           className="object-cover rounded-lg bg-slate-800"
         />
         <div className="flex flex-col">
           <p className="text-lg capitalize text-default-800">
-            {emp.first_name} {emp.middle_name} {emp.lasst_name}
+            {emp?.first_name} {emp?.middle_name} {emp?.last_name}
           </p>
           <p className="text-small text-default-500 lowercase">
-            {emp.designation} &rarr; {emp.username}
+            {emp?.designation} &rarr; {emp?.username}
           </p>
           <p className="text-sm text-default-600 capitalize">
-            Serving Since {new Date(emp.doj).toDateString()}
+            Serving Since {new Date(emp?.doj).toDateString()}
           </p>
         </div>
       </div>

@@ -59,7 +59,7 @@ const employeeSchema = new Schema(
     designation: {
       type: String,
       enum: {
-        values: ["Employee", "Manager"],
+        values: ["Employee", "Manager", "Admin"],
         message: (props) => `${props.name} is not set to ${props.value}`,
       },
       required: true,

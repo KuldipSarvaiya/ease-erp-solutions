@@ -135,7 +135,8 @@ function AdminNavBoll() {
                   <>
                     <h6 className="flex-1">MANAGERIAL DASHBOARD</h6>
                     <p className="flex flex-nowrap max-md:flex-wrap gap-3">
-                      {my_dept === "finance" && (
+                      {(my_dept === "finance" ||
+                        session?.user?.designation === "Admin") && (
                         <Button
                           className="font-semibold"
                           as={Link}
@@ -146,7 +147,8 @@ function AdminNavBoll() {
                           F I N A N A C E
                         </Button>
                       )}
-                      {my_dept === "inventory" && (
+                      {(my_dept === "inventory" ||
+                        session?.user?.designation === "Admin") && (
                         <Button
                           className="font-semibold"
                           as={Link}
@@ -157,7 +159,8 @@ function AdminNavBoll() {
                           I N V E T O R Y
                         </Button>
                       )}
-                      {my_dept === "hr" && (
+                      {(my_dept === "hr" ||
+                        session?.user?.designation === "Admin") && (
                         <Button
                           className="font-semibold"
                           as={Link}
@@ -171,7 +174,8 @@ function AdminNavBoll() {
                     </p>
                   </>
                 )}
-                {depts.includes(my_dept) && (
+                {(depts.includes(my_dept) ||
+                  session?.user?.designation === "Admin") && (
                   <>
                     <h6 className="flex-1">GENERAL DEPARTMENT DASHBOARD</h6>
                     <p className="flex flex-wrap max-w-[500px] justify-stretch gap-3">

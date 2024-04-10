@@ -182,7 +182,7 @@ function Page() {
               {...register("username", {
                 required: "Please enter username",
                 pattern: {
-                  value: /[a-zA-Z0-9]{8,}/,
+                  value: /[a-zA-Z0-9_]{8,}/,
                   message: "Please use A-Z, a-z, 0-9, 8+ characters",
                 },
               })}

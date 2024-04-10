@@ -1,12 +1,23 @@
 "use client";
 
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem, Snippet } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { useState } from "react";
 
 function NewDepartment({ id, data }) {
   const router = useRouter();
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect(
+        "/api/auth/signin?callback_url=/managers/hr/manage_employee/new"
+      );
+    },
+  });
   const {
     register,
     getValues,
@@ -17,6 +28,7 @@ function NewDepartment({ id, data }) {
   } = useForm({
     defaultValues: id ? data : {},
   });
+  const [success, setSuccess] = useState(false);
 
   async function createNewDepartment(data) {
     console.log(data);
@@ -24,6 +36,8 @@ function NewDepartment({ id, data }) {
     const formData = new FormData();
 
     for (const key in data) formData.append(key, data[key]);
+    formData.append("updated_by", session?.user?._id);
+    if (id) formData.append("department_id", id);
 
     const result = await fetch("/api/admin/departments", {
       method: id ? "PUT" : "POST",
@@ -36,8 +50,11 @@ function NewDepartment({ id, data }) {
 
     console.log(res);
 
-    if (res.success === true)
+    if (res.success === true) {
+      setSuccess("Department Has Been Registered Successfully");
+      setTimeout(() => setSuccess(false), [5000]);
       return id ? router.push("/admin/departments") : reset();
+    }
 
     for (const key in res) {
       setError(key, { message: res[key] });
@@ -104,7 +121,6 @@ function NewDepartment({ id, data }) {
             required:
               "Please Enter the Level of Material Used in this Department",
             min: 1,
-            max: 10000,
           })}
           variant="faded"
           raw_material_used_level="md"
@@ -122,15 +138,16 @@ function NewDepartment({ id, data }) {
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">
-          Produced Raw Material Level :{" "}
+          Produced Material Level :{" "}
         </span>
         <Input
           defaultValue={getValues("produced_material_level")}
           {...register("produced_material_level", {
             required:
               "Please Enter the Level of Material Produced by this Department",
-            min: 2,
-            max: 10000,
+            validate: (v) =>
+              +getValues("raw_material_used_level") < +v ||
+              "Please Enter Valid Level",
           })}
           variant="faded"
           size="md"
@@ -146,101 +163,7 @@ function NewDepartment({ id, data }) {
           {errors?.produced_material_level?.message}
         </p>
       </span>
-      <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Used Raw Materials : </span>
-        <Select
-          defaultSelectedKeys={getValues("used_material_id")}
-          {...register("used_material_id", {
-            required: "Please Select the Materials Used by this Department",
-          })}
-          selectionMode="multiple"
-          isMultiline
-          variant="faded"
-          size="md"
-          color="secondary"
-          name="used_material_id"
-          aria-label="used_material_id"
-          aria-labelledby="used_material_id"
-          title="Enter used materials in this department"
-          className="md:col-start-2 md:col-end-4"
-        >
-          {/* // ! here you will need all the raw materials within the process level */}
-          {[
-            "rajapuri keri",
-            "kesar keri",
-            "hafus keri",
-            "kagda keri",
-            "daseri keri",
-          ].map((item) => (
-            <SelectItem key={item} value={item}>
-              {item}
-            </SelectItem>
-          ))}
-        </Select>
-        <p className="text-red-500">{errors?.used_material_id?.message}</p>
-      </span>
-      <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Produced Raw Materials : </span>
-        <Select
-          defaultSelectedKeys={getValues("produced_material_id")}
-          {...register("produced_material_id", {
-            required: "Please Select the Materials Produced by this Department",
-          })}
-          selectionMode="multiple"
-          isMultiline
-          variant="faded"
-          size="md"
-          color="secondary"
-          name="produced_material_id"
-          aria-label="produced_material_id"
-          aria-labelledby="produced_material_id"
-          title="Enter produced_materials in this department"
-          className="md:col-start-2 md:col-end-4"
-        >
-          {/* // ! here you will need all the raw materials within the process level */}
-          {["ready made keri ras", "keri no ras kadho", "frooti pivo"].map(
-            (item) => (
-              <SelectItem key={item} value={item}>
-                {item}
-              </SelectItem>
-            )
-          )}
-        </Select>
-        <p className="text-red-500">{errors?.produced_material_id?.message}</p>
-      </span>
-      <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
-        <span className="text-xl font-semibold">Produced Products : </span>
-        <Select
-          defaultSelectedKeys={getValues("produced_product_id")}
-          {...register("produced_product_id", {
-            required: "Please Select the Products Produced by this Department",
-          })}
-          selectionMode="multiple"
-          isMultiline
-          variant="faded"
-          size="md"
-          color="secondary"
-          name="produced_product_id"
-          aria-label="produced_product_id"
-          aria-labelledby="produced_product_id"
-          title="Enter produced_product in this department"
-          className="md:col-start-2 md:col-end-4"
-        >
-          {/* // ! here you will need all the product within the process level */}
-          {[
-            "gokul no ras",
-            "gir ni special keri",
-            "laal desi keri",
-            "apdi vadi ni keri",
-          ].map((item) => (
-            <SelectItem key={item} value={item}>
-              {item}
-            </SelectItem>
-          ))}
-        </Select>
-        <p className="text-red-500">{errors?.produced_product_id?.message}</p>
-      </span>
-      <span className="grid grid-cols-6 gap-3 max-md:grid-cols-2 max-md:grid-rows-2 grid-rows-1">
+      <span className="flex flex-row justify-start gap-5">
         <Button
           type="submit"
           color="secondary"
@@ -259,9 +182,115 @@ function NewDepartment({ id, data }) {
         >
           RESET
         </Button>
+        {success !== false && (
+          <Snippet color="success" hideCopyButton hideSymbol>
+            {success}
+          </Snippet>
+        )}
       </span>
     </form>
   );
 }
 
 export default NewDepartment;
+
+// used ram material, produces raw material, produced product
+
+// {/* <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
+//   <span className="text-xl font-semibold">Used Raw Materials : </span>
+//   <Select
+//     defaultSelectedKeys={getValues("used_material_id")}
+//     {...register("used_material_id", {
+//       required: "Please Select the Materials Used by this Department",
+//     })}
+//     selectionMode="multiple"
+//     isMultiline
+//     variant="faded"
+//     size="md"
+//     color="secondary"
+//     name="used_material_id"
+//     aria-label="used_material_id"
+//     aria-labelledby="used_material_id"
+//     title="Enter used materials in this department"
+//     className="md:col-start-2 md:col-end-4"
+//   >
+//      {/* // ! here you will need all the raw materials within the process level */}
+//     {[
+//       "rajapuri keri",
+//       "kesar keri",
+//       "hafus keri",
+//       "kagda keri",
+//       "daseri keri",
+//     ].map((item) => (
+//       <SelectItem key={item} value={item}>
+//         {item}
+//       </SelectItem>
+//     ))}
+//   </Select>
+//   <p className="text-red-500">{errors?.used_material_id?.message}</p>
+// </span>
+// <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
+//   <span className="text-xl font-semibold">Produced Raw Materials : </span>
+//   <Select
+//     defaultSelectedKeys={getValues("produced_material_id")}
+//     {...register("produced_material_id", {
+//       required: !!getValues("produced_product_id")
+//         ? false
+//         : "Please Select the Materials Produced by this Department",
+//     })}
+//     selectionMode="multiple"
+//     isMultiline
+//     variant="faded"
+//     size="md"
+//     color="secondary"
+//     name="produced_material_id"
+//     aria-label="produced_material_id"
+//     aria-labelledby="produced_material_id"
+//     title="Enter produced_materials in this department"
+//     className="md:col-start-2 md:col-end-4"
+//   >
+//      {/* // ! here you will need all the raw materials within the process level */}
+//     {["ready made keri ras", "keri no ras kadho", "frooti pivo"].map(
+//       (item) => (
+//         <SelectItem key={item} value={item}>
+//           {item}
+//         </SelectItem>
+//       )
+//     )}
+//   </Select>
+//   <p className="text-red-500">{errors?.produced_material_id?.message}</p>
+// </span>
+// <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
+//   <span className="text-xl font-semibold">Produced Products : </span>
+//   <Select
+//     defaultSelectedKeys={getValues("produced_product_id")}
+//     {...register("produced_product_id", {
+//       required: !!getValues("produced_material_id")
+//         ? false
+//         : "Please Select the Products Produced by this Department",
+//     })}
+//     selectionMode="multiple"
+//     isMultiline
+//     variant="faded"
+//     size="md"
+//     color="secondary"
+//     name="produced_product_id"
+//     aria-label="produced_product_id"
+//     aria-labelledby="produced_product_id"
+//     title="Enter produced_product in this department"
+//     className="md:col-start-2 md:col-end-4"
+//   >
+//      {/* // ! here you will need all the product within the process level */}
+//     {[
+//       "gokul no ras",
+//       "gir ni special keri",
+//       "laal desi keri",
+//       "apdi vadi ni keri",
+//     ].map((item) => (
+//       <SelectItem key={item} value={item}>
+//         {item}
+//       </SelectItem>
+//     ))}
+//   </Select>
+//   <p className="text-red-500">{errors?.produced_product_id?.message}</p>
+// </span>
