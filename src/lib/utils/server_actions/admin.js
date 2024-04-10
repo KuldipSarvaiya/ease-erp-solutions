@@ -2,6 +2,7 @@
 
 import Department from "@/lib/models/department.model";
 import Employee from "@/lib/models/employee.model";
+import RawMaterial from "@/lib/models/raw_material.model";
 import connectDB from "@/lib/mongoose";
 import { revalidatePath } from "next/cache";
 
@@ -73,4 +74,21 @@ export async function changeDesignation(formdata) {
   console.log(res);
   if (res.acknowledged) revalidatePath("/admin/employees");
   return res.acknowledged;
+}
+
+export async function deleteDepartment(formdata) {
+  const dept_id = formdata.get("department_id");
+  await connectDB();
+
+  const emps = await Employee.find({ department_id: dept_id }).countDocuments();
+  const materials = await RawMaterial.find({
+    $or: [{ produced_by: dept_id }, { $in: { used_by: dept_id } }],
+  }).countDocuments();
+  console.log(emps, materials);
+  if (emps <= 0 && materials <= 0) {
+    const ddpt = await Department.deleteOne({ _id: dept_id });
+    console.log(ddpt);
+    revalidatePath("/admin/departments/");
+    return ddpt.acknowledged;
+  }
 }

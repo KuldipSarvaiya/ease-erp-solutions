@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MdCreate, MdDelete, MdUpdate } from "react-icons/md";
 import NewDepartment from "./NewDepartment";
 import Department from "@/lib/models/department.model";
+import { deleteDepartment } from "@/lib/utils/server_actions/admin";
 
 export default async function Page({ params: { id } }) {
   console.log(id);
@@ -142,7 +143,7 @@ export default async function Page({ params: { id } }) {
                 </span>
               </span>
               {!["hr", "finance", "inventory"].includes(dept?.dept_name) && (
-                <span>
+                <span className="flex flex-row gap-3">
                   <Button
                     as={Link}
                     href={"/admin/departments/" + dept?._id}
@@ -154,16 +155,26 @@ export default async function Page({ params: { id } }) {
                   >
                     U P D A T E
                   </Button>
-                  &nbsp; &nbsp;
-                  <Button
-                    variant="shadow"
-                    color="secondary"
-                    size="sm"
-                    title="Make Sure To Shift Employees To Other Dept"
-                    startContent={<MdDelete />}
-                  >
-                    D E L E T E
-                  </Button>
+                  <form action={deleteDepartment}>
+                    <input
+                      hidden
+                      readOnly
+                      defaultValue={dept?._id?.toString()}
+                      name="department_id"
+                      type="text"
+                      required
+                    />
+                    <Button
+                      type="submit"
+                      variant="shadow"
+                      color="secondary"
+                      size="sm"
+                      title="Make Sure To Shift Employees / Materials To Other Dept. This will not Delete Dept If Any Employee is Here"
+                      startContent={<MdDelete />}
+                    >
+                      D E L E T E
+                    </Button>
+                  </form>
                 </span>
               )}
             </div>
