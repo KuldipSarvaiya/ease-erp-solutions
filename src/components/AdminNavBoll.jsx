@@ -11,7 +11,7 @@ import {
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsMenuButtonWideFill } from "react-icons/bs";
 function AdminNavBoll() {
   const { data: session } = useSession({
@@ -23,14 +23,22 @@ function AdminNavBoll() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [ballPosition, setBallPosition] = useState({ x: 10, y: 200 });
-  const [depts, setDepts] = useState([
-    "fabric-manufacturing",
-    "cleaning-and-finishing",
-    "dying-and-printing",
-    "cutting",
-    "sewing",
-    "packing-and-labeling",
-  ]);
+  const [depts, setDepts] = useState([]);
+
+  useEffect(() => {
+    if (depts.length === 0) {
+      (async function () {
+        const res = await fetch("/api/hr/department", {
+          method: "GET",
+        });
+        if (!res.ok) return;
+
+        const depts = await res.json();
+        console.log(depts);
+        setDepts(depts);
+      })();
+    }
+  }, []);
 
   // do not show ball if he is employee
   if (
@@ -174,27 +182,31 @@ function AdminNavBoll() {
                     </p>
                   </>
                 )}
-                {(depts.includes(my_dept) ||
-                  session?.user?.designation === "Admin") && (
+                {(session?.user?.designation === "Admin" ||
+                  !["hr", "inventory", "finance"].includes(my_dept)) && (
                   <>
                     <h6 className="flex-1">GENERAL DEPARTMENT DASHBOARD</h6>
                     <p className="flex flex-wrap max-w-[500px] justify-stretch gap-3">
                       {depts.map((dept) => (
                         <>
-                          {my_dept === dept && (
-                            <Button
-                              key={dept}
-                              className="font-semibold tracking-[0.15rem] uppercase"
-                              as={Link}
-                              href={
-                                "/managers/general_manager?department=" + dept
-                              }
-                              color="secondary"
-                              variant="shadow"
-                            >
-                              {dept.replaceAll("-", " ")}
-                            </Button>
-                          )}
+                          {(my_dept === dept.dept_name ||
+                            session?.user?.designation === "Admin") &&
+                            !["hr", "inventory", "finance"].includes(
+                              dept.dept_name
+                            ) && (
+                              <Button
+                                key={dept._id}
+                                className="font-semibold tracking-[0.15rem] uppercase"
+                                as={Link} 
+                                href={
+                                  "/managers/general_manager?department=" + dept.dept_name
+                                }
+                                color="secondary"
+                                variant="shadow"
+                              >
+                                {dept.dept_name.replaceAll("-", " ")}
+                              </Button>
+                            )}
                         </>
                       ))}
                     </p>
