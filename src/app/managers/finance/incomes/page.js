@@ -10,6 +10,7 @@ import {
   Pagination,
   Select,
   SelectItem,
+  Snippet,
   Table,
   TableBody,
   TableCell,
@@ -18,7 +19,7 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/react";
-import React, { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { VscGitPullRequest } from "react-icons/vsc";
 import jsPDF from "jspdf";
@@ -26,225 +27,64 @@ import autoTable from "jspdf-autotable";
 import { FaDownload, FaSearch } from "react-icons/fa";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { createIncome, getIncomes } from "@/lib/utils/server_actions/finance";
 
 export default function IncomePage() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/managers/finance/incomes");
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
+  const [success, setSuccess] = useState(false);
+  const [incomes, setIncomes] = useState([]);
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm();
   const rowsPerPage = 10;
 
-  function handleCreateIncome(formdata) {
+  useEffect(() => {
+    if (incomes.length === 0) {
+      (async () => {
+        const res = await getIncomes("nothing");
+        if (res)
+          return setIncomes(
+            res.map((item, i) => ({
+              ...item,
+              key: i + 1,
+              date: new Date(item.date).toDateString(),
+            }))
+          );
+      })();
+    }
+  }, []);
+
+  async function handleCreateIncome(formdata) {
+    formdata.updated_by = session?.user?._id;
     console.log(formdata);
     setIsLoading(true);
-  }
 
-  const incomes = [
-    {
-      key: 1,
-      type: "sells",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "it was big income for the company",
-      customer_order_id: "-",
-    },
-    {
-      key: 2,
-      type: "joint_ventures",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places ",
-      customer_order_id: "-",
-    },
-    {
-      key: 3,
-      type: "rental_income",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 4,
-      type: "sells",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 5,
-      type: "joint_ventures",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 6,
-      type: "sells",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 7,
-      type: "rental_income",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 8,
-      type: "loan",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 9,
-      type: "liacense",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 10,
-      type: "loan",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 11,
-      type: "divident",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 12,
-      type: "rental_income",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places ",
-      customer_order_id: "-",
-    },
-    {
-      key: 13,
-      type: "loan",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 14,
-      type: "rental_income",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 15,
-      type: "divident",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 16,
-      type: "rental_income",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 17,
-      type: "liacense",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 18,
-      type: "rental_income",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 19,
-      type: "divident",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 20,
-      type: "loan",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 21,
-      type: "other",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-    {
-      key: 22,
-      type: "other",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places",
-      customer_order_id: "-",
-    },
-  ];
+    const res = await createIncome(formdata);
+
+    if (res.success) {
+      reset();
+      setSuccess("Income Entry Has Been Successfully Generated");
+    } else setSuccess("Failed To Create Income Entry Right Now.");
+
+    setTimeout(() => setSuccess(false), [5000]);
+    setIsLoading(false);
+  }
 
   const pages = Math.ceil(incomes.length / rowsPerPage);
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
@@ -275,10 +115,8 @@ export default function IncomePage() {
     console.log(formdata.get("to_date"));
   }
 
-  // =================================================================
-
+  // Charts  ///////////////////////////////////////////////////////////////////////////////
   ChartJS.register(ArcElement, Tooltip, Legend);
-
   const chart_total = [0, 0, 0, 0, 0, 0, 0];
   for (let i = 0; i < incomes.length; i++) {
     switch (incomes[i].type) {
@@ -307,7 +145,6 @@ export default function IncomePage() {
         break;
     }
   }
-
   const data = {
     labels: [
       "SELLS",
@@ -344,7 +181,7 @@ export default function IncomePage() {
       },
     ],
   };
-  //
+  //////////////////////////////////////////////////////////////////////////////
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -369,6 +206,7 @@ export default function IncomePage() {
                 input={{
                   type: "date",
                   name: "date",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -385,11 +223,13 @@ export default function IncomePage() {
                   control: control,
                   rules: {
                     required: "income amount is required",
+                    valueAsNumber: true,
                   },
                 }}
                 input={{
                   type: "number",
                   name: "amount",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -471,7 +311,7 @@ export default function IncomePage() {
               <p className="text-red-500"> {errors?.type?.message} </p>
             </span>
 
-            <span>
+            <span className="flex gap-5">
               <Button
                 size="md"
                 color="secondary"
@@ -483,6 +323,17 @@ export default function IncomePage() {
               >
                 CREATE INCOME
               </Button>
+              {success !== false && (
+                <Snippet
+                  color={
+                    success.includes("Successfully") ? "success" : "danger"
+                  }
+                  hideCopyButton
+                  hideSymbol
+                >
+                  {success}
+                </Snippet>
+              )}
             </span>
           </div>
         </form>
@@ -490,24 +341,22 @@ export default function IncomePage() {
 
       {/*  */}
       {/* old income records */}
-      <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
+      <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 relative">
         <Accordion>
           <AccordionItem
             title={
-              <>
-                <span className="uppercase flex justify-between flex-row flex-nowrap text-2xl max-md:text-lg tracking-wider font-bold w-full">
-                  <span>income history</span>
-                  <Button
-                    size="sm"
-                    variant="shadow"
-                    color="secondary"
-                    aria-label="download-pdf"
-                    onClick={downloadPdf}
-                  >
-                    <FaDownload /> PDF
-                  </Button>
-                </span>
-              </>
+              <span className="uppercase flex justify-between flex-row flex-nowrap text-2xl max-md:text-lg tracking-wider font-bold w-full">
+                <span>income history</span>
+                <Button
+                  size="sm"
+                  variant="shadow"
+                  color="secondary"
+                  aria-label="download-pdf"
+                  onClick={downloadPdf}
+                >
+                  <FaDownload /> PDF
+                </Button>
+              </span>
             }
             key={1}
           >
@@ -555,7 +404,7 @@ export default function IncomePage() {
           id="download-table"
           aria-label="Example table with client side pagination"
           bottomContent={
-            <div className="flex w-full justify-center">
+            <span className="flex w-full justify-center">
               <Pagination
                 isCompact
                 showControls
@@ -565,15 +414,15 @@ export default function IncomePage() {
                 total={pages}
                 onChange={(page) => setPage(page)}
               />
-            </div>
+            </span>
           }
         >
           <TableHeader>
-            <TableColumn key={"type"}>TYPE</TableColumn>
             <TableColumn key={"date"}>DATE</TableColumn>
+            <TableColumn key={"type"}>TYPE</TableColumn>
             <TableColumn key={"amount"}>AMOUNT</TableColumn>
-            <TableColumn key={"customer_order_id"}>REF.</TableColumn>
             <TableColumn key={"description"}>DESCRIPTION</TableColumn>
+            <TableColumn key={"customer_order_id"}>REF.</TableColumn>
           </TableHeader>
           <TableBody items={items} emptyContent={"NO DATA FOUND"}>
             {(item) => (

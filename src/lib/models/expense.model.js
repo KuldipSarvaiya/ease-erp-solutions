@@ -21,9 +21,9 @@ const expenseSchema = new Schema(
       immutable: true,
     },
     raw_material_order_id: {
-      type: [Schema.ObjectId],
+      type: Schema.ObjectId,
       ref: "RawMaterialOrder",
-      required: true,
+      required: false,
     },
     salary_id: {
       type: [Schema.ObjectId],

@@ -54,7 +54,7 @@ export function PunchIn({ id }) {
           myCoords.attendance_radius,
           // 100,
           // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
-          // { latitude: 23.0302, longitude: 72.5772 }, //home
+          // { latitude: 22.9977, longitude: 72.5759 }, //home
           myCoords.attendance_coordinates,
           a.coords
         );
@@ -103,7 +103,9 @@ export function PunchIn({ id }) {
           punch in {!loading && <GiExitDoor />}
         </Button>
         <p className="text-red-500">
-          Please Turn On Location Service Before Processed Further
+          <span className="text-yellow-500">
+            Please Turn On Location Service Before Processed Further
+          </span>
           <br />
           <br />
           {!!!myCoords.attendance_coordinates &&
@@ -139,7 +141,7 @@ export function PunchOut({ data, myCoords }) {
           myCoords.attendance_radius,
           // 100,
           // { latitude: 21.7631, longitude: 72.1485 }, //azziptech
-          // { latitude: 23.0302, longitude: 72.5772 }, //home
+          // { latitude: 22.9977, longitude: 72.5759 }, //home
           myCoords.attendance_coordinates,
           a.coords
         );
@@ -207,7 +209,9 @@ export function PunchOut({ data, myCoords }) {
           {!loading && <GiEntryDoor />}punch out
         </Button>
         <p className="text-red-500">
-          Please Turn On Location Service Before Processed Further
+          <span className="text-yellow-500">
+            Please Turn On Location Service Before Processed Further
+          </span>{" "}
           <br />
           <br />
           {error}

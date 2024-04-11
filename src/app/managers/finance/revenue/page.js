@@ -10,6 +10,7 @@ import {
   Pagination,
   Select,
   SelectItem,
+  Snippet,
   Table,
   TableBody,
   TableCell,
@@ -18,169 +19,88 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/react";
-import React, { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { VscGitPullRequest } from "react-icons/vsc";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FaDownload, FaSearch } from "react-icons/fa";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
+import { Pie } from "react-chartjs-2";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { createRevenue, getRevenues } from "@/lib/utils/server_actions/finance";
 
 export default function Page() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/managers/finance/incomes");
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
+  const [success, setSuccess] = useState(false);
+  const [revenues, setRevenues] = useState([]);
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm();
   const rowsPerPage = 10;
 
-  function handleGenerateRevenue(formdata) {
+  useEffect(() => {
+    if (revenues.length === 0) {
+      (async () => {
+        const res = await getRevenues("nothing");
+        if (res)
+          return setRevenues(
+            res.map((item, i) => ({
+              ...item,
+              key: i + 1,
+              revenue_from_date: new Date(
+                item.revenue_from_date
+              ).toDateString(),
+              revenue_to_date: new Date(item.revenue_to_date).toDateString(),
+              income_id: item?.income_id?.[0] + "...",
+              expense_id: item?.expense_id?.[0] + "...",
+            }))
+          );
+      })();
+    }
+  }, []);
+
+  async function handleGenerateRevenue(formdata) {
+    formdata.updated_by = session?.user?._id;
     console.log(formdata);
     setIsLoading(true);
+
+    const res = await createRevenue(formdata);
+
+    if (res.success) {
+      reset();
+      setSuccess("Revenue Entry Has Been Successfully Generated");
+    } else setSuccess("Failed To Create Revenue Entry Right Now.");
+
+    setTimeout(() => setSuccess(false), [5000]);
+    setIsLoading(false);
   }
 
-  const revenues = [
-    {
-      key: 1,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 2,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 3,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 4,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 5,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 6,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 7,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 8,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 9,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 10,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-    {
-      key: 11,
-      title: "this is title of revenue",
-      type: "WEEKLY",
-      revenue_from_date: new Date().toLocaleDateString(),
-      revenue_to_date: new Date().toLocaleDateString(),
-      total_income: 232,
-      total_expense: 23,
-      total_tax: 242,
-      total_revenue: 1000,
-    },
-  ];
+  function handleSearchSubmit(event) {
+    event.preventDefault();
+    const formdata = new FormData(event.target);
+    console.log(formdata.get("from_date"));
+    console.log(formdata.get("to_date"));
+    console.log(formdata.get("type"));
+  }
 
+  // table pagination math
   const pages = Math.ceil(revenues.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-
-    return revenues.slice(start, end);
+    return revenues?.slice(start, end);
   }, [page, revenues]);
 
   function downloadPdf() {
@@ -200,81 +120,36 @@ export default function Page() {
     doc.save("income_records.pdf");
   }
 
-  function handleSearchSubmit(event) {
-    event.preventDefault();
-    const formdata = new FormData(event.target);
-    console.log(formdata.get("from_date"));
-    console.log(formdata.get("to_date"));
-    console.log(formdata.get("type"));
-  }
+  // charts /////////////////////////////////////////////////////////////////////////////////////
+  ChartJS.register(ArcElement, Tooltip, Legend);
 
-  //================================================================================================
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-  );
-
-  const options = {
-    plugins: {
-      title: {
-        display: true,
-        text: "REVENUE STATS FOR ABOVE REPORTS",
-      },
-    },
-    responsive: true,
-    indexAxis: "y",
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
-  };
-
-  const labels = ["Revenue Stats"];
-  let total_income = 0;
-  let total_expense = 0;
-  let total_tax = 0;
-  let total_revenue = 0;
+  let chart_total = [0, 0, 0];
   for (let i = 0; i < revenues.length; i++) {
-    total_income += revenues[i].total_income;
-    total_expense += revenues[i].total_expense;
-    total_revenue += revenues[i].total_revenue;
-    total_tax += revenues[i].total_tax;
+    chart_total[0] += revenues[i].total_expense;
+    chart_total[1] += revenues[i].total_tax;
+    chart_total[2] += revenues[i].net_revenue;
   }
-
   const chart_data = {
-    labels,
+    labels: ["EXPENSE", "TAX", "PROFIT"],
     datasets: [
       {
-        label: "INCOME",
-        data: [total_income],
-        backgroundColor: "rgb(255, 99, 132)",
-      },
-      {
-        label: "EXPENSE",
-        data: [total_expense],
-        backgroundColor: "#36A2EB",
-      },
-      {
-        label: "TAX",
-        data: [total_tax],
-        backgroundColor: "#FFB1C1",
-      },
-      {
-        label: "PROFIT",
-        data: [total_tax],
-        backgroundColor: "rgb(75, 192, 192)",
+        label: "Contro. In Revenue -",
+        data: chart_total,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+        ],
+        borderWidth: 1,
       },
     ],
   };
-  //
+  ////////////////////////////////////////////////////////////////////////////////////////
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -325,6 +200,7 @@ export default function Page() {
                 }}
                 input={{
                   type: "date",
+                  size: "lg",
                   name: "revenue_from_date",
                   isRequired: true,
                   disabled: isLoading,
@@ -349,6 +225,7 @@ export default function Page() {
                 input={{
                   type: "date",
                   name: "revenue_to_date",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -379,6 +256,7 @@ export default function Page() {
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
+                  size: "lg",
                 }}
               />
               <p className="text-red-500">{errors?.revenue_to_date?.message}</p>
@@ -405,13 +283,13 @@ export default function Page() {
                       className={"md:col-start-2 md:col-end-4"}
                       aria-label="type"
                     >
-                      <SelectItem key={"monthly"} value={"monthly"}>
+                      <SelectItem key={"MONTHLY"} value={"MONTHLY"}>
                         MONTHLY
                       </SelectItem>
-                      <SelectItem key={"quaterly"} value={"quaterly"}>
+                      <SelectItem key={"QUATERLY"} value={"QUATERLY"}>
                         QUATERLY
                       </SelectItem>
-                      <SelectItem key={"yearly"} value={"yearly"}>
+                      <SelectItem key={"YEARLY"} value={"YEARLY"}>
                         YEARLY
                       </SelectItem>
                     </Select>
@@ -421,7 +299,7 @@ export default function Page() {
               <p className="text-red-500"> {errors?.type?.message} </p>
             </span>
 
-            <span>
+            <span className="flex gap-5">
               <Button
                 size="md"
                 color="secondary"
@@ -433,6 +311,17 @@ export default function Page() {
               >
                 GENERATE REVENUE
               </Button>
+              {success !== false && (
+                <Snippet
+                  color={
+                    success.includes("Successfully") ? "success" : "danger"
+                  }
+                  hideCopyButton
+                  hideSymbol
+                >
+                  {success}
+                </Snippet>
+              )}
             </span>
           </div>
         </form>
@@ -555,7 +444,7 @@ export default function Page() {
             <TableColumn key={"total_income"}>INCOME</TableColumn>
             <TableColumn key={"total_expense"}>EXPENSE</TableColumn>
             <TableColumn key={"total_tax"}>TAX</TableColumn>
-            <TableColumn key={"total_revenue"}>REVENUE</TableColumn>
+            <TableColumn key={"net_revenue"}>REVENUE</TableColumn>
           </TableHeader>
           <TableBody items={items} emptyContent={"NO DATA FOUND"}>
             {(item) => (
@@ -571,7 +460,11 @@ export default function Page() {
 
       {/* chart */}
       <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
-        <Bar options={options} data={chart_data} className="max-h-56" />
+        <Pie
+          data={chart_data}
+          className=" max-h-[400px]"
+          options={{ responsive: true }}
+        />{" "}
       </div>
     </div>
   );

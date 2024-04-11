@@ -21,6 +21,10 @@ const metadataSchema = new Schema({
     type: Number,
     required: true,
   },
+  salary_travel_expense: {
+    type: Number,
+    required: true,
+  },
   updated_by: {
     type: Schema.ObjectId,
     ref: "Employee",

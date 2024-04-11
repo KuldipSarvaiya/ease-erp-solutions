@@ -10,6 +10,7 @@ import {
   Pagination,
   Select,
   SelectItem,
+  Snippet,
   Table,
   TableBody,
   TableCell,
@@ -18,7 +19,7 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/react";
-import React, { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { VscGitPullRequest } from "react-icons/vsc";
 import jsPDF from "jspdf";
@@ -26,189 +27,68 @@ import autoTable from "jspdf-autotable";
 import { FaDownload, FaSearch } from "react-icons/fa";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { createExpense, getExpenses } from "@/lib/utils/server_actions/finance";
 
 export default function ExpensePage() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/managers/finance/incomes");
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
+  const [success, setSuccess] = useState(false);
+  const [expense, setExpense] = useState([]);
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm();
   const rowsPerPage = 10;
 
-  function handleCreateIncome(formdata) {
+  async function handleCreateIncome(formdata) {
+    formdata.updated_by = session?.user?._id;
     console.log(formdata);
     setIsLoading(true);
+
+    const res = await createExpense(formdata);
+
+    if (res.success) {
+      reset()
+      setSuccess("Expense Entry Has Been Successfully Generated");
+    } else setSuccess("Failed To Create Expense Entry Right Now.");
+
+    setTimeout(() => setSuccess(false), [5000]);
+    setIsLoading(false);
   }
 
-  const expense = [
-    {
-      key: 1,
-      type: "employee_expense",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "it was big expense for the company",
-      ref: "2rfdsg4gert322",
-    },
-    {
-      key: 2,
-      type: "employee_expense",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 3,
-      type: "accident",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 4,
-      type: "raw_material",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "fgf32efret3r34e",
-    },
-    {
-      key: 5,
-      type: "emi",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 6,
-      type: "marketing",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 7,
-      type: "royalty",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 8,
-      type: "raw_material",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "dfg34554fewert",
-    },
-    {
-      key: 9,
-      type: "other",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 10,
-      type: "maintenance",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 11,
-      type: "emi",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 12,
-      type: "maintenance",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description:
-        "this is small or may be big income depends on future got from various places ",
-      ref: "-",
-    },
-    {
-      key: 13,
-      type: "other",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 14,
-      type: "raw_material",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "fg43r5tefg343t45",
-    },
-    {
-      key: 15,
-      type: "emi",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 16,
-      type: "accident",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 17,
-      type: "raw_material",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 18,
-      type: "emi",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 19,
-      type: "other",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-    {
-      key: 20,
-      type: "royalty",
-      date: new Date().toLocaleDateString(),
-      amount: 100,
-      description: "ok this is real expense",
-      ref: "-",
-    },
-  ];
+  useEffect(() => {
+    if (expense.length === 0) {
+      (async () => {
+        const res = await getExpenses("nothing");
+        if (res)
+          return setExpense(
+            res.map((item, i) => ({
+              ...item,
+              key: i + 1,
+              date: new Date(item.date).toDateString(),
+              ref:
+                item?.raw_material_order_id?.toString() ||
+                item?.salary_id?.[0] ||
+                "...",
+            }))
+          );
+      })();
+    }
+  }, []);
 
   const pages = Math.ceil(expense.length / rowsPerPage);
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
@@ -239,10 +119,8 @@ export default function ExpensePage() {
     console.log(formdata.get("to_date"));
   }
 
-  // =================================================================
-
+  // charts /////////////////////////////////////////////////////////////
   ChartJS.register(ArcElement, Tooltip, Legend);
-
   const chart_total = [0, 0, 0, 0, 0, 0, 0, 0];
   for (let i = 0; i < expense.length; i++) {
     switch (expense[i].type) {
@@ -274,7 +152,6 @@ export default function ExpensePage() {
         break;
     }
   }
-
   const data = {
     labels: [
       "RAW MATERIAL",
@@ -288,7 +165,7 @@ export default function ExpensePage() {
     ],
     datasets: [
       {
-        label: "# of Votes",
+        label: "# part in Total Expense ",
         data: chart_total,
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
@@ -314,6 +191,7 @@ export default function ExpensePage() {
       },
     ],
   };
+  /////////////////////////////////////////////////////////////////////
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -339,6 +217,7 @@ export default function ExpensePage() {
                 input={{
                   type: "date",
                   name: "date",
+                  size: "lg",
                   isRequired: true,
                   disabled: isLoading,
                   className: "md:col-start-2 md:col-end-4",
@@ -359,6 +238,7 @@ export default function ExpensePage() {
                 }}
                 input={{
                   type: "number",
+                  size: "lg",
                   name: "amount",
                   isRequired: true,
                   disabled: isLoading,
@@ -444,7 +324,7 @@ export default function ExpensePage() {
               <p className="text-red-500"> {errors?.type?.message} </p>
             </span>
 
-            <span>
+            <span className="flex gap-5">
               <Button
                 size="md"
                 color="secondary"
@@ -456,6 +336,17 @@ export default function ExpensePage() {
               >
                 CREATE EXPENSE
               </Button>
+              {success !== false && (
+                <Snippet
+                  color={
+                    success.includes("Successfully") ? "success" : "danger"
+                  }
+                  hideCopyButton
+                  hideSymbol
+                >
+                  {success}
+                </Snippet>
+              )}
             </span>
           </div>
         </form>
@@ -466,7 +357,7 @@ export default function ExpensePage() {
         <Accordion>
           <AccordionItem
             title={
-              <div className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
+              <span className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
                 <span>Expense history</span>
                 <Button
                   className=""
@@ -478,7 +369,7 @@ export default function ExpensePage() {
                 >
                   <FaDownload /> PDF
                 </Button>
-              </div>
+              </span>
             }
             key={1}
           >
@@ -543,9 +434,8 @@ export default function ExpensePage() {
             <TableColumn key={"type"}>TYPE</TableColumn>
             <TableColumn key={"date"}>DATE</TableColumn>
             <TableColumn key={"amount"}>AMOUNT</TableColumn>
-            <TableColumn key={"ref"}>REF.</TableColumn>{" "}
-            {/* ref to salary or order id */}
             <TableColumn key={"description"}>DESCRIPTION</TableColumn>
+            <TableColumn key={"ref"}>REF.</TableColumn>{" "}
           </TableHeader>
           <TableBody items={items} emptyContent={"NO DATA FOUND"}>
             {(item) => (

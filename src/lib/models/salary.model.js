@@ -34,12 +34,22 @@ const salarySchema = new Schema(
       required: true,
       default: 0,
     },
+    overtime_salary: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     provident_fund: {
       type: Number,
       required: true,
       default: 0,
     },
     profession_tax: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    travel_expense: {
       type: Number,
       required: true,
       default: 0,
@@ -59,19 +69,19 @@ const salarySchema = new Schema(
       required: true,
       immutable: true,
     },
-    check_no: {
-      type: String,
-      required: false,
-    },
+    // check_no: {
+    //   type: String,
+    //   required: false,
+    // },
     transaction_no: {
       type: String,
       required: false,
     },
-    updated_by: {
-      type: Schema.ObjectId,
-      ref: "Employee",
-      required: true,
-    },
+    // updated_by: {
+    //   type: Schema.ObjectId,
+    //   ref: "Employee",
+    //   required: true,
+    // },
   },
   { timestamps: true }
 );
