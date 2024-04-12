@@ -20,9 +20,9 @@ export default async function Page({ params: { id } }) {
         </p>
         <Divider className="my-2" />
         <div className="flex flex-row flex-wrap justify-start gap-7 lg:px-8">
-          <RawMaterialCard />
-          <RawMaterialCard />
-          <RawMaterialCard />
+          <RawMaterialCard card_only={false}/>
+          <RawMaterialCard card_only={false}/>
+          <RawMaterialCard card_only={false}/>
         </div>
       </div>
 

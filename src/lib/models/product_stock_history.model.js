@@ -9,15 +9,23 @@ const product_stock_historySchema = new Schema(
       immutable: true,
     },
     product_group_id: { type: String, required: true, immutable: true },
-    total_produced_units: {
+    units: {
       type: Number,
+      required: true,
+      immutable: true,
+    },
+    change_type: {
+      type: String,
+      enum: {
+        values: ["Increase", "Decrease"],
+      },
       required: true,
       immutable: true,
     },
     updated_by: {
       type: Schema.ObjectId,
       ref: "Employee",
-      required: true,
+      required: false,
     },
   },
   {

@@ -5,10 +5,30 @@ import NewProduct from "./NewProduct";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loading from "@/components/Loading";
+import connectDB from "@/lib/mongoose";
+import Product from "@/lib/models/product.model";
 
 export default async function Page({ params: { id } }) {
-  // ! Fetch data of given id when it is available and send to <NewProduct /> to display
   console.log(id);
+
+  await connectDB();
+
+  const products = await Product.aggregate([
+    {
+      $lookup: {
+        from: "departments",
+        localField: "produced_by",
+        foreignField: "_id",
+        as: "produced_by",
+      },
+    },
+  ]);
+
+  const id_product = products.filter(
+    (item) => item._id.toString() === id?.[0]
+  )[0];
+
+  console.log("tha toitem = ", id_product);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -19,9 +39,20 @@ export default async function Page({ params: { id } }) {
           MANAGE PRODUCTS <Download />
         </p>
         <Divider className="my-2" />
-        <div className="flex flex-row flex-wrap justify-start gap-10 lg:px-14">
-          <ProductCard />
-          <ProductCard />
+        <div className="relative grid place-content-center w-full">
+          <div className="lg:columns-3 md:columns-2 max-sm:columns-1 gap-8 space-y-8 break-after-column">
+            {!products && (
+              <div className="flex flex-row gap-5 justify-center items-center p-20">
+                <span className="animate-spinner-linear-spin duration-75">
+                  <Loading inline={true} />
+                </span>
+                No Product Details Right Now
+              </div>
+            )}
+            {products?.map((item) => (
+              <ProductCard key={item._id} card_only={false} product={item} />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -47,18 +78,15 @@ export default async function Page({ params: { id } }) {
             <NewProduct
               id={id}
               data={{
-                name: "shirt",
-                size: "m, l, xl, xxl",
-                description: "this is shirt\n short sleaves",
-                unit_of_measurement: "piece",
-                expiry_timing: "no expiry",
-                chemical_property: "cotton\n row color",
-                price: 1222,
-                discount: 12,
-                available_stock_units: 12,
-                tags: "ok,ok",
-                color: "#ffffff",
-                product_group_id: "short sleave products",
+                ...id_product,
+                description: id_product?.description?.join(" ; "),
+                chemical_property: id_product?.chemical_property?.join(" ; "),
+                tags: id_product?.tags?.join(","),
+                produced_by: id_product?.produced_by?.map((item) =>
+                  item?._id?.toString()
+                ),
+                photo: id_product?.image,
+                image: undefined,
               }}
             />
           </div>

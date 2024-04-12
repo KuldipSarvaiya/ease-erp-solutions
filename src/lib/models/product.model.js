@@ -25,13 +25,11 @@ const productSchema = new Schema(
     },
     color: {
       type: String,
-      required: false,
-      immutable: true,
+      required: false, 
     },
     size: {
       type: String,
-      required: false,
-      immutable: true,
+      required: false, 
     },
     unit_of_measurement: {
       type: String,
@@ -58,8 +56,13 @@ const productSchema = new Schema(
       default: 0,
     },
     tags: {
-      try: [String],
+      type: [String],
       required: true,
+    },
+    produced_by: {
+      type: [Schema.ObjectId],
+      ref: "Department",
+      required: false,
     },
     updated_by: {
       type: Schema.ObjectId,

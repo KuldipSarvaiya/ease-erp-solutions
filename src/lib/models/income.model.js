@@ -41,7 +41,7 @@ const incomeSchema = new Schema(
     updated_by: {
       type: Schema.ObjectId,
       ref: "Employee",
-      required: true,
+      required: false,
     },
   },
   {

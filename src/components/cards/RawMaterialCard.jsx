@@ -13,29 +13,29 @@ import { GrView } from "react-icons/gr";
 
 function RawMaterialCard({ card_only }) {
   return (
-    <Tooltip
-      isDisabled={!card_only}
-      content={
-        <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-3 rounded-xl border-1 border-purple-900">
-          <h5>
-            <b>Raw Material Group ID :</b> dsf2wafasSA
-          </h5>
-          <p>
-            <b>Unit of Measurement :</b> Piece
-          </p>
-          <p className="max-w-80">
-            <b>Description :</b> this is material ois good . very good working .
-            price is best works with any tempreture
-          </p>
-          <p className="max-w-80">
-            <b>Chemical Property :</b> this is material ois good . very good
-            working . price is best works with any tempreture
-          </p>
-        </div>
-      }
-      delay={1000}
-      className="bg-transparent border-none shadow-none inline-block"
-    >
+      <Tooltip
+        isDisabled={card_only}
+        content={
+          <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-3 rounded-xl border-1 border-purple-900">
+            <h5>
+              <b>Raw Material Group ID :</b> dsf2wafasSA
+            </h5>
+            <p>
+              <b>Unit of Measurement :</b> Piece
+            </p>
+            <p className="max-w-80">
+              <b>Description :</b> this is material ois good . very good working .
+              price is best works with any tempreture
+            </p>
+            <p className="max-w-80">
+              <b>Chemical Property :</b> this is material ois good . very good
+              working . price is best works with any tempreture
+            </p>
+          </div>
+        }
+        delay={1000}
+        className="bg-transparent border-none shadow-none inline-block"
+      >
       <Card
         isFooterBlurred
         radius="lg"

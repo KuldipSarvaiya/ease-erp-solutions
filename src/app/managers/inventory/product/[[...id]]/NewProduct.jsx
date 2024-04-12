@@ -1,13 +1,30 @@
 "use client";
 
-import { Avatar, Button, Chip, Input, Textarea } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Input,
+  Select,
+  SelectItem,
+  Textarea,
+} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { VscInsert } from "react-icons/vsc";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 function NewProduct({ id, data }) {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/managers/finance/incomes");
+    },
+  });
+  const [depts, setDepts] = useState([]);
   const router = useRouter();
   const [colors, setColors] = useState([]);
   const {
@@ -20,6 +37,21 @@ function NewProduct({ id, data }) {
   } = useForm({
     defaultValues: id ? data : {},
   });
+  console.log("this item data = ", data);
+  // fetches departments
+  useEffect(() => {
+    if (depts.length === 0)
+      (async function () {
+        const res = await fetch("/api/hr/department", {
+          method: "GET",
+        });
+        if (!res.ok) return;
+
+        const depts = await res.json();
+        console.log(depts);
+        setDepts(depts);
+      })();
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -28,11 +60,19 @@ function NewProduct({ id, data }) {
   }, [id]);
 
   async function createNewProduct(formdata) {
-    formdata.color = colors;
-    formdata.size = formdata.size.split(",");
-    formdata.description = formdata.description.split("\n");
-    formdata.chemical_property = formdata.chemical_property.split("\n");
+    formdata.color = id ? colors[0] : colors;
+    formdata.size = formdata.size.replaceAll(/\n|\r|\t/g, " ").split(",");
+    formdata.description = formdata.description.replaceAll(/\n|\r|\t/g, " ");
+    formdata.chemical_property = formdata.chemical_property.replaceAll(
+      /\n|\r|\t/g,
+      " "
+    );
     formdata.tags = formdata.tags.split(",");
+    formdata.updated_by = session?.user?._id;
+    if (id) {
+      formdata._id = id;
+      formdata.size = formdata.size[0];
+    }
     console.log(formdata);
 
     const formData = new FormData();
@@ -54,7 +94,12 @@ function NewProduct({ id, data }) {
     console.log(res);
 
     if (res.success === true)
-      return id ? router.push("/managers/inventory/product") : reset();
+      return id
+        ? router.push("/managers/inventory/product")
+        : (() => {
+            setColors([]);
+            reset();
+          })();
 
     for (const key in res) {
       setError(key, { message: res[key] });
@@ -123,8 +168,8 @@ function NewProduct({ id, data }) {
             <Avatar
               size="md"
               src={
-                getValues("image")?.[0]
-                  ? URL.createObjectURL(getValues("image")[0])
+                !id && getValues("image")?.[0]
+                  ? URL?.createObjectURL(getValues("image")[0])
                   : null
               }
             />
@@ -174,7 +219,8 @@ function NewProduct({ id, data }) {
               size="lg"
               className="h-14"
               onClick={() => {
-                if (!colors.includes(getValues("color")))
+                const single = id ? colors.length < 1 : true;
+                if (!colors.includes(getValues("color")) && single)
                   setColors((prev) => {
                     return [...prev, getValues("color")];
                   });
@@ -242,6 +288,7 @@ function NewProduct({ id, data }) {
           {...register("unit_of_measurement", {
             required: "Please Specify Unit of Measurement Of the Product",
           })}
+          isReadOnly={id}
           variant="faded"
           size="md"
           color="secondary"
@@ -283,7 +330,7 @@ function NewProduct({ id, data }) {
           variant="faded"
           size="lg"
           color="secondary"
-          placeholder={"hit ↩️ENTER for new point"}
+          placeholder={"put (;) for new point"}
           name="description"
           aria-label="description"
           aria-labelledby="description"
@@ -302,7 +349,7 @@ function NewProduct({ id, data }) {
           variant="faded"
           size="lg"
           color="secondary"
-          placeholder={"hit ↩️ENTER for new point"}
+          placeholder={"put (;) for new point"}
           name="chemical_property"
           aria-label="chemical_property"
           aria-labelledby="chemical_property"
@@ -310,6 +357,39 @@ function NewProduct({ id, data }) {
           className="md:col-start-2 md:col-end-4"
         />
         <p className="text-red-500"> {errors?.chemical_property?.message} </p>
+      </span>
+      <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
+        <span className="text-xl font-semibold">Department : </span>
+        <Select
+          {...register("produced_by", {
+            required: "Please select department that produces this product",
+          })}
+          defaultSelectedKeys={data.produced_by}
+          selectionMode="multiple"
+          isMultiline
+          variant="faded"
+          size="md"
+          color="secondary"
+          name="produced_by"
+          aria-label="produced_by"
+          startContent="🪪"
+          aria-labelledby="produced_by"
+          isRequired
+          className="md:col-start-2 md:col-end-4"
+        >
+          {depts
+            ?.filter(
+              (dp) => !["hr", "finance", "inventory"].includes(dp.dept_name)
+            )
+            ?.map((item, i) => {
+              return (
+                <SelectItem key={item._id} value={item._id}>
+                  {item.dept_name.toUpperCase().replaceAll("-", " ")}
+                </SelectItem>
+              );
+            })}
+        </Select>
+        <p className="text-red-500"> {errors?.produced_by?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Price : </span>
@@ -356,6 +436,7 @@ function NewProduct({ id, data }) {
           {...register("available_stock_units", {
             required: "Please Specify Available Units",
           })}
+          isReadOnly={id}
           variant="faded"
           size="md"
           color="secondary"
@@ -396,7 +477,7 @@ function NewProduct({ id, data }) {
           endContent={<big>📦</big>}
           // isDisabled={!colors.length}
         >
-          ADD PRODUCT
+          {id ? "UPDATE" : "ADD"} PRODUCT
         </Button>
         <Button
           type="reset"

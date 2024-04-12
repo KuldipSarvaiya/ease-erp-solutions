@@ -1,4 +1,5 @@
 import Employee from "@/lib/models/employee.model";
+import Expense from "@/lib/models/expense.model";
 import MetaData from "@/lib/models/metadata.model";
 import Salary from "@/lib/models/salary.model";
 import connectDB from "@/lib/mongoose";
@@ -149,6 +150,7 @@ export async function POST(req) {
     // formate employee salary data
     const salary_slips = [];
     const emp_ids = [];
+    let exp_amount = 0;
     for (let emp of data.employees) {
       emp_ids.push(emp._id);
 
@@ -195,28 +197,46 @@ export async function POST(req) {
         dtl.travel_expense -
         dtl.profession_tax -
         dtl.provident_fund;
+
+      exp_amount += dtl.net_salary;
+
       salary_slips.push(dtl);
     }
 
     const salarys = await Salary.insertMany(salary_slips);
 
-    const nnotices = await Employee.updateMany(
-      { _id: { $in: emp_ids } },
+    // const notices = await Employee.updateMany(
+    //   { _id: { $in: emp_ids } },
+    //   {
+    //     $push: {
+    //       notice:
+    //         "Your Salary of " +
+    //         data.month +
+    //         " Has Been Creadited In Your Account 👍",
+    //     },
+    //   }
+    // );
+
+    const salary_ids = salarys.map((sal) => sal._id);
+
+    console.log(salary_ids, exp_amount);
+
+    const expense = await Expense.insertMany([
       {
-        $push: {
-          notice:
-            "Your Salary of " +
-            data.month +
-            " Has Been Creadited In Your Account 👍",
-        },
-      }
-    );
+        type: "employee_expense",
+        salary_id: salary_ids,
+        date: new Date(),
+        amount: exp_amount,
+        description: "Employees Salary of " + data.month.toString(),
+      },
+    ]);
 
     console.log(salary_slips, emp_ids);
 
     revalidatePath("managers/finanace/payroll");
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(error, { status: 500 });
   }
 }

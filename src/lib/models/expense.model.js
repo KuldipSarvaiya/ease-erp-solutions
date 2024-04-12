@@ -47,7 +47,7 @@ const expenseSchema = new Schema(
     updated_by: {
       type: Schema.ObjectId,
       ref: "Employee",
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }

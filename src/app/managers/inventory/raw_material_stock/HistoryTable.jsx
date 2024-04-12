@@ -134,8 +134,7 @@ function HistoryTable() {
           RAW MATERIAL GROUP
         </TableColumn>
         <TableColumn key={"units"}>UNITS</TableColumn>
-        <TableColumn key={"change_type"}>CHANGE TYPE</TableColumn>
-        {/* <TableColumn key={"description"}>DESCRIPTION</TableColumn> */}
+        <TableColumn key={"change_type"}>STOCK CHANGE</TableColumn>
       </TableHeader>
       <TableBody items={items} emptyContent={"NO DATA FOUND"}>
         {(item) => (

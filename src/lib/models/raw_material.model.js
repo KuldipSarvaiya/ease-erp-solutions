@@ -48,7 +48,7 @@ const raw_materialSchema = new Schema({
   //   required: false,
   // },
   produced_by: {
-    type: Schema.ObjectId,
+    type: [Schema.ObjectId],
     ref: "Department",
     required: false,
   },
