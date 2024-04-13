@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import {
   Pagination,
   Table,
@@ -10,7 +11,8 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { BsCircleFill } from "react-icons/bs";
 
 const Increase = () => {
   return (
@@ -47,48 +49,42 @@ function HistoryTable({ id }) {
     Decrease: <Decrease />,
   };
   const [page, setPage] = useState(1);
-  const [history, setHistory] = useState([
-    {
-      key: 1,
-      product: "product name color size",
-      product_group_id: "product group",
-      units: 342,
-      stock_produced_date: new Date().toDateString(),
-      change_type: change_type["Decrease"],
-    },
-    {
-      key: 2,
-      product: "product name color size",
-      product_group_id: "product group",
-      units: 342,
-      stock_produced_date: new Date().toDateString(),
-      change_type: change_type["Increase"],
-    },
-    {
-      key: 3,
-      product: "product name color size",
-      product_group_id: "product group",
-      units: 342,
-      stock_produced_date: new Date().toDateString(),
-      change_type: change_type["Increase"],
-    },
-    {
-      key: 4,
-      product: "product name color size",
-      product_group_id: "product group",
-      units: 342,
-      stock_produced_date: new Date().toDateString(),
-      change_type: change_type["Decrease"],
-    },
-    {
-      key: 5,
-      product: "product name color size",
-      product_group_id: "product group",
-      units: 342,
-      stock_produced_date: new Date().toDateString(),
-      change_type: change_type["Increase"],
-    },
-  ]);
+  const [history, setHistory] = useState([]);
+  const [dataStatus, setDataStatus] = useState(<Loading />);
+
+  useEffect(() => {
+    // fetch(`/api/inventory/product/stock_history?department=${department}`);
+    if (history.length === 0)
+      fetch("/api/inventory/product/stock_history?department=all", {
+        method: "GET",
+        next: { tags: ["ProductStockHistory"] },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const data2 = data.map((item, i) => ({
+            ...item,
+            key: i,
+            stock_produced_date: new Date(
+              item.stock_produced_date
+            ).toDateString(),
+            change_type: change_type[item.change_type],
+            product: (
+              <span className="flex flex-row flex-nowrap gap-1 items-center">
+                {item.product.name}
+                <BsCircleFill style={{ color: item.product.color }} />
+                {item.product.size}
+              </span>
+            ),
+            available_stock_units: (
+              <span>
+                {item.units} {item.product.unit_of_measurement}
+              </span>
+            ),
+          }));
+          setHistory(data2);
+        })
+        .catch(() => setDataStatus("No Stock History Available"));
+  });
 
   const rowsPerPage = 10;
   const pages = Math.ceil(history.length / rowsPerPage);
@@ -122,10 +118,10 @@ function HistoryTable({ id }) {
         <TableColumn key={"stock_produced_date"}>DATE</TableColumn>
         <TableColumn key={"product"}>PRODUCT</TableColumn>
         <TableColumn key={"product_group_id"}>PRODUCT GROUP</TableColumn>
-        <TableColumn key={"units"}>UNITS</TableColumn>
+        <TableColumn key={"available_stock_units"}>UNITS</TableColumn>
         <TableColumn key={"change_type"}>STOCK CHANGE</TableColumn>
       </TableHeader>
-      <TableBody items={items} emptyContent={"NO DATA FOUND"}>
+      <TableBody items={items} emptyContent={dataStatus}>
         {(item) => (
           <TableRow key={item.name}>
             {(columnKey) => (

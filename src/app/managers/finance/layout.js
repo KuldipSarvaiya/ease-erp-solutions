@@ -16,7 +16,7 @@ export default function FinanceLayout({ children }) {
     "incomes",
     "expenses",
     "revenue",
-    "reports",
+    // "reports",
   ];
   return (
     <section>

@@ -15,7 +15,7 @@ export default function GenManagerLayout({ children }) {
     "raw_material",
     "used_stock",
     "produced_stock",
-    "reports",
+    // "reports",
   ];
   return (
     <section>

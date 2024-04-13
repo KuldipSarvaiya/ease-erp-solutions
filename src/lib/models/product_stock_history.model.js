@@ -22,6 +22,11 @@ const product_stock_historySchema = new Schema(
       required: true,
       immutable: true,
     },
+    produced_by: {
+      type: [Schema.ObjectId],
+      ref: "Department",
+      required: false,
+    },
     updated_by: {
       type: Schema.ObjectId,
       ref: "Employee",

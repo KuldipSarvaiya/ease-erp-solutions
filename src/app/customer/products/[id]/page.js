@@ -17,8 +17,8 @@ export default function Page({ params: { id } }) {
       <div className="grid grid-cols-2 max-md:grid-cols-1 grid-rows-1  max-md:grid-rows-2">
         <Image
           src={"/AdminPage.svg"}
-          height={500}
-          width={600}
+          height={400}
+          width={500}
           alt="Image Of Product"
           aria-label="image of product"
           aria-labelledby="product image"
@@ -122,7 +122,7 @@ export default function Page({ params: { id } }) {
               isDisabled={units === 0}
             >
               {" "}
-              ADD TO CART{" "}
+              BUY NOW{" "}
             </Button>
           </p>
         </div>

@@ -16,7 +16,7 @@ export default function HrLayout({ children }) {
     "attendance",
     "leave_report",
     "announcement",
-    "reports",
+    // "reports",
   ];
   return (
     <section>

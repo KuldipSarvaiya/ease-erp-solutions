@@ -7,16 +7,16 @@ const raw_material_stock_historySchema = new Schema(
       ref: "RawMaterial",
       required: true,
       immutable: true,
-    },
+    }, 
     // raw_material_stock_id: {
     //   type: Schema.ObjectId,
     //   ref: "RawMaterialStock",
     //   required: true,
     // },
-    stock_produced_date: {
-      type: Date,
-      required: true,
+    stock_date: {
+      type: Date, 
       immutable: true,
+      default: new Date(),
     },
     units: {
       type: Number,
@@ -35,8 +35,14 @@ const raw_material_stock_historySchema = new Schema(
     //   type: Date,
     //   required: false,
     // },
-    stock_process_level: {
-      type: Number,
+    produced_by: {
+      type: [Schema.ObjectId],
+      ref: "Department",
+      required: false,
+    },
+    used_by: {
+      type: [Schema.ObjectId],
+      ref: "Department",
       required: true,
     },
     updated_by: {

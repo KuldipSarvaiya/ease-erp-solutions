@@ -12,9 +12,6 @@ export async function POST(request) {
   const data = await request.formData();
 
   console.log("api = ", data);
-  // todo : need to upload product image
-  // todo : add product_id
-  // todo : create multiple product based on colors and sizes
 
   const image_name = `${Date.now()}__${data.get("image").name}`.replaceAll(
     " ",
@@ -69,6 +66,7 @@ export async function POST(request) {
       units: item.available_stock_units,
       change_type: "Increase",
       updated_by: data.get("updated_by"),
+      produced_by: data.getAll("produced_by")[0].split(","),
     });
 
   const history = await ProductStockHistory.insertMany(product_history);
@@ -82,9 +80,7 @@ export async function POST(request) {
 export async function PUT(request) {
   const data = await request.formData();
 
-  console.log("product put = ", data);
-  // todo : add product_group_id
-  // todo : create multiple product based on colors and sizes
+  console.log("product put = ", data); 
 
   const img_obj = {};
   if (data.get("image").name) {
@@ -127,22 +123,42 @@ export async function PUT(request) {
       },
     }
   );
-  console.log(res, {
-    _id: data.get("_id"),
-    ...img_obj,
-    name: data.get("name"),
-    description: description,
-    chemical_property: chemical_property,
-    color: data.get("color"),
-    size: data.get("size"),
-    unit_of_measurement: data.get("unit_of_measurement"),
-    expiry_timing: data.get("expiry_timing") || "",
-    price: +data.get("price"),
-    discount: +data.get("discount"),
-    tags: tags,
-    updated_by: data.get("updated_by"),
-    produced_by: data.getAll("produced_by")[0].split(","),
-  });
+  // console.log(res, {
+  //   _id: data.get("_id"),
+  //   ...img_obj,
+  //   name: data.get("name"),
+  //   description: description,
+  //   chemical_property: chemical_property,
+  //   color: data.get("color"),
+  //   size: data.get("size"),
+  //   unit_of_measurement: data.get("unit_of_measurement"),
+  //   expiry_timing: data.get("expiry_timing") || "",
+  //   price: +data.get("price"),
+  //   discount: +data.get("discount"),
+  //   tags: tags,
+  //   updated_by: data.get("updated_by"),
+  //   produced_by: data.getAll("produced_by")[0].split(","),
+  // });
   revalidatePath("/managers/inventory/product");
   return NextResponse.json({ success: true });
+}
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const department = searchParams.get("department");
+
+  const matchQry = {};
+  if (department !== "all") matchQry.produced_by = { $in: [department] };
+
+  await connectDB();
+
+  const res = await Product.aggregate([
+    {
+      $match: matchQry,
+    },
+  ]);
+
+  console.log("product for this department = ", department, " =  ", res);
+
+  return NextResponse.json(res);
 }

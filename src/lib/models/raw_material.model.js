@@ -16,13 +16,11 @@ const raw_materialSchema = new Schema({
   },
   color: {
     type: String,
-    required: true,
-    immutable: true,
+    required: false, 
   },
   size: {
     type: String,
-    required: true,
-    immutable: true,
+    required: false, 
   },
   chemical_property: {
     type: [String],

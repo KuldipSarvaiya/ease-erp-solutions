@@ -34,7 +34,7 @@ function AdminNavBoll() {
         if (!res.ok) return;
 
         const depts = await res.json();
-        console.log(depts);
+        // console.log(depts);
         setDepts(depts);
       })();
     }

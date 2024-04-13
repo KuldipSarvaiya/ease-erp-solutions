@@ -17,7 +17,7 @@ export default function InventoryLayout({ children }) {
     "raw_material_stock",
     "orders",
     "crm",
-    "reports",
+    // "reports",
   ];
   return (
     <section>

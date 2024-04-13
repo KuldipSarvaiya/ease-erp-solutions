@@ -1,25 +1,102 @@
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import Income from "@/lib/models/income.model";
+import Product from "@/lib/models/product.model";
+import ProductStockHistory from "@/lib/models/product_stock_history.model";
 import { Button, ButtonGroup, Input, Tooltip } from "@nextui-org/react";
+import { getServerSession } from "next-auth";
+import { revalidatePath, revalidateTag } from "next/cache";
 import Image from "next/image";
 import { GrAdd } from "react-icons/gr";
 import { MdRemove } from "react-icons/md";
 
-function ProductSmall() {
+async function ProductSmall({ product }) {
+  const session = await getServerSession(options);
   function ToolTipDialog() {
     async function handleSubmit(formdata) {
       "use server";
+      try {
+        const product_id = formdata.get("product_id");
+        const updated_by = formdata.get("updated_by");
+        const change_units = formdata.get("units");
+        const available_stock_units = formdata.get("available_stock_units");
+        const increase = formdata.get("increase") !== null;
+        const decrease = formdata.get("decrease") !== null;
 
-      console.log(
-        "form action",
-        formdata.get("units"),
-        "\n increse pressed = ",
-        formdata.get("increase") !== null,
-        "\n decrese pressed = ",
-        formdata.get("decrease") !== null
-      );
+        if (increase !== !decrease) return;
+
+        const new_unit = increase
+          ? +change_units + +available_stock_units
+          : +available_stock_units - +change_units;
+
+        const update = await Product.findOneAndUpdate(
+          { _id: product_id },
+          { available_stock_units: new_unit, updated_by: updated_by },
+          { new: true }
+        );
+
+        console.log(update);
+
+        const product_history = {
+          product_id: product_id,
+          product_group_id: update.product_group_id,
+          units: +formdata.get("units"),
+          change_type: increase ? "Increase" : "Decrease",
+          updated_by: updated_by,
+          produced_by: update.produced_by,
+        };
+
+        const history = await ProductStockHistory.insertMany([product_history]);
+
+        if (decrease) {
+          const res = await Income.insertMany([
+            {
+              type: "sells",
+              date: new Date(),
+              amount: +formdata.get("units") * +formdata.get("product_price"),
+              description: "Local sell registed by Inventory Manager",
+              updated_by: updated_by,
+            },
+          ]);
+        }
+
+        console.log(history);
+        revalidateTag("ProductStockHistory");
+        revalidatePath("/managers/inventory/product_stock");
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     return (
       <form action={handleSubmit}>
+        <input
+          hidden
+          readOnly
+          name="product_id"
+          defaultValue={product?._id}
+          required
+        />
+        <input
+          hidden
+          readOnly
+          name="product_price"
+          defaultValue={product?.price}
+          required
+        />
+        <input
+          hidden
+          readOnly
+          name="updated_by"
+          defaultValue={session?.user?._id}
+          required
+        />
+        <input
+          hidden
+          readOnly
+          name="available_stock_units"
+          defaultValue={product?.available_stock_units}
+          required
+        />
         <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-3 rounded-xl border-1 border-purple-900">
           <div className="flex flex-col">
             <p className="text-lg capitalize text-default-800">
@@ -35,7 +112,11 @@ function ProductSmall() {
                 size="sm"
                 variant="faded"
                 color="secondary"
-                endContent={<span className="capitalize">pieces</span>}
+                endContent={
+                  <span className="capitalize">
+                    {product?.unit_of_measurement}
+                  </span>
+                }
                 aria-label="units"
                 aria-labelledby="units"
               />
@@ -79,29 +160,32 @@ function ProductSmall() {
           alt="product img"
           height={100}
           radius="sm"
-          src="/AdminPage.svg"
+          src={"/kuldip_upload/" + product?.image}
           width={100}
-          className="object-contain rounded-lg bg-slate-800"
+          className="max-h-24 rounded-lg bg-slate-800 object-cover"
           aria-label="photot of product"
           aria-labelledby="photot of product"
         />
         <div className="flex flex-col">
-          <p className="text-lg capitalize text-default-800">indi shirt</p>
+          <p className="text-lg capitalize text-default-800">{product?.name}</p>
           <p className="text-xs text-default-500 capitalize">
-            Product Group : product_group
+            Product Group : {product?.product_group_id}
           </p>
           <p className="text-xs text-default-500">
             Color :{" "}
             <span
-              style={{ backgroundColor: "#ffffff" }}
-              className="text-slate-800 px-3 rounded-2xl"
+              style={{ backgroundColor: product?.color }}
+              className="text-slate-700 font-bold px-3 rounded-2xl"
             >
-              #ffffff
+              {product?.color}
             </span>
           </p>
-          <p className="text-xs text-default-500 capitalize">Size : m</p>
+          <p className="text-xs text-default-500 capitalize">
+            Size : {product?.size}
+          </p>
           <p className="text-sm text-default-600 capitalize">
-            available units : 100 piece
+            available units : {product?.available_stock_units}{" "}
+            {product?.unit_of_measurement}
           </p>
         </div>
       </div>

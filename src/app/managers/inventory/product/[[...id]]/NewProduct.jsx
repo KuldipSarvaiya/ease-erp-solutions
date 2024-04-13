@@ -287,8 +287,7 @@ function NewProduct({ id, data }) {
           defaultValue={getValues("unit_of_measurement")}
           {...register("unit_of_measurement", {
             required: "Please Specify Unit of Measurement Of the Product",
-          })}
-          isReadOnly={id}
+          })} 
           variant="faded"
           size="md"
           color="secondary"

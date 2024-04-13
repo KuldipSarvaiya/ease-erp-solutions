@@ -40,7 +40,7 @@ export default async function Page({ params: { id } }) {
         </p>
         <Divider className="my-2" />
         <div className="relative grid place-content-center w-full">
-          <div className="lg:columns-3 md:columns-2 max-sm:columns-1 gap-8 space-y-8 break-after-column">
+          <div className="lg:columns-3 md:columns-2 max-sm:columns-1 gap-8 space-y-8">
             {!products && (
               <div className="flex flex-row gap-5 justify-center items-center p-20">
                 <span className="animate-spinner-linear-spin duration-75">

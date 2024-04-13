@@ -10,12 +10,22 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GrPowerReset } from "react-icons/gr";
 import { VscInsert } from "react-icons/vsc";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 function NewRawMaterial({ id, data }) {
+  const scroll = useRef(null);
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/managers/finance/incomes");
+    },
+  });
+  const [depts, setDepts] = useState([]);
   const router = useRouter();
   const [colors, setColors] = useState([]);
   const {
@@ -29,17 +39,45 @@ function NewRawMaterial({ id, data }) {
     defaultValues: id ? data : {},
   });
 
+  // fetches departments
+  useEffect(() => {
+    if (depts.length === 0)
+      (async function () {
+        const res = await fetch("/api/hr/department", {
+          method: "GET",
+        });
+        if (!res.ok) return;
+
+        const depts = await res.json();
+        console.log(depts);
+        setDepts(depts);
+      })();
+  }, []);
+
   useEffect(() => {
     if (id) {
-      setColors([data.color]);
+      if (data.color !== "") setColors([data.color]);
+      scroll?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
     }
   }, [id]);
 
   async function createNewRawMaterial(formdata) {
-    formdata.color = colors;
-    formdata.size = formdata.size.split(",");
-    formdata.description = formdata.description.split("\n");
-    formdata.chemical_property = formdata.chemical_property.split("\n"); 
+    formdata.color = id ? colors[0] : colors;
+    formdata.size = formdata.size.replaceAll(/\n|\r|\t/g, " ").split(",");
+    formdata.description = formdata.description.replaceAll(/\n|\r|\t/g, " ");
+    formdata.chemical_property = formdata.chemical_property.replaceAll(
+      /\n|\r|\t/g,
+      " "
+    );
+    formdata.updated_by = session?.user?._id;
+    if (id) {
+      formdata._id = id;
+      formdata.size = formdata.size[0];
+    }
     console.log(formdata);
 
     const formData = new FormData();
@@ -54,14 +92,19 @@ function NewRawMaterial({ id, data }) {
       body: formData,
     });
     if (!result.ok)
-      return alert("Failed To Create New Product.\n Please Try Again");
+      return alert("Failed To Create New Raw Materails .\n Please Try Again");
 
     const res = await result.json();
 
     console.log(res);
 
     if (res.success === true)
-      return id ? router.push("/managers/inventory/raw_material") : reset();
+      return id
+        ? router.push("/managers/inventory/raw_material")
+        : (() => {
+            setColors([]);
+            reset();
+          })();
 
     for (const key in res) {
       setError(key, { message: res[key] });
@@ -75,6 +118,7 @@ function NewRawMaterial({ id, data }) {
       noValidate={false}
       encType="multipart/form-data"
       className="flex flex-col flex-nowrap gap-5 md:flex-nowrap w-full"
+      ref={scroll}
     >
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Raw Material Name : </span>
@@ -133,7 +177,7 @@ function NewRawMaterial({ id, data }) {
             <Avatar
               size="md"
               src={
-                getValues("image")?.[0]
+                !id && getValues("image")?.[0]
                   ? URL.createObjectURL(getValues("image")[0])
                   : null
               }
@@ -159,9 +203,11 @@ function NewRawMaterial({ id, data }) {
         <div className="md:col-start-2 md:col-end-4 flex flex-col gap-5">
           <div className="flex gap-7 flex-row items-end">
             <Input
-              // defaultValue={getValues("color")}
+              defaultValue={getValues("color")}
               {...register("color", {
-                required: "Please Select Colors Of the Product",
+                required: id
+                  ? data.color !== ""
+                  : "Please Select Colors Of the Product",
               })}
               variant="faded"
               size="md"
@@ -184,7 +230,8 @@ function NewRawMaterial({ id, data }) {
               size="lg"
               className="h-14"
               onClick={() => {
-                if (!colors.includes(getValues("color")))
+                const single = id ? colors.length < 1 : true;
+                if (!colors.includes(getValues("color")) && single)
                   setColors((prev) => {
                     return [...prev, getValues("color")];
                   });
@@ -275,6 +322,7 @@ function NewRawMaterial({ id, data }) {
           size="md"
           color="secondary"
           type="text"
+          // placeholder="0 - if you are buying it"
           name="usage_process_level"
           aria-label="usage_process_level"
           aria-labelledby="usage_process_level"
@@ -295,7 +343,7 @@ function NewRawMaterial({ id, data }) {
           variant="faded"
           size="lg"
           color="secondary"
-          placeholder={"hit ↩️ENTER for new point"}
+          placeholder={"put (;) for new point"}
           name="description"
           aria-label="description"
           aria-labelledby="description"
@@ -314,7 +362,7 @@ function NewRawMaterial({ id, data }) {
           variant="faded"
           size="lg"
           color="secondary"
-          placeholder={"hit ↩️ENTER for new point"}
+          placeholder={"put (;) for new point"}
           name="chemical_property"
           aria-label="chemical_property"
           aria-labelledby="chemical_property"
@@ -330,33 +378,32 @@ function NewRawMaterial({ id, data }) {
         <Select
           defaultSelectedKeys={getValues("produced_by")}
           {...register("produced_by", {
-            required: "Please select department that produces this material",
+            required: false, // "Please select department that produces this material",
           })}
           variant="faded"
           size="md"
+          placeholder="leave emploty if you are buying it"
           color="secondary"
           name="produced_by"
           aria-label="select produced_by department"
           aria-labelledby="select produced_by department"
           className="md:col-start-2 md:col-end-4"
         >
-          {[
-            "hr",
-            "finance",
-            "inventory",
-            "fabric manufacturing",
-            "cleaning and finishing",
-            "dying and printing",
-            "cutting",
-            "sewing",
-            "packing and labeling",
-          ].map((item, i) => {
-            return (
-              <SelectItem key={item} value={item}>
-                {item.toUpperCase()}
-              </SelectItem>
-            );
-          })}
+          {depts
+            ?.filter(
+              (dp) => !["hr", "finance", "inventory"].includes(dp.dept_name)
+            )
+            ?.map((item, i) => {
+              return (
+                <SelectItem key={item._id} value={item._id}>
+                  {`Level : ${item.production_process_level
+                    .toString()
+                    .padEnd(10, "‎")} ${item.dept_name
+                    .toUpperCase()
+                    .replaceAll("-", " ")}`}
+                </SelectItem>
+              );
+            })}
         </Select>
         <p className="text-red-500"> {errors?.produced_by?.message} </p>
       </span>
@@ -366,46 +413,53 @@ function NewRawMaterial({ id, data }) {
           defaultSelectedKeys={getValues("used_by")}
           {...register("used_by", {
             required: "Please select department that produces this material",
-          })} 
+          })}
           selectionMode="multiple"
           isMultiline
           variant="faded"
           size="md"
+          placeholder=""
           color="secondary"
           name="used_by"
           aria-label="select used_by department"
           aria-labelledby="select used_by department"
           className="md:col-start-2 md:col-end-4"
         >
-          {[
-            "hr",
-            "finance",
-            "inventory",
-            "fabric manufacturing",
-            "cleaning and finishing",
-            "dying and printing",
-            "cutting",
-            "sewing",
-            "packing and labeling",
-          ].map((item, i) => {
-            return (
-              <SelectItem key={item} value={item}>
-                {item.toUpperCase()}
-              </SelectItem>
-            );
-          })}
+          {depts
+            ?.filter(
+              (dp) => !["hr", "finance", "inventory"].includes(dp.dept_name)
+            )
+            ?.map((item, i) => {
+              return (
+                <SelectItem
+                  key={item._id}
+                  value={item._id}
+                  aria-disabled={
+                    +getValues("usage_process_level") ===
+                    +item.production_process_level
+                  }
+                >
+                  {`Level : ${item.production_process_level
+                    .toString()
+                    .padEnd(10, "‎")} ${item.dept_name
+                    .toUpperCase()
+                    .replaceAll("-", " ")}`}
+                </SelectItem>
+              );
+            })}
         </Select>
         <p className="text-red-500"> {errors?.used_by?.message} </p>
       </span>
-      <span className="grid grid-cols-6 gap-3 max-md:grid-cols-2 max-md:grid-rows-2 grid-rows-1">
+      <span className="flex w-full gap-5">
         <Button
           type="submit"
           color="secondary"
           variant="shadow"
           endContent={<big>📦</big>}
           // isDisabled={!colors.length}
+          className="min-w-fit"
         >
-          ADD PRODUCT
+          {id ? "UPDATE RAW MATERIAL" : " ADD RAW MATERIAL"}
         </Button>
         <Button
           type="reset"

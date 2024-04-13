@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }) {
     "managers",
     "departments",
     "employees",
-    "reports",
+    // "reports",
   ];
   return (
     <section>

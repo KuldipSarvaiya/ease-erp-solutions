@@ -43,7 +43,7 @@ function ProductCard({ card_only, product }) {
         radius="lg"
         className="shadow-lg border-2 border-slate-900 aspect-square"
       >
-        <CardHeader className="justify-around bg-white/02 border-white/20 border-1 backdrop-blur-sm overflow-hidden py-1 absolute before:rounded-xl rounded-large top-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+        <CardHeader className="justify-around bg-white/20 border-white/20 border-1 backdrop-blur-sm overflow-hidden py-1 absolute before:rounded-xl rounded-large top-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10 text-slate-900">
           <span className="flex flex-row flex-nowrap justify-between gap-1 w-full">
             <span className="text-tiny flex gap-2  uppercase font-bold">
               Produced By{" "}
@@ -67,8 +67,8 @@ function ProductCard({ card_only, product }) {
           className="h-full w-full object-cover"
         />
         {/* </CardBody> */}
-        <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-          <p className="text-base flex items-center flex-row justify-between w-full px-2 text-white/80 capitalize">
+        <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] ml-1 z-10 font-bold shadow-slate-800  shadow-inner">
+          <p className="text-lg flex items-center flex-row justify-between w-full px-2 text-black/80 capitalize">
             <span>{product?.name}</span>
             <span className="underline text-sm flex items-center gap-3 flex-wrap">
               <BsCircleFill style={{ color: product.color }} />{" "}
