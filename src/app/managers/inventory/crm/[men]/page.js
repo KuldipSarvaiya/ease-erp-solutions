@@ -1,5 +1,6 @@
 "use client";
 
+import InputCon from "@/components/InputCon";
 import {
   createCustomer,
   createSupplier,
@@ -13,38 +14,54 @@ import {
   SelectItem,
   Textarea,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { notFound, useRouter } from "next/navigation";
+import { notFound, redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaBackward } from "react-icons/fa";
-import { GrPowerReset } from "react-icons/gr";
+import { GrMapLocation, GrPowerReset } from "react-icons/gr";
 
 function Page({ params: { men } }) {
   if (men !== "customer" && men !== "supplier") return notFound();
-
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callback_url=/managers/finance/incomes");
+    },
+  });
   const router = useRouter();
   const [rawMaterial, setRawMaterial] = useState([]);
   const {
     register,
+    control,
     getValues,
     reset,
     setError,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
   useEffect(() => {
     console.log(men);
-    if (men === "supplier")
-      setRawMaterial([
-        "shirt",
-        "t-shirt",
-        "jeans",
-        "trouser",
-        "polo",
-        "jacket",
-      ]);
+    if (men === "supplier" && rawMaterial.length === 0)
+      fetch("/api/inventory/raw_material", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setRawMaterial(
+            data.map((item) => ({
+              _id: item?._id,
+              name: item?.name,
+              color: item?.color,
+              size: item?.size,
+              raw_material_group_id: item?.raw_material_group_id,
+              usage_process_level: item?.usage_process_level,
+            }))
+          );
+        });
   }, []);
 
   async function submitForm(data) {
@@ -56,6 +73,7 @@ function Page({ params: { men } }) {
       if (key === "image") formdata.append(key, data[key][0]);
       else formdata.append(key, data[key]);
     }
+    formdata.append("updated_by", session?.user?._id);
 
     const res =
       men === "customer"
@@ -202,46 +220,120 @@ function Page({ params: { men } }) {
           {men === "customer" && (
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 gap-3">
               <span className="text-xl font-semibold">
-                Address Coordinates :
+                Attendace Coordinates :{" "}
               </span>
               <span className="flex gap-3 items-stretch md:col-start-2 md:col-end-4">
-                <Input
-                  {...register("latitude", {
-                    validate: (v) =>
-                      !v.toString().includes("e") ||
-                      "latitude must be a valid number",
-                  })}
-                  variant="faded"
-                  size="md"
-                  color="secondary"
-                  type="number"
-                  name="latitude"
-                  aria-label="latitude"
-                  aria-labelledby="latitude"
-                  title="Enter latitude of Address"
-                  startContent={<span>Latitude:</span>}
+                <InputCon
+                  controller={{
+                    name: "latitude",
+                    control: control,
+                    rules: {
+                      // required: "Please enter latitude of customer place",
+                      validate: (v) =>
+                        !v.toString().includes("e") ||
+                        "latitude must be a valid number",
+                    },
+                  }}
+                  input={{
+                    size: "lg",
+                    variant: "faded",
+                    isRequired: true,
+                    color: "secondary",
+                    type: "number",
+                    name: "latitude",
+                    id: "latitude",
+                    "aria-label": "latitude",
+                    "aria-labelledby": "latitude",
+                    startContent: "Latitude: ",
+                  }}
                 />
-                <Input
-                  {...register("longitude", {
-                    validate: (v) =>
-                      !v.toString().includes("e") ||
-                      "longitude must be a valid number",
-                  })}
-                  variant="faded"
-                  size="md"
-                  color="secondary"
-                  type="number"
-                  name="longitude"
-                  aria-label="longitude"
-                  aria-labelledby="longitude"
-                  title="Enter longitude of Address"
-                  startContent={<span>Longitude:</span>}
+                <InputCon
+                  controller={{
+                    name: "longitude",
+                    control: control,
+                    rules: {
+                      // required: "Please enter Longitude of customer place",
+                      validate: (v) =>
+                        !v.toString().includes("e") ||
+                        "Longitude must be a valid number",
+                    },
+                  }}
+                  input={{
+                    size: "lg",
+                    variant: "faded",
+                    isRequired: true,
+                    color: "secondary",
+                    type: "number",
+                    name: "longitude",
+                    id: "longitude",
+                    "aria-label": "longitude",
+                    "aria-labelledby": "longitude",
+                    startContent: "Longitude: ",
+                  }}
                 />
+                <Button
+                  variant="ghost"
+                  isIconOnly
+                  size="lg"
+                  title="use current coordinates"
+                  color="secondary"
+                  startContent={<GrMapLocation />}
+                  onClick={() => {
+                    if (!navigator.geolocation)
+                      return alert("Please Allow location Permission");
+                    navigator.geolocation.getCurrentPosition((coordinates) => {
+                      setValue("latitude", coordinates.coords.latitude);
+                      setValue("longitude", coordinates.coords.longitude);
+                    });
+                  }}
+                ></Button>
               </span>
               <p className="text-red-500">
                 {errors?.latitude?.message} <br /> {errors?.longitude?.message}
               </p>
             </span>
+            // <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 gap-3">
+            //   <span className="text-xl font-semibold">
+            //     Address Coordinates :
+            //   </span>
+            //   <span className="flex gap-3 items-stretch md:col-start-2 md:col-end-4">
+            //     <Input
+            //       {...register("latitude", {
+            //         validate: (v) =>
+            //           !v.toString().includes("e") ||
+            //           "latitude must be a valid number",
+            //       })}
+            //       variant="faded"
+            //       size="md"
+            //       color="secondary"
+            //       type="number"
+            //       name="latitude"
+            //       aria-label="latitude"
+            //       aria-labelledby="latitude"
+            //       title="Enter latitude of Address"
+            //       startContent={<span>Latitude:</span>}
+            //     />
+            //     <Input
+            //       {...register("longitude", {
+            //         validate: (v) =>
+            //           !v.toString().includes("e") ||
+            //           "longitude must be a valid number",
+            //       })}
+            //       variant="faded"
+            //       size="md"
+            //       color="secondary"
+            //       type="number"
+            //       name="longitude"
+            //       aria-label="longitude"
+            //       aria-labelledby="longitude"
+            //       title="Enter longitude of Address"
+            //       startContent={<span>Longitude:</span>}
+            //     />
+            //   </span>
+            //   <p className="text-red-500">
+            //     {errors?.latitude?.message} <br /> {errors?.longitude?.message}
+            //   </p>
+            // </span>
           )}
           {men === "supplier" && (
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
@@ -265,8 +357,12 @@ function Page({ params: { men } }) {
               >
                 {rawMaterial?.map((item, i) => {
                   return (
-                    <SelectItem key={item} value={item}>
-                      {item.toUpperCase()}
+                    <SelectItem key={item?._id} value={item?._id}>
+                      {`Level : ${
+                        item?.usage_process_level
+                      } | ${item?.name?.toUpperCase()} | ${
+                        item?.raw_material_group_id
+                      } | ${item?.color} | ${item?.size} `}
                     </SelectItem>
                   );
                 })}

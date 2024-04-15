@@ -1,6 +1,12 @@
 const { createSlice } = require("@reduxjs/toolkit");
 
-const initialState = { isLoggedIn: false, auth: { id: "", name: "" } };
+const initialState = {
+  address: localStorage.getItem("customerAddress") || "",
+  address_coordinates: {
+    longitude: localStorage.getItem("customerAddress_longitude") || "",
+    latitude: localStorage.getItem("customerAddress_latitude") || "",
+  },
+};
 
 const customerSlice = createSlice({
   name: "customer_state",

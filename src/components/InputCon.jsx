@@ -6,11 +6,12 @@ function InputCon({ controller, input }) {
     <Controller
       name={controller.name}
       control={controller.control}
-      rules={controller.rules}
+      rules={controller?.rules}
       // defaultValue={controller.value || ""}
       render={({ field }) => (
         <>
           <Input
+            hidden={input.hidden || false}
             defaultValue={input.defaultValue || ""}
             type={input.type || "text"}
             label={input.label || ""}

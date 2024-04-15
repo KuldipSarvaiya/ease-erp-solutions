@@ -7,18 +7,28 @@ import {
   Input,
   Select,
   SelectItem,
+  Snippet,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaBackward } from "react-icons/fa";
 import { GrPowerReset } from "react-icons/gr";
 
 function NewRawMaterialOrderPage() {
-  const router = useRouter();
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect(
+        "/api/auth/signin?callbackUrl=/managers/inventory/orders/new_raw_material_order"
+      );
+    },
+  });
   const [suppliers, setSuppliers] = useState([]);
   const [rawMaterial, setRawMaterial] = useState([]);
+  const [success, setSuccess] = useState(false);
   const {
     register,
     getValues,
@@ -26,45 +36,93 @@ function NewRawMaterialOrderPage() {
     setError,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
+  const watch_raw_material_id = watch(["raw_material_id"]);
+  const [prevMaterial, setPrevMaterial] = useState("");
 
+  // fetching raw material
   useEffect(() => {
-    if (getValues("raw_material_id"))
-      setSuppliers(["kuldip1", "kuldip2", "kuldip3", "kuldip4"]);
-    else
-      setRawMaterial([
-        "shirt",
-        "t-shirt",
-        "jeans",
-        "trouser",
-        "polo",
-        "jacket",
-      ]);
+    if (rawMaterial.length === 0)
+      fetch("/api/inventory/raw_material", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setRawMaterial(
+            data.map((item) => ({
+              _id: item?._id,
+              name: item?.name,
+              color: item?.color,
+              size: item?.size,
+              raw_material_group_id: item?.raw_material_group_id,
+              usage_process_level: item?.usage_process_level,
+            }))
+          );
+        });
+  }, []);
+
+  // fetch suppliers of selected raw material
+  const getSupplier = useCallback(() => {
+    if (!getValues("raw_material_id")) return setSuppliers([]);
+    fetch(
+      "/api/inventory/supplier?match_material=" + getValues("raw_material_id"),
+      {
+        method: "GET",
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.length === 0) {
+          setSuppliers([]);
+          return alert(
+            "No Supplier Is Registered To Supply This Raw Material\nFirst Register Supplier To Supply This Raw Material"
+          );
+        } else
+          setSuppliers(
+            data?.map((item) => ({
+              _id: item?._id,
+              total_completed_orders: item?.total_completed_orders,
+              name: item?.name,
+            }))
+          );
+      });
+    setPrevMaterial(getValues("raw_material_id"));
   }, [getValues("raw_material_id")]);
+  useEffect(() => {
+    if (watch_raw_material_id?.[0] !== prevMaterial) getSupplier();
+  }, [watch_raw_material_id]);
 
   async function createNewRawMaterial(formdata) {
     console.log(formdata);
 
-    // const formData = new FormData();
+    const formData = new FormData();
 
-    // for (const key in formdata) {
-    //   if (key === "image") formData.append(key, formdata[key][0]);
-    //   else formData.append(key, formdata[key]);
-    // }
+    for (const key in formdata) {
+      if (key === "bill_image") formData.append(key, formdata[key][0]);
+      else formData.append(key, formdata[key]);
+    }
+    formData.append("updated_by", session?.user?._id);
 
-    // const result = await fetch("/api/inventory/raw_material", {
-    //   method: id ? "PUT" : "POST",
-    //   body: formData,
-    // });
-    // if (!result.ok)
-    //   return alert("Failed To Create New Product.\n Please Try Again");
+    const result = await fetch("/api/inventory/raw_material/order", {
+      method: "POST",
+      body: formData,
+    });
+    if (!result.ok) {
+      setSuccess("Failed To Distribute Employees Salary");
+      setTimeout(() => setSuccess(false), [5000]);
+      return;
+    }
 
-    // const res = await result.json();
+    const res = await result.json();
 
-    // console.log(res);
+    console.log(res);
 
-    // if (res.success === true)
-    //   return id ? router.push("/managers/inventory/raw_material") : reset();
+    if (res.success === true) {
+      reset();
+      setSuccess("Salary Employees Has Been Distributed Successfully");
+      setTimeout(() => setSuccess(false), [5000]);
+    }
 
     // for (const key in res) {
     //   setError(key, { message: res[key] });
@@ -102,6 +160,7 @@ function NewRawMaterialOrderPage() {
               })}
               variant="faded"
               size="md"
+              isDisabled={rawMaterial?.length === 0}
               color="secondary"
               name="raw_material_id"
               aria-label="select raw_material_id order"
@@ -110,8 +169,12 @@ function NewRawMaterialOrderPage() {
             >
               {rawMaterial?.map((item, i) => {
                 return (
-                  <SelectItem key={item} value={item}>
-                    {item.toUpperCase()}
+                  <SelectItem key={item?._id} value={item?._id}>
+                    {`Level : ${
+                      item?.usage_process_level
+                    } | ${item?.name?.toUpperCase()} | ${
+                      item?.raw_material_group_id
+                    } | ${item?.color} | ${item?.size} `}
                   </SelectItem>
                 );
               })}
@@ -124,6 +187,7 @@ function NewRawMaterialOrderPage() {
               {...register("supplier_id", {
                 required: "Please select Raw Material Supplier for this Order",
               })}
+              isDisabled={suppliers?.length === 0}
               variant="faded"
               size="md"
               color="secondary"
@@ -134,8 +198,10 @@ function NewRawMaterialOrderPage() {
             >
               {suppliers?.map((item, i) => {
                 return (
-                  <SelectItem key={item} value={item}>
-                    {item.toUpperCase()}
+                  <SelectItem key={item?._id} value={item?._id}>
+                    {`${item?.name?.toUpperCase()} | Completed Orders : ${
+                      item?.total_completed_orders
+                    } `}
                   </SelectItem>
                 );
               })}
@@ -432,7 +498,7 @@ function NewRawMaterialOrderPage() {
             />
             <p className="text-red-500">{errors?.net_bill_amount?.message}</p>
           </span>
-          <span className="grid grid-cols-6 gap-3 max-md:grid-cols-2 max-md:grid-rows-2 grid-rows-1">
+          <span className="w-full flex justify-start gap-5 items-center">
             <Button type="submit" color="secondary" variant="shadow">
               CREATE ORDER
             </Button>
@@ -445,6 +511,15 @@ function NewRawMaterialOrderPage() {
             >
               RESET
             </Button>
+            {success !== false && (
+              <Snippet
+                color={success.includes("Successfully") ? "success" : "danger"}
+                hideCopyButton
+                hideSymbol
+              >
+                {success}
+              </Snippet>
+            )}
           </span>
         </form>
       </div>

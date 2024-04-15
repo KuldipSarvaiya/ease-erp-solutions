@@ -53,7 +53,7 @@ function RawMaterialCard({ card_only, material }) {
           <span className="flex flex-row flex-nowrap justify-between w-full">
             <span className="text-tiny uppercase font-bold flex flex-col">
               {material?.produced_by?.map((item, i) => (
-                <span key={i}>{item.dept_name.replaceAll("-", " ")}</span>
+                <span key={i}>{item?.dept_name.replaceAll("-", " ")}</span>
               ))}
               {material?.produced_by?.length === 0 && "💲Purchased"}
             </span>
@@ -78,7 +78,7 @@ function RawMaterialCard({ card_only, material }) {
         {/* </CardBody> */}
         <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
           <p className="text-base flex items-center flex-row justify-between w-full px-2 text-black/80 font-semibold capitalize">
-            <span>{material.name}</span>
+            <span>{material?.name}</span>
             <span className="underline text-sm flex items-center gap-3 flex-wrap">
               <BsCircleFill style={{ color: material?.color || "transparent" }} />{" "}
               {material?.size} {material?.unit_of_measurement}

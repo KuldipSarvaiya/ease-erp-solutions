@@ -119,7 +119,7 @@ export default function NavBar() {
                 <UiLink
                   as={Link}
                   href="/customer/profile"
-                  color="secondary"
+                  color="foreground"
                   size="sm"
                   onClick={() => {
                     setActive("account");
@@ -129,7 +129,7 @@ export default function NavBar() {
                   {session?.user?.picture ? (
                     <Avatar
                       size="sm"
-                      src={"/kuldip_upload/" + session.user.picture}
+                      src={session.user.picture}
                     />
                   ) : (
                     <VscAccount />
@@ -146,7 +146,7 @@ export default function NavBar() {
                   as={Link}
                   href="/api/auth/signout?callbackUrl=/"
                   size="sm"
-                  color="secondary"
+                  color="foreground"
                   onClick={() => {
                     setActive("signout");
                   }}
@@ -161,7 +161,7 @@ export default function NavBar() {
               <UiLink
                 as={Link}
                 href="/api/auth/signin?callbackUrl=/customer/profile"
-                color="secondary"
+                color="foreground"
                 size="sm"
                 onClick={() => {
                   setActive("signin");

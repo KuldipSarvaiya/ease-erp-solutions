@@ -5,6 +5,6 @@ import { NextResponse } from "next/server";
 export async function GET() {
   await connectDB();
   const depts = await Department.find({}).select("dept_name _id production_process_level");
-  console.log(depts);
+  // console.log(depts);
   return NextResponse.json(depts);
 }

@@ -35,7 +35,7 @@ function NotifyModel() {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            // console.log(data);
             setNotices(data.notice);
           });
       })();
@@ -48,7 +48,7 @@ function NotifyModel() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data); // do something with the response
+        // console.log(data); // do something with the response
         setNotices(notices.filter((n) => n !== notice));
       });
   }

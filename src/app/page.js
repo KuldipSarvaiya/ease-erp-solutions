@@ -70,7 +70,7 @@ export default async function Home() {
                 alt="HR"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="600"
               />
             </div>
@@ -89,7 +89,7 @@ export default async function Home() {
                 alt="Inventory"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="600"
               />
             </div>
@@ -108,7 +108,7 @@ export default async function Home() {
                 alt="Finance"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="600"
               />
             </div>
@@ -127,7 +127,7 @@ export default async function Home() {
                 alt="Admin Control Panel"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="600"
               />
             </div>
@@ -153,14 +153,14 @@ export default async function Home() {
                 alt="Payroll Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
               <img
                 alt="Employee Dashboard"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>
@@ -186,14 +186,14 @@ export default async function Home() {
                 alt="Employee Dashboard"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
               <img
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>
@@ -219,14 +219,14 @@ export default async function Home() {
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
               <img
                 alt="Task Assignment"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>
@@ -252,14 +252,14 @@ export default async function Home() {
                 alt="Task Assignment"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
               <img
                 alt="Inventory Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>
@@ -286,14 +286,14 @@ export default async function Home() {
                 alt="Inventory Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
               <img
                 alt="Order Tracking"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>
@@ -320,14 +320,14 @@ export default async function Home() {
                 alt="Order Tracking"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
               <img
                 alt="CRM"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>
@@ -353,14 +353,14 @@ export default async function Home() {
                 alt="CRM"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
               <img
                 alt="Financial Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>
@@ -386,7 +386,7 @@ export default async function Home() {
                 alt="Financial Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/placeholder.svg"
+                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
                 width="640"
               />
             </div>

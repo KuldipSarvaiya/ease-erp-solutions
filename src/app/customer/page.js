@@ -23,7 +23,7 @@ export default function CustomerPage() {
               alt="Hero"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom lg:aspect-video/none lg:order-last"
               height="300"
-              src="/placeholder.svg"
+              src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
               width="600"
             />
           </div>
@@ -51,7 +51,7 @@ export default function CustomerPage() {
           alt="Fabric Manufacturing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/placeholder.svg"
+          src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
           width="700"
         />
       </section>
@@ -65,7 +65,7 @@ export default function CustomerPage() {
           alt="Fabric Cleaning"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/placeholder.svg"
+          src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
           width="700"
         />
         <div className="flex flex-col justify-center space-y-4">
@@ -104,7 +104,7 @@ export default function CustomerPage() {
           alt="Creative Printing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/placeholder.svg"
+          src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
           width="700"
         />
       </section>
@@ -118,7 +118,7 @@ export default function CustomerPage() {
           alt="Art of Sewing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/placeholder.svg"
+          src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
           width="700"
         />
         <div className="flex flex-col justify-center space-y-4">
@@ -158,12 +158,12 @@ export default function CustomerPage() {
           alt="Packaging Perfection"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/placeholder.svg"
+          src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
           width="700"
         />
       </section>
       <section
-        className="grid gap-12 lg:grid-cols-2 xl:gap-20"
+        className="grid gap-12 lg:grid-cols-2 xl:gap-20 mb-10"
         style={{
           background: "#10151D",
         }}
@@ -172,7 +172,7 @@ export default function CustomerPage() {
           alt="Elegant Designs"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/placeholder.svg"
+          src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
           width="700"
         />
         <div className="flex flex-col justify-center space-y-4">

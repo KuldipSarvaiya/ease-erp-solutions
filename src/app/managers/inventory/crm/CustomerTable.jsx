@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import {
   Avatar,
   Pagination,
@@ -18,77 +19,49 @@ import { HiArrowTopRightOnSquare } from "react-icons/hi2";
 function CustomerTable({ id }) {
   const [page, setPage] = useState(1);
   const [customers, setCustomers] = useState([]);
+  const [dataStatus, setDataStatus] = useState(<Loading />);
 
   useEffect(() => {
-    // todo : add google map link with given coordinates
-
-    const temp = [
-      {
-        key: 1,
-        image: "/AdminPage.svg",
-        name: "customer name1",
-        email: "kuldipsarvaiya@gmail.com",
-        contact_no: 1234567890,
-        address: "23, Main Street, Suite , Suite, Suite 330",
-        orders: "10",
-        address_coordinates: { latitude: 23.0302, longitude: 72.5772 },
-      },
-      {
-        key: 2,
-        image: "/AdminPage.svg",
-        name: "customer name2",
-        email: "kuldipsarvaiya@gmail.com",
-        contact_no: 1234567890,
-        address: "23, Main Street, Suite , Suite, Suite 330",
-        orders: "3",
-        address_coordinates: { latitude: 23.0302, longitude: 72.5772 },
-      },
-      {
-        key: 3,
-        image: "/AdminPage.svg",
-        name: "customer name3",
-        email: "kuldipsarvaiya@gmail.com",
-        contact_no: 1234567890,
-        address: "23, Main Street, Suite , Suite, Suite 330",
-        orders: "0",
-        address_coordinates: {},
-      },
-      {
-        key: 4,
-        image: "/AdminPage.svg",
-        name: "customer name4",
-        email: "kuldipsarvaiya@gmail.com",
-        contact_no: 1234567890,
-        address: "23, Main Street, Suite , Suite, Suite 330",
-        orders: "67",
-        address_coordinates: { latitude: 23.0302, longitude: 72.5772 },
-      },
-      {
-        key: 5,
-        image: "/AdminPage.svg",
-        name: "customer name5",
-        email: "kuldipsarvaiya@gmail.com",
-        contact_no: 1234567890,
-        address: "23, Main Street, Suite , Suite, Suite 330 ",
-        orders: "1",
-        address_coordinates: {},
-      },
-    ].map((cust) => {
-      return {
-        ...cust,
-        image: <Avatar size="sm" src={cust?.image} />,
-        address: <div className="max-w-80 text-wrap">{cust?.address}</div>,
-        address_coordinates: cust?.address_coordinates.latitude ? (
-          <Link href={"kd"} target="_blank">
-            <HiArrowTopRightOnSquare />
-          </Link>
-        ) : (
-          "-"
-        ),
-      };
-    });
-
-    setCustomers(temp);
+    if (customers.length === 0)
+      fetch("/api/customer", { method: "GET" })
+        .then((res) => res.json())
+        .then((data) => {
+          setCustomers(
+            data.map((cust) => {
+              return {
+                ...cust,
+                image: (
+                  <Avatar
+                    size="sm"
+                    src={
+                      cust?.image?.startsWith("https://")
+                        ? cust?.image
+                        : "/kuldip_upload/" + cust?.image
+                    }
+                  />
+                ),
+                orders: 0,
+                address: (
+                  <div className="max-w-80 text-wrap">{cust?.address}</div>
+                ),
+                address_coordinates: cust?.address_coordinates.latitude ? (
+                  <Link
+                    href={`https://www.google.com/maps/search/?api=1&query=${cust?.address_coordinates?.latitude},${cust?.address_coordinates?.longitude}`}
+                    target="_blank"
+                  >
+                    <HiArrowTopRightOnSquare />
+                  </Link>
+                ) : (
+                  "-"
+                ),
+              };
+            })
+          );
+        })
+        .catch((e) => {
+          console.log(e);
+          setDataStatus("No Customers Are Available");
+        });
   }, []);
 
   const rowsPerPage = 10;
@@ -129,7 +102,7 @@ function CustomerTable({ id }) {
         <TableColumn key={"orders"}>ORDERS</TableColumn>
         <TableColumn key={"address_coordinates"}>MAP</TableColumn>
       </TableHeader>
-      <TableBody items={items} emptyContent={"NO DATA AVAILABLE"}>
+      <TableBody items={items} emptyContent={dataStatus}>
         {(item) => (
           <TableRow key={item.name}>
             {(columnKey) => (

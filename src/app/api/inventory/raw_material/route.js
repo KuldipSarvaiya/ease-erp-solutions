@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { cwd } from "node:process";
 import { Buffer } from "node:buffer";
 import { writeFile } from "node:fs";
-import RawMaterialStockHistory from "@/lib/models/raw_material_stock_history.model";
+// import RawMaterialStockHistory from "@/lib/models/raw_material_stock_history.model";
 import connectDB from "@/lib/mongoose";
 import RawMaterialStock from "@/lib/models/raw_material_stock.model";
 
@@ -157,4 +157,19 @@ export async function PUT(request) {
   return NextResponse.json({
     success: true,
   });
+}
+
+export async function GET(req) {
+  await connectDB();
+  const res = await RawMaterial.aggregate([
+    {
+      $match: {
+        produced_by: {
+          $exists: true,
+          $eq: [],
+        },
+      },
+    },
+  ]);
+  return NextResponse.json(res);
 }

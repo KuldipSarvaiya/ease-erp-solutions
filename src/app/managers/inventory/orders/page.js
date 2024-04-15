@@ -77,43 +77,7 @@ export default function SalesPage() {
         </p>
         <Divider className="my-2" />
         <Suspense fallback={<Loading inline={true} key={2} />}>
-          <PurchaseTable
-            data={[
-              {
-                key: 1,
-                supplier: {
-                  supplier_id: "werwer32",
-                  name: "kuldip",
-                  image: "/AdminPage.svg",
-                  address: "123 Main Street, Suite, Suite 330",
-                  contact_no: "1234567890",
-                  email: "kuldip@example.com",
-                  total_completed_orders: 23,
-                },
-                raw_material: {
-                  raw_material_id: "werwerwer32",
-                  name: "red shirt",
-                  image: "/AdminPage.svg",
-                  color: "#FF0000",
-                  size: "xxl",
-                  usage_process_level: 12,
-                },
-                bill_no: "12sa22e",
-                ordered_units: 12,
-                order_ordered_date: new Date(),
-                order_receive_date: new Date(),
-                payment_mode: "inaccount",
-                check_no: "erf432rwefd",
-                transaction_no: "32e23dfdsdfsd",
-                mrp_per_unit: 233,
-                total_tax: 32,
-                delivery_charge: 2,
-                total_discount: 342,
-                net_bill_amount: 324,
-                bill_image: "/AdminPage.svg",
-              },
-            ]}
-          />
+          <PurchaseTable />
         </Suspense>
       </div>
     </div>

@@ -14,6 +14,7 @@ const customerSchema = new Schema(
     email: {
       type: String,
       required: true,
+      // unique: true,
     },
     contact_no: {
       type: String,
@@ -31,15 +32,15 @@ const customerSchema = new Schema(
         longitude: { type: String, required: true },
       },
     },
-    cart: {
-      type: [Schema.ObjectId],
-      ref: "CustomerOrder",
-      required: false,
-    },
+    // cart: {
+    //   type: [Schema.ObjectId],
+    //   ref: "CustomerOrder",
+    //   required: false,
+    // },
     updated_by: {
       type: Schema.ObjectId,
       ref: "Employee",
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }

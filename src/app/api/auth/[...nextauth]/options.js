@@ -2,24 +2,41 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Employee from "@/lib/models/employee.model";
 import connectDB from "@/lib/mongoose";
+import Customer from "@/lib/models/customer.model";
 
 export const options = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      profile(profile) {
-        let role = "customer";
-        if (
-          profile.email_verified &&
-          profile.email === "kuldipsarvaiya100@gmail.com"
-        )
-          role = "admin";
+      async profile(profile) {
+        await connectDB();
+
+        let customer = await Customer.findOne({ email: profile.email });
+        console.log("\n**** old Custommer = ", customer);
+
+        if (!customer) {
+          customer = await Customer.insertMany([
+            {
+              name: profile?.name,
+              image: profile?.picture,
+              email: profile?.email,
+              address: "",
+              address_coordinates: {
+                latitude: 0,
+                longitude: 0,
+              },
+            },
+          ]);
+          customer = customer[0]._doc;
+          console.log("\n**** new Custommer = ", customer);
+        }
 
         return {
           id: profile.sub,
           ...profile,
-          role,
+          ...customer,
+          role: "customer",
         };
       },
       authorization: {
@@ -48,7 +65,7 @@ export const options = {
             paddig: "3px",
             color: "#cbd5e1",
             fontSize: "20px",
-            backgroundColor:"#0c0a09"
+            backgroundColor: "#0c0a09",
           },
         },
         password: {
@@ -66,7 +83,7 @@ export const options = {
             paddig: "3px",
             color: "#cbd5e1",
             fontSize: "20px",
-            backgroundColor:"#0c0a09"
+            backgroundColor: "#0c0a09",
           },
         },
       },

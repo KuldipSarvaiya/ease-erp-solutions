@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import {
   Pagination,
   Table,
@@ -14,8 +15,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-
-// todo : place google map link with given coordinates
+ 
 const SupplierTooltip = ({ supplier }) => {
   return (
     <Tooltip
@@ -25,9 +25,9 @@ const SupplierTooltip = ({ supplier }) => {
             alt="supplier img"
             height={100}
             radius="sm"
-            src={supplier?.image}
+            src={"/kuldip_upload/" + supplier?.image}
             width={100}
-            className="object-contain rounded-lg bg-slate-800"
+            className="object-cover rounded-lg bg-slate-800"
             aria-label="photo of supplier"
             aria-labelledby="photo of supplier"
           />
@@ -67,9 +67,9 @@ const RawMaterialTooltip = ({ raw_material }) => {
             alt="raw_material img"
             height={100}
             radius="sm"
-            src={raw_material?.image}
+            src={"/kuldip_upload/" + raw_material?.image}
             width={100}
-            className="object-contain rounded-lg bg-slate-800"
+            className="object-cover rounded-lg bg-slate-800"
             aria-label="photo of raw_material"
             aria-labelledby="photo of raw_material"
           />
@@ -95,7 +95,7 @@ const RawMaterialTooltip = ({ raw_material }) => {
 
             <p className="text-xs text-default-500">
               <Link
-                href={"/managers/raw_material/" + raw_material.raw_material_id}
+                href={"/managers/inventory/raw_material/" + raw_material._id}
                 target="_blank"
               >
                 {" "}
@@ -114,32 +114,70 @@ const RawMaterialTooltip = ({ raw_material }) => {
   );
 };
 
-function PurchaseTable({ data }) {
+function PurchaseTable() {
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState([]);
+  const [dataStatus, setDataStatus] = useState(<Loading />);
 
   useEffect(() => {
-    const temp = data?.map((order) => {
-      return {
-        ...order,
-        supplier: <SupplierTooltip supplier={order.supplier} />,
-        raw_material: <RawMaterialTooltip raw_material={order.raw_material} />,
-        order_receive_date: new Date(
-          order.order_receive_date
-        ).toLocaleDateString(),
-        order_ordered_date: new Date(
-          order.order_ordered_date
-        ).toLocaleDateString(),
-        ref:
-          order.payment_mode === "inaccount"
-            ? order.transaction_no
-            : order.payment_mode === "check"
-            ? order.check_no
-            : "-",
-      };
-    });
-    setOrders(temp);
-  }, [data]);
+    if (orders.length === 0) {
+      fetch("/api/inventory/raw_material/order", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.length === 0) return setDataStatus("No Orders Placed Yet");
+          // console.log(data);
+          setOrders(
+            data?.map((order, i) => {
+              return {
+                ...order,
+                key: i,
+                payment_mode: (
+                  <Tooltip
+                    content={
+                      <Image
+                        alt="Bill Image"
+                        src={"/kuldip_upload/" + order.bill_image}
+                        height={250}
+                        width={250}
+                        className="object-cover"
+                      />
+                    }
+                    delay={1000}
+                  >
+                    <span>{order.payment_mode}</span>
+                  </Tooltip>
+                ),
+                supplier: <SupplierTooltip supplier={order.supplier_id} />,
+                raw_material: (
+                  <RawMaterialTooltip raw_material={order.raw_material_id} />
+                ),
+                order_receive_date: new Date(
+                  order.order_receive_date
+                ).toLocaleDateString(),
+                order_ordered_date: new Date(
+                  order.order_ordered_date
+                ).toLocaleDateString(),
+                ref: (
+                  <span className="text-xs">
+                    {order.payment_mode === "inaccount"
+                      ? order.transaction_no
+                      : order.payment_mode === "check"
+                      ? order.check_no
+                      : "-"}
+                  </span>
+                ),
+              };
+            })
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          setDataStatus("No Orders Placed Yet");
+        });
+    }
+  }, []);
 
   const rowsPerPage = 10;
   const pages = Math.ceil(orders.length / rowsPerPage);
@@ -184,7 +222,7 @@ function PurchaseTable({ data }) {
         <TableColumn key={"total_discount"}>DISCOUNT</TableColumn>
         <TableColumn key={"net_bill_amount"}>NET TOTAL</TableColumn>
       </TableHeader>
-      <TableBody items={items} emptyContent={"NO DATA AVAILABLE"}>
+      <TableBody items={items} emptyContent={dataStatus}>
         {(item) => (
           <TableRow key={item.name}>
             {(columnKey) => (
