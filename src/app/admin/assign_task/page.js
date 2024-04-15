@@ -14,7 +14,7 @@ export default async function Page() {
     pending: "text-yellow-500",
     present: "text-emerald-500",
     onleave: "text-red-500",
-    "": "text-white",
+    absent: "text-white",
   };
   const session = await getServerSession(options);
 
@@ -87,6 +87,12 @@ export default async function Page() {
         department: {
           dept_name: 1,
         },
+      },
+    },
+    {
+      $unwind: {
+        path: "$attendance",
+        preserveNullAndEmptyArrays: true,
       },
     },
   ]);
@@ -171,7 +177,12 @@ export default async function Page() {
                     />
                   }
                   endContent={
-                    <FaDotCircle className={colors[emp?.attendance]+" scale-150 mr-2"} />
+                    <FaDotCircle
+                      className={
+                        colors[emp?.attendance?.state || "absent"] +
+                        " scale-150 mr-2"
+                      }
+                    />
                   }
                   className="h-fit p-1"
                 >
@@ -185,7 +196,9 @@ export default async function Page() {
                     />
                     <span>
                       {emp?.middle_name}&nbsp;{emp?.first_name}
-                      <p className="uppercase">{emp?.department?.dept_name}</p>
+                      <p className="uppercase">
+                        {emp?.department?.dept_name.replaceAll("-", " ")}
+                      </p>
                     </span>
                     &nbsp;
                   </span>

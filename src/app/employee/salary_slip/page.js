@@ -50,7 +50,8 @@ export default function SalarySlipPage() {
         method: "GET",
       })
         .then((res) => res.json())
-        .then((data) =>
+        .then((data) => {
+          if (data.length === 0) return setDataStatus("No Salary Found");
           setSalary(
             data.map((item, i) => ({
               key: i,
@@ -77,8 +78,8 @@ export default function SalarySlipPage() {
                 </Button>
               ),
             }))
-          )
-        )
+          );
+        })
         .catch((e) => {
           console.log(e);
           setDataStatus("No Salary Found");
@@ -115,8 +116,8 @@ export default function SalarySlipPage() {
     <>
       <div className="relative w-full h-full max-h-full max-w-full">
         <div className="border-4 rounded-3xl mx-10 my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
-          <p className="flex justify-between flex-row flex-wrap text-2xl font-bold tracking-wide my-8">
-            <span>VIEW AND PRINT YOUR SALARY DETAILS SLIP</span>
+          <p className="flex justify-between flex-row flex-wrap text-2xl font-bold tracking-wide my-3">
+            <span>SALARY DETAILS</span>
             <Button
               size="sm"
               variant="shadow"

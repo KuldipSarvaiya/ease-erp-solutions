@@ -1,7 +1,66 @@
 import { Divider } from "@nextui-org/react";
 import GMEmployeeCard from "./GMEmployeeCard";
+import { getServerSession } from "next-auth";
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import Employee from "@/lib/models/employee.model";
+import mongoose from "mongoose";
+import connectDB from "@/lib/mongoose";
 
-export default function EmpPage() {
+export default async function EmpPage() {
+  const session = await getServerSession(options);
+
+  await connectDB();
+
+  const employees = await Employee.aggregate([
+    {
+      $match: {
+        // designation: "Employee",
+        department_id: new mongoose.Types.ObjectId(
+          session?.user?.department_id?._id
+        ),
+      },
+    },
+    {
+      $lookup: {
+        from: "attendances",
+        let: {
+          employeeId: "$_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$employee_id", "$$employeeId"],
+                  },
+                  {
+                    $eq: [
+                      {
+                        $dayOfYear: "$createdAt",
+                      },
+                      {
+                        $dayOfYear: new Date(),
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "attendance",
+      },
+    },
+    {
+      $unwind: {
+        path: "$attendance",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ]);
+  console.log(employees);
+
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
       {/* employees details of this department */}
@@ -11,11 +70,14 @@ export default function EmpPage() {
         </p>
         <Divider className="my-3" />
         <div className="grid manager_inventory_product_stock w-full gap-3 ">
-          <GMEmployeeCard />
-          <GMEmployeeCard />
-          <GMEmployeeCard />
-          <GMEmployeeCard />
-          <GMEmployeeCard /> 
+          {employees.length === 0 && (
+            <b className="p-10 text-balance">
+              No Employees Has Assigned To This Department {":("}
+            </b>
+          )}
+          {employees?.map((employee) => (
+            <GMEmployeeCard key={employee._id} emp={employee} />
+          ))}
         </div>
       </div>
     </div>

@@ -11,10 +11,9 @@ import Link from "next/link";
 import { BsArrowRight, BsCircleFill } from "react-icons/bs";
 import { GrView } from "react-icons/gr";
 
-function RawMaterialCard({ card_only, material }) {
+function RawMaterialCard({ card_only, material, no_dept }) {
   return (
     <Tooltip
-      isDisabled={card_only}
       placement="left"
       content={
         <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-3 rounded-xl border-1 border-purple-900 text-white">
@@ -50,22 +49,24 @@ function RawMaterialCard({ card_only, material }) {
           <h4 className="font-bold text-large">
             Usage Process Level : {material?.usage_process_level}
           </h4>
-          <span className="flex flex-row flex-nowrap justify-between w-full">
-            <span className="text-tiny uppercase font-bold flex flex-col">
-              {material?.produced_by?.map((item, i) => (
-                <span key={i}>{item?.dept_name.replaceAll("-", " ")}</span>
-              ))}
-              {material?.produced_by?.length === 0 && "💲Purchased"}
+          {!no_dept && (
+            <span className="flex flex-row flex-nowrap justify-between w-full">
+              <span className="text-tiny uppercase font-bold flex flex-col">
+                {material?.produced_by?.map((item, i) => (
+                  <span key={i}>{item?.dept_name?.replaceAll("-", " ")}</span>
+                ))}
+                {material?.produced_by?.length === 0 && "💲Purchased"}
+              </span>
+              <big className=" font-extrabold text-xl">
+                <BsArrowRight />
+              </big>
+              <span className="text-tiny uppercase font-bold flex flex-col">
+                {material?.used_by?.map((item, i) => (
+                  <span key={i}>{item.dept_name.replaceAll("-", " ")}</span>
+                ))}
+              </span>
             </span>
-            <big className=" font-extrabold text-xl">
-              <BsArrowRight />
-            </big>
-            <span className="text-tiny uppercase font-bold flex flex-col">
-              {material?.used_by?.map((item, i) => (
-                <span key={i}>{item.dept_name.replaceAll("-", " ")}</span>
-              ))}
-            </span>
-          </span>
+          )}
         </CardHeader>
         {/* <CardBody> */}
         <Image
@@ -80,7 +81,9 @@ function RawMaterialCard({ card_only, material }) {
           <p className="text-base flex items-center flex-row justify-between w-full px-2 text-black/80 font-semibold capitalize">
             <span>{material?.name}</span>
             <span className="underline text-sm flex items-center gap-3 flex-wrap">
-              <BsCircleFill style={{ color: material?.color || "transparent" }} />{" "}
+              <BsCircleFill
+                style={{ color: material?.color || "transparent" }}
+              />{" "}
               {material?.size} {material?.unit_of_measurement}
             </span>
           </p>

@@ -58,7 +58,7 @@ export default function ExpensePage() {
     const res = await createExpense(formdata);
 
     if (res.success) {
-      reset()
+      reset();
       setSuccess("Expense Entry Has Been Successfully Generated");
     } else setSuccess("Failed To Create Expense Entry Right Now.");
 
@@ -354,7 +354,7 @@ export default function ExpensePage() {
 
       {/* old expense records */}
       <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
-        <Accordion>
+        {/* <Accordion>
           <AccordionItem
             title={
               <span className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
@@ -368,8 +368,9 @@ export default function ExpensePage() {
                   onClick={downloadPdf}
                 >
                   <FaDownload /> PDF
-                </Button>
+                </Button> 
               </span>
+              
             }
             key={1}
           >
@@ -411,7 +412,20 @@ export default function ExpensePage() {
               </span>
             </form>
           </AccordionItem>
-        </Accordion>
+        </Accordion>  */}
+        <span className="uppercase flex justify-between flex-row flex-wrap text-2xl max-md:text-lg tracking-wider font-bold">
+          <span>Expense history</span>
+          <Button
+            className=""
+            size="sm"
+            variant="shadow"
+            color="secondary"
+            aria-label="download-pdf"
+            onClick={downloadPdf}
+          >
+            <FaDownload /> PDF
+          </Button>
+        </span>
         <Divider className="my-5" />
         <Table
           id="download-table"

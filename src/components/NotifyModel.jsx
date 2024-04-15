@@ -69,12 +69,10 @@ function NotifyModel() {
                 return (
                   <p
                     key={i}
-                    className={`bg-slate-800 text-slate-300 p-2 rounded-2xl text-md sm:text-base flex flex-col gap-[1px] max-w-90`}
+                    className={`bg-slate-800 text-slate-300 p-2 rounded-2xl text-md sm:text-base flex flex-row gap-[1px] max-w-90 justify-between items-center`}
                   >
-                    <div className="flex justify-between">
-                      <span className="text-slate-50 text-xs place-self-start">
-                        {new Date().toLocaleString().split(",")[1]}
-                      </span>
+                    {msg}
+                    <div className="flex justify-end">
                       <Button
                         onPress={() => deleteNotice(msg)}
                         isIconOnly
@@ -84,7 +82,6 @@ function NotifyModel() {
                         <GrClearOption />
                       </Button>
                     </div>
-                    {msg}
                   </p>
                 );
               })}

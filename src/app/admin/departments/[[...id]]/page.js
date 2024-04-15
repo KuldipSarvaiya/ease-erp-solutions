@@ -56,6 +56,30 @@ export default async function Page({ params: { id } }) {
         as: "prev_managers",
       },
     },
+    {
+      $lookup: {
+        from: "rawmaterials",
+        localField: "_id",
+        foreignField: "produced_by",
+        as: "produced_materials",
+      },
+    },
+    {
+      $lookup: {
+        from: "rawmaterials",
+        localField: "_id",
+        foreignField: "used_by",
+        as: "used_materials",
+      },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "produced_by",
+        as: "produced_products",
+      },
+    },
   ]);
 
   console.log(departments);
@@ -95,9 +119,17 @@ export default async function Page({ params: { id } }) {
                   <span className="flex  flex-row flex-nowrap gap-1">
                     <b>USED MATERIALS : </b>
                     <span className="flex flex-col">
-                      {dept?.used_material_id?.map((material) => (
+                      {dept?.used_materials?.map((material, i) => (
                         <span key={material?.name}>
-                          &rarr; {material?.name}
+                          {i === 3 ? (
+                            "..."
+                          ) : i < 3 ? (
+                            <>
+                              &rarr; {material?.name} | {material?.size}
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </span>
                       ))}
                     </span>
@@ -105,9 +137,17 @@ export default async function Page({ params: { id } }) {
                   <span className="flex  flex-row flex-nowrap gap-1">
                     <b>PRODUCED MATERIALS : </b>
                     <span className="flex flex-col">
-                      {dept?.produced_material_id?.map((material) => (
+                      {dept?.produced_materials?.map((material, i) => (
                         <span key={material?.name}>
-                          &rarr; {material?.name}
+                          {i === 3 ? (
+                            "..."
+                          ) : i < 3 ? (
+                            <>
+                              &rarr; {material?.name} | {material?.size}
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </span>
                       ))}
                     </span>
@@ -115,9 +155,17 @@ export default async function Page({ params: { id } }) {
                   <span className="flex  flex-row flex-nowrap gap-1">
                     <b>PRODUCED PRODUCT : </b>
                     <span className="flex flex-col">
-                      {dept?.produced_product_id?.map((material) => (
+                      {dept?.produced_products?.map((material, i) => (
                         <span key={material?.name}>
-                          &rarr; {material?.name}
+                          {i === 3 ? (
+                            "..."
+                          ) : i < 3 ? (
+                            <>
+                              &rarr; {material?.name} | {material?.size}
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </span>
                       ))}
                     </span>

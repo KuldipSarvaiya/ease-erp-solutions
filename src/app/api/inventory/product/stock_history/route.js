@@ -1,5 +1,6 @@
 import ProductStockHistory from "@/lib/models/product_stock_history.model";
 import connectDB from "@/lib/mongoose";
+import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -7,7 +8,8 @@ export async function GET(request) {
   const department = searchParams.get("department");
 
   const matchQry = {};
-  if (department !== "all") matchQry.produced_by = { $in: [department] };
+  if (department !== "all")
+    matchQry.produced_by = { $in: [new mongoose.Types.ObjectId(department)] };
 
   await connectDB();
 
@@ -31,7 +33,7 @@ export async function GET(request) {
     },
   ]);
 
-  console.log("ptoduct stock for this department = ", department, " =  ", res);
+  console.log("product stock for this department = ", department, " =  ", res);
 
   return NextResponse.json(res);
 }

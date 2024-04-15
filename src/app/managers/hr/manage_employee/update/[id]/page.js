@@ -596,7 +596,7 @@ function Page({ params: { id } }) {
                       key={item._id.toString()}
                       value={item._id.toString()}
                     >
-                      {item.dept_name.toUpperCase()}
+                      {item.dept_name.toUpperCase().replaceAll("-", " ")}
                     </SelectItem>
                   );
                 })}

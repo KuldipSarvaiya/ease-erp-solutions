@@ -46,7 +46,11 @@ export default function ManageEmpAdmin() {
           </Button>
         </p>
         <Divider className="my-5" />
-        {data.length === 0 && <Loading />}
+        {data.length === 0 && (
+          <div className="py-10 flex flex-row items-center gap-3 justify-center">
+            <Loading /> Loading Employee Deatils
+          </div>
+        )}
 
         <Accordion
           className="grid  grid-cols-1 row-auto gap-5"
@@ -69,7 +73,11 @@ export default function ManageEmpAdmin() {
                   {dept.employees?.map((emp) => (
                     <EmployeeSmall emp={emp} />
                   ))}
-                  {dept?.employees.length === 0 && <h1>This Department Is <b>ABANDON</b>, No Employee Works Here</h1>}
+                  {dept?.employees.length === 0 && (
+                    <h1>
+                      This Department Is <b>ABANDON</b>, No Employee Works Here
+                    </h1>
+                  )}
                 </div>
               </AccordionItem>
             );

@@ -29,3 +29,7 @@ html {
   grid-template-columns: repeat(auto-fit, minmax(200px, 350px));
   justify-content: center;
 }
+
+.can_you_please_hide {
+  @apply hidden;
+}

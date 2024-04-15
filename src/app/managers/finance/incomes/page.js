@@ -342,7 +342,7 @@ export default function IncomePage() {
       {/*  */}
       {/* old income records */}
       <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 relative">
-        <Accordion>
+        {/* <Accordion>
           <AccordionItem
             title={
               <span className="uppercase flex justify-between flex-row flex-nowrap text-2xl max-md:text-lg tracking-wider font-bold w-full">
@@ -356,7 +356,7 @@ export default function IncomePage() {
                 >
                   <FaDownload /> PDF
                 </Button>
-              </span>
+              </span> 
             }
             key={1}
           >
@@ -398,7 +398,20 @@ export default function IncomePage() {
               </span>
             </form>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
+
+        <span className="uppercase flex justify-between flex-row flex-nowrap text-2xl max-md:text-lg tracking-wider font-bold w-full">
+          <span>income history</span>
+          <Button
+            size="sm"
+            variant="shadow"
+            color="secondary"
+            aria-label="download-pdf"
+            onClick={downloadPdf}
+          >
+            <FaDownload /> PDF
+          </Button>
+        </span>
         <Divider className="my-5" />
         <Table
           id="download-table"

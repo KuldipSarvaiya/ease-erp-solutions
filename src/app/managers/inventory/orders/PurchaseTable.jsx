@@ -2,6 +2,8 @@
 
 import Loading from "@/components/Loading";
 import {
+  Button,
+  Divider,
   Pagination,
   Table,
   TableBody,
@@ -13,9 +15,13 @@ import {
   getKeyValue,
 } from "@nextui-org/react";
 import Image from "next/image";
+import { ImPlus } from "react-icons/im";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
- 
+import { FaDownload } from "react-icons/fa";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 const SupplierTooltip = ({ supplier }) => {
   return (
     <Tooltip
@@ -32,9 +38,7 @@ const SupplierTooltip = ({ supplier }) => {
             aria-labelledby="photo of supplier"
           />
           <div className="flex flex-col gap-1">
-            <p className="text-xs text-default-500">
-              SUPPLIER ID : {supplier?.supplier_id}
-            </p>
+            <p className="text-xs text-default-500">ID : {supplier?._id}</p>
             <p className="text-xs text-default-500">
               CONTANCT NO : {supplier?.contact_no}
             </p>
@@ -74,9 +78,7 @@ const RawMaterialTooltip = ({ raw_material }) => {
             aria-labelledby="photo of raw_material"
           />
           <div className="flex flex-col gap-2">
-            <p className="text-xs text-default-500">
-              Raw Material ID : {raw_material?.raw_material_id}
-            </p>
+            <p className="text-xs text-default-500">ID : {raw_material?._id}</p>
             <p className="text-xs text-default-500">
               COLOR :{" "}
               <span
@@ -179,6 +181,23 @@ function PurchaseTable() {
     }
   }, []);
 
+  function downloadPdf() {
+    const doc = new jsPDF("landscape", "mm", "a4");
+    doc.page =
+      doc.internal.pageSize.getWidth() / doc.internal.pageSize.getHeight();
+    autoTable(doc, {
+      html: "#download-table",
+      theme: "grid",
+      head: "Kuldip Head",
+      foot: "Kuldip Foot",
+      showFoot: "everyPage",
+      showHead: "everyPage",
+      headStyles: { fillColor: "red" },
+    });
+
+    doc.save("supplier_order_records.pdf");
+  }
+
   const rowsPerPage = 10;
   const pages = Math.ceil(orders.length / rowsPerPage);
 
@@ -190,48 +209,76 @@ function PurchaseTable() {
   }, [page, orders]);
 
   return (
-    <Table
-      id="download-table"
-      aria-label="expenses of company for the all time"
-      aria-labelledby="expenses of company for the all time"
-      bottomContent={
-        <div className="flex w-full justify-center">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
+    <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
+      <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
+        RAW MATERIALS PURCHASE ORDERS{" "}
+        <span>
+          <Button
+            as={Link}
+            href="/managers/inventory/orders/new_raw_material_order"
+            size="sm"
+            variant="shadow"
             color="secondary"
-            page={page}
-            total={pages}
-            onChange={(page) => setPage(page)}
-          />
-        </div>
-      }
-    >
-      <TableHeader>
-        <TableColumn key={"supplier"}>SUPPLIER</TableColumn>
-        <TableColumn key={"raw_material"}>RAW MATERIAL</TableColumn>
-        <TableColumn key={"ordered_units"}>UNITS</TableColumn>
-        <TableColumn key={"payment_mode"}>PAYMENT</TableColumn>
-        <TableColumn key={"ref"}>REFERENCE</TableColumn>
-        <TableColumn key={"order_ordered_date"}>ORDERED DATE</TableColumn>
-        <TableColumn key={"order_receive_date"}>RECEIVED DATE</TableColumn>
-        <TableColumn key={"mrp_per_unit"}>SUB TOTAL</TableColumn>
-        <TableColumn key={"total_tax"}>TAX</TableColumn>
-        <TableColumn key={"delivery_charge"}>CHARGE</TableColumn>
-        <TableColumn key={"total_discount"}>DISCOUNT</TableColumn>
-        <TableColumn key={"net_bill_amount"}>NET TOTAL</TableColumn>
-      </TableHeader>
-      <TableBody items={items} emptyContent={dataStatus}>
-        {(item) => (
-          <TableRow key={item.name}>
-            {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+            startContent={<ImPlus />}
+          >
+            NEW ORDER
+          </Button>{" "}
+          <Button
+            size="sm"
+            variant="shadow"
+            color="secondary"
+            aria-label="download-pdf"
+            onClick={downloadPdf}
+          >
+            <FaDownload /> PDF
+          </Button>
+          {/* <Download /> */}
+        </span>
+      </p>
+      <Divider className="my-2" />
+      <Table
+        id="download-table"
+        aria-label="expenses of company for the all time"
+        aria-labelledby="expenses of company for the all time"
+        bottomContent={
+          <div className="flex w-full justify-center">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
+        }
+      >
+        <TableHeader>
+          <TableColumn key={"supplier"}>SUPPLIER</TableColumn>
+          <TableColumn key={"raw_material"}>RAW MATERIAL</TableColumn>
+          <TableColumn key={"ordered_units"}>UNITS</TableColumn>
+          <TableColumn key={"payment_mode"}>PAYMENT</TableColumn>
+          <TableColumn key={"ref"}>REFERENCE</TableColumn>
+          <TableColumn key={"order_ordered_date"}>ORDERED DATE</TableColumn>
+          <TableColumn key={"order_receive_date"}>RECEIVED DATE</TableColumn>
+          <TableColumn key={"mrp_per_unit"}>SUB TOTAL</TableColumn>
+          <TableColumn key={"total_tax"}>TAX</TableColumn>
+          <TableColumn key={"delivery_charge"}>CHARGE</TableColumn>
+          <TableColumn key={"total_discount"}>DISCOUNT</TableColumn>
+          <TableColumn key={"net_bill_amount"}>NET TOTAL</TableColumn>
+        </TableHeader>
+        <TableBody items={items} emptyContent={dataStatus}>
+          {(item) => (
+            <TableRow key={item.name}>
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 

@@ -117,7 +117,7 @@ export default function Page() {
       headStyles: { fillColor: "red" },
     });
 
-    doc.save("income_records.pdf");
+    doc.save("revenue_records.pdf");
   }
 
   // charts /////////////////////////////////////////////////////////////////////////////////////
@@ -330,7 +330,7 @@ export default function Page() {
       {/*  */}
       {/* old revenue records */}
       <div className="border-4 rounded-3xl mx-10 my-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
-        <Accordion>
+        {/* <Accordion>
           <AccordionItem
             title={
               <>
@@ -346,6 +346,7 @@ export default function Page() {
                     <FaDownload /> PDF
                   </Button>
                 </span>
+               
               </>
             }
             key={1}
@@ -417,7 +418,19 @@ export default function Page() {
               </span>
             </form>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
+        <span className="uppercase flex justify-between flex-row flex-nowrap text-2xl max-md:text-lg tracking-wider font-bold">
+          <span>revenue history</span>
+          <Button
+            size="sm"
+            variant="shadow"
+            color="secondary"
+            aria-label="download-pdf"
+            onClick={downloadPdf}
+          >
+            <FaDownload /> PDF
+          </Button>
+        </span>
         <Divider className="my-5" />
         <Table
           id="download-table"

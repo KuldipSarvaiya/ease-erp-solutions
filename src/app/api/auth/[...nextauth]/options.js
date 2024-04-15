@@ -5,6 +5,9 @@ import connectDB from "@/lib/mongoose";
 import Customer from "@/lib/models/customer.model";
 
 export const options = {
+  pages: {
+  error: "/unauth",
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -63,7 +66,7 @@ export const options = {
             border: "2px solid #cbd5e1",
             borderBottom: "8px double #cbd5e1",
             paddig: "3px",
-            color: "#cbd5e1",
+            color: "white",
             fontSize: "20px",
             backgroundColor: "#0c0a09",
           },
@@ -81,46 +84,43 @@ export const options = {
             border: "2px solid #cbd5e1",
             borderBottom: "8px double #cbd5e1",
             paddig: "3px",
-            color: "#cbd5e1",
+            color: "white",
             fontSize: "20px",
             backgroundColor: "#0c0a09",
           },
         },
       },
       async authorize(profile) {
-        // let role = "manager";
-        // if (profile.username === "kd") role = "admin";
-        try {
-          await connectDB();
+        await connectDB();
 
-          const emp = await Employee.findOne({
-            username: profile.username,
-            password: profile.password,
-            is_ex_employee: false,
-          })
-            .select(
-              "first_name _id middle_name last_name designation image email department_id"
-            )
-            .populate([
-              {
-                path: "department_id",
-                select: "dept_name _id",
-              },
-            ]);
-          console.log("\n*********from credential next auth = \t", {
-            ...profile,
-            ...emp._doc,
-          });
+        const emp = await Employee.findOne({
+          username: profile.username,
+          password: profile.password,
+          is_ex_employee: false,
+        })
+          .select(
+            "first_name _id middle_name last_name designation image email department_id"
+          )
+          .populate([
+            {
+              path: "department_id",
+              select: "dept_name _id",
+            },
+          ]);
 
-          return {
-            ...profile,
-            ...emp?._doc,
-          };
-        } catch (error) {
-          console.log(error);
-          throw error.message;
-          // return new Error(error)
+        if (!emp?._doc) {
+          throw new Error("WRONG CREDENTIALS");
         }
+
+        console.log("\n*********from credential next auth = \t", {
+          ...profile,
+          ...emp._doc,
+        });
+
+        return {
+          ...profile,
+          ...emp?._doc,
+        };
       },
     }),
   ],

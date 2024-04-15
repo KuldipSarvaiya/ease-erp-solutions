@@ -62,20 +62,30 @@ function Page() {
     }
     formData.append("updated_by", session?.user?._id);
 
-    const res = await fetch("/api/hr/employee", {
-      method: "POST",
-      body: formData,
-    });
-    if (res.ok)
-      return (() => {
-        setSuccess("Employee Has Been Registered Successfully");
-        reset();
-        setTimeout(() => setSuccess(false), [5000]);
-      })();
-    setError("allowed_leave_per_month", { message: "cannot create Employee" });
-    // res.forEach((item) => {
-    //   setError(item.field, { message: item.message });
-    // });
+    try {
+      const res = await fetch("/api/hr/employee", {
+        method: "POST",
+        body: formData,
+      });
+      if (res.ok)
+        return (() => {
+          setSuccess("Employee Has Been Registered Successfully");
+          reset();
+          setTimeout(() => setSuccess(false), [5000]);
+        })();
+
+      setSuccess("Failed To Registere Employee");
+      setTimeout(() => setSuccess(false), [5000]);
+
+      const json = await res.json();
+      console.log(json);
+      [json].forEach((item) => {
+        reset({ [item.field]: "" });
+        setError(item.field, { message: item.message });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -549,7 +559,7 @@ function Page() {
               {depts?.map((item, i) => {
                 return (
                   <SelectItem key={item._id} value={item._id}>
-                    {item.dept_name.toUpperCase()}
+                    {item.dept_name.toUpperCase().replaceAll("-", " ")}
                   </SelectItem>
                 );
               })}
@@ -772,7 +782,11 @@ function Page() {
             </Button>
             &nbsp; &nbsp; &nbsp;
             {success !== false && (
-              <Snippet color="success" hideCopyButton hideSymbol>
+              <Snippet
+                color={success.includes("Successfully") ? "success" : "danger"}
+                hideCopyButton
+                hideSymbol
+              >
                 {success}
               </Snippet>
             )}

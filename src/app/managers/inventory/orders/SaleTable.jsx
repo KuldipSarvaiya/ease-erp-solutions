@@ -206,7 +206,7 @@ function SaleTable({ data }) {
 
   return (
     <Table
-      id="download-table"
+      id="download-table-sales"
       aria-label="expenses of company for the all time"
       aria-labelledby="expenses of company for the all time"
       bottomContent={

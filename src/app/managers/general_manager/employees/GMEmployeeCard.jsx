@@ -2,21 +2,38 @@ import { Tooltip } from "@nextui-org/react";
 import Image from "next/image";
 import { FaDotCircle } from "react-icons/fa";
 
-function GMEmployeeCard() {
-  function ToolTipDialog() {
+function GMEmployeeCard({ emp }) {
+  function ToolTipDialog({ attendance }) {
+    const date1 = new Date(attendance?.punch_out || new Date());
+    const date2 = new Date(attendance?.punch_in);
+    const diffInMs = Math.abs(date2 - date1);
+    const total_hours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const total_minutes = Math.floor(
+      (diffInMs % (1000 * 60 * 60)) / (1000 * 60)
+    );
+
     return (
       <div className="flex flex-col gap-3 bg-purple-900/10 backdrop-blur-2xl p-5 rounded-xl border-1 border-purple-900">
         <u>TODAY</u>
-        <p>Punch In Time : {new Date().toLocaleTimeString()}</p>
-        <p>Punch Out Time : {new Date().toLocaleTimeString()}</p>
         <p>
-          Total Hours :
-          {new Date(new Date().setHours(14) - new Date()).getHours()}
+          Punch In Time : {new Date(attendance?.punch_in).toLocaleTimeString()}
         </p>
+        {attendance.punch_out && (
+          <p>
+            Punch Out Time :{" "}
+            {new Date(attendance?.punch_out).toLocaleTimeString()}
+          </p>
+        )}
         <p>
-          Over Time Hours :
-          {new Date(new Date().setHours(14) - new Date()).getHours()}
+          Total Time : {total_hours} hours&nbsp;|&nbsp;
+          {total_minutes} minutes
         </p>
+        {total_hours > 8 && (
+          <p>
+            Over Time : {total_hours - 8} hours&nbsp;|&nbsp;
+            {total_minutes - 60} minutes
+          </p>
+        )}
       </div>
     );
   }
@@ -29,7 +46,14 @@ function GMEmployeeCard() {
 
   return (
     <Tooltip
-      content={<ToolTipDialog />}
+      content={
+        emp?.attendance?.state === "present" ||
+        emp?.attendance?.state === "pending" ? (
+          <ToolTipDialog attendance={emp?.attendance} />
+        ) : (
+          <></>
+        )
+      }
       // placement="top"
       delay={1000}
       className="bg-transparent border-none shadow-none "
@@ -39,26 +63,25 @@ function GMEmployeeCard() {
           alt="employee logo"
           height={100}
           radius="sm"
-          src="/adminPage.svg"
+          src={"/kuldip_upload/" + emp?.image}
           width={100}
-          className="object-contain rounded-lg bg-slate-800"
+          className="object-cover rounded-lg bg-slate-800"
         />
         <div className="flex flex-col">
           <p className="text-lg capitalize text-default-800">
-            sarvaiya kuldip kishorbhai
+            {" "}
+            {emp?.first_name} {emp?.middle_name} {emp?.last_name}{" "}
           </p>
           <p className="text-small text-default-500 lowercase">
-            +91 9724924494
+            +91 {emp?.contact_no}
           </p>
-          <p className="text-small text-default-500 lowercase">
-            kuldipsarvaiya94@gmail.com
-          </p>
+          <p className="text-small text-default-500 lowercase">{emp?.email}</p>
           <p className="text-small text-default-500">
-            DOJ : {new Date().toLocaleDateString()}
+            DOJ : {new Date(emp?.doj).toLocaleDateString()}
           </p>
           <p className="text-sm text-default-600 capitalize flex gap-2 items-center">
-            Attendance : present
-            <FaDotCircle className={colors["present"]} />
+            Attendance : {emp?.attendance?.state || "Absent"}
+            <FaDotCircle className={colors[emp?.attendance?.state]} />
           </p>
         </div>
       </div>

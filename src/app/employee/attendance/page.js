@@ -98,7 +98,7 @@ export default function AttendancePage() {
             type="date"
             size="sm"
             value={date}
-            className="w-52"
+            className="w-52 can_you_please_hide"
           />
         </div>
         <Divider className="my-3" />
@@ -114,7 +114,11 @@ export default function AttendancePage() {
               ot={item.overtime_hours}
             />
           ))}
-          {oldAttendance.length === 0 && <center className="w-full py-10 font-semibold text-base">You Have No Any Previous Attendances {":("}</center>}
+          {oldAttendance.length === 0 && (
+            <center className="w-full py-10 font-semibold text-base">
+              You Have No Any Previous Attendances {":("}
+            </center>
+          )}
         </div>
       </div>
     </div>

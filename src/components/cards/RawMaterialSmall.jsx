@@ -154,6 +154,7 @@ async function RawMaterialSmall({ no_decrement, no_increment, material }) {
             )}
             {!no_decrement && (
               <Button
+                isDisabled={material?.available_units <= 0}
                 name="decrease"
                 type="submit"
                 startContent={<MdRemove className="scale-150" />}

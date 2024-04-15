@@ -25,7 +25,7 @@ const product_stock_historySchema = new Schema(
     produced_by: {
       type: [Schema.ObjectId],
       ref: "Department",
-      required: false,
+      required: true,
     },
     updated_by: {
       type: Schema.ObjectId,

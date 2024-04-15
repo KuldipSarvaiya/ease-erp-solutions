@@ -9,7 +9,7 @@ import Image from "next/image";
 import { GrAdd } from "react-icons/gr";
 import { MdRemove } from "react-icons/md";
 
-async function ProductSmall({ product }) {
+async function ProductSmall({ product, no_decrement }) {
   const session = await getServerSession(options);
   function ToolTipDialog() {
     async function handleSubmit(formdata) {
@@ -135,13 +135,15 @@ async function ProductSmall({ product }) {
             >
               INCREASE
             </Button>
-            <Button
-              name="decrease"
-              type="submit"
-              startContent={<MdRemove className="scale-150" />}
-            >
-              DECREASE
-            </Button>
+            {!no_decrement && (
+              <Button
+                name="decrease"
+                type="submit"
+                startContent={<MdRemove className="scale-150" />}
+              >
+                DECREASE
+              </Button>
+            )}
           </ButtonGroup>
         </div>
       </form>

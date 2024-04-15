@@ -2,6 +2,8 @@
 
 import Loading from "@/components/Loading";
 import {
+  Button,
+  Divider,
   Pagination,
   Table,
   TableBody,
@@ -13,6 +15,9 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
 import { BsCircleFill } from "react-icons/bs";
+import { FaDownload } from "react-icons/fa";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const Increase = () => {
   return (
@@ -43,7 +48,7 @@ const Decrease = () => {
   );
 };
 
-function HistoryTable({ id }) {
+function HistoryTable() {
   const change_type = {
     Increase: <Increase />,
     Decrease: <Decrease />,
@@ -51,6 +56,23 @@ function HistoryTable({ id }) {
   const [page, setPage] = useState(1);
   const [history, setHistory] = useState([]);
   const [dataStatus, setDataStatus] = useState(<Loading />);
+
+  function downloadPdf() {
+    const doc = new jsPDF("portrait", "mm", "a4");
+    doc.page =
+      doc.internal.pageSize.getWidth() / doc.internal.pageSize.getHeight();
+    autoTable(doc, {
+      html: "#download-table",
+      theme: "grid",
+      head: "Kuldip Head",
+      foot: "Kuldip Foot",
+      showFoot: "everyPage",
+      showHead: "everyPage",
+      headStyles: { fillColor: "red" },
+    });
+
+    doc.save("product_stock_records.pdf");
+  }
 
   useEffect(() => {
     // fetch(`/api/inventory/product/stock_history?department=${department}`);
@@ -84,7 +106,7 @@ function HistoryTable({ id }) {
           setHistory(data2);
         })
         .catch(() => setDataStatus("No Stock History Available"));
-  });
+  }, []);
 
   const rowsPerPage = 10;
   const pages = Math.ceil(history.length / rowsPerPage);
@@ -97,40 +119,58 @@ function HistoryTable({ id }) {
   }, [page, history]);
 
   return (
-    <Table
-      id={id}
-      aria-label="expenses of company for the all time"
-      bottomContent={
-        <div className="flex w-full justify-center">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="secondary"
-            page={page}
-            total={pages}
-            onChange={(page) => setPage(page)}
-          />
-        </div>
-      }
-    >
-      <TableHeader>
-        <TableColumn key={"stock_produced_date"}>DATE</TableColumn>
-        <TableColumn key={"product"}>PRODUCT</TableColumn>
-        <TableColumn key={"product_group_id"}>PRODUCT GROUP</TableColumn>
-        <TableColumn key={"available_stock_units"}>UNITS</TableColumn>
-        <TableColumn key={"change_type"}>STOCK CHANGE</TableColumn>
-      </TableHeader>
-      <TableBody items={items} emptyContent={dataStatus}>
-        {(item) => (
-          <TableRow key={item.name}>
-            {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+    <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
+      <div className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
+        PRODUCTS STOCK HISTORY
+        <Button
+          size="sm"
+          variant="shadow"
+          color="secondary"
+          aria-label="download-pdf"
+          onClick={downloadPdf}
+        >
+          <FaDownload /> PDF
+        </Button>
+        {/* <Download id={"download-table"} /> */}
+      </div>
+      <Divider className="my-2" />
+      <div className="w-full">
+        <Table
+          id={"download-table"}
+          aria-label="expenses of company for the all time"
+          bottomContent={
+            <div className="flex w-full justify-center">
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="secondary"
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
+          }
+        >
+          <TableHeader>
+            <TableColumn key={"stock_produced_date"}>DATE</TableColumn>
+            <TableColumn key={"product"}>PRODUCT</TableColumn>
+            <TableColumn key={"product_group_id"}>PRODUCT GROUP</TableColumn>
+            <TableColumn key={"available_stock_units"}>UNITS</TableColumn>
+            <TableColumn key={"change_type"}>STOCK CHANGE</TableColumn>
+          </TableHeader>
+          <TableBody items={items} emptyContent={dataStatus}>
+            {(item) => (
+              <TableRow key={item.name}>
+                {(columnKey) => (
+                  <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
             )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          </TableBody>
+        </Table>{" "}
+      </div>
+    </div>
   );
 }
 

@@ -1,9 +1,7 @@
 import Download from "@/components/Dowload";
-import { Button, Divider } from "@nextui-org/react";
+import { Divider } from "@nextui-org/react";
 import SaleTable from "./SaleTable";
 import PurchaseTable from "./PurchaseTable";
-import Link from "next/link";
-import { ImPlus } from "react-icons/im";
 import { Suspense } from "react";
 import Loading from "@/components/Loading";
 
@@ -12,6 +10,9 @@ export default function SalesPage() {
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
+      {/* purchases orders table */}
+      <PurchaseTable />
+
       {/* sales order tables */}
       <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
         <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
@@ -54,30 +55,6 @@ export default function SalesPage() {
               },
             ]}
           />
-        </Suspense>
-      </div>
-
-      {/* purchases orders table */}
-      <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
-        <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
-          RAW MATERIALS PURCHASE ORDERS{" "}
-          <span>
-            <Button
-              as={Link}
-              href="/managers/inventory/orders/new_raw_material_order"
-              size="sm"
-              variant="shadow"
-              color="secondary"
-              startContent={<ImPlus />}
-            >
-              NEW ORDER
-            </Button>{" "}
-            <Download />
-          </span>
-        </p>
-        <Divider className="my-2" />
-        <Suspense fallback={<Loading inline={true} key={2} />}>
-          <PurchaseTable />
         </Suspense>
       </div>
     </div>

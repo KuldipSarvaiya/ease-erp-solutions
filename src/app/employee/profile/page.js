@@ -39,7 +39,9 @@ export default async function ProfilePage() {
             {emp.first_name} {emp.middle_name}
           </p>
         </div>
-        <p className="text-xl min-md:text-md md:mr-20">ID : {emp._id.toString()}</p>
+        <p className="text-xl min-md:text-md md:mr-20">
+          ID : {emp._id.toString()}
+        </p>
       </div>
 
       {/* main content */}
@@ -133,7 +135,7 @@ export default async function ProfilePage() {
               <div className="flex flex-col flex-nowrap gap-3">
                 <p>: {emp.designation}</p>
                 <p>: {new Date(emp.doj).toDateString()}</p>
-                <p>: {emp.department_id.dept_name}</p>
+                <p>: {emp.department_id.dept_name.replaceAll("-", " ")}</p>
                 <p>: {emp.basic_salary}</p>
                 <p>: {emp.ot_salary_per_hour}</p>
                 <p>: {emp.allowed_leave_per_month}</p>

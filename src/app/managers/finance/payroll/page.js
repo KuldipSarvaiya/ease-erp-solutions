@@ -230,7 +230,7 @@ export default function PayrollPage() {
               <AccordionItem
                 title={
                   <div className="text-lg font-bold tracking-wide w-full uppercase flex justify-between">
-                    {dept?.dept_name}
+                    {dept?.dept_name.replaceAll("-", " ")}
                     <Checkbox
                       color="secondary"
                       size="lg"

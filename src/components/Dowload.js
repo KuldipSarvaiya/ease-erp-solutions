@@ -29,8 +29,9 @@ export default function Download({ id }) {
 
     doc.save(`${id}.pdf`);
   }
-
-  return (
+  return true === true ? (
+    <></>
+  ) : (
     <Dropdown size="sm" aria-label="dowload" aria-labelledby="dowload">
       <DropdownTrigger
         aria-label="dowlnoad button"

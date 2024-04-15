@@ -34,7 +34,7 @@ export default async function Page({ params: { id } }) {
     <div className="relative w-full h-full max-h-full max-w-full">
       {/* display products  */}
 
-      <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
+      <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch max-h-[80dvh] overflow-y-scroll">
         <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
           MANAGE PRODUCTS <Download />
         </p>

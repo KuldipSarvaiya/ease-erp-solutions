@@ -16,56 +16,72 @@ export async function POST(request) {
   const dept = formdata.get("department_id");
   console.log(dept);
 
-  // todo : file upload to own backend server
-  const arrBuf = await image.arrayBuffer();
-  const buffer = new Buffer.from(arrBuf);
+  try {
+    // todo : file upload to own backend server
+    const arrBuf = await image.arrayBuffer();
+    const buffer = new Buffer.from(arrBuf);
 
-  const ulr = join(cwd(), "public", "kuldip_upload", image_name);
-  writeFile(ulr, buffer, () => {
-    console.log("file saved");
-  });
+    const ulr = join(cwd(), "public", "kuldip_upload", image_name);
+    writeFile(ulr, buffer, () => {
+      console.log("file saved");
+    });
 
-  await connectDB();
+    await connectDB();
 
-  const createEmp = new Employee({
-    image: image_name,
-    first_name: formdata.get("first_name"),
-    middle_name: formdata.get("middle_name"),
-    last_name: formdata.get("last_name"),
-    gender: formdata.get("gender"),
-    dob: new Date(formdata.get("dob")),
-    doj: new Date(),
-    prev_experience: formdata.get("prev_experience"),
-    expert_area: formdata.get("expert_area"),
-    course_studied: formdata.get("course_studied"),
-    designation: formdata.get("designation"),
-    attendance_coordinates: {
-      latitude: formdata.get("latitude"),
-      longitude: formdata.get("longitude"),
-    },
-    attendance_radius: formdata.get("attendance_radius"),
-    basic_salary: formdata.get("basic_salary"),
-    department_id: formdata.get("department_id"),
-    email: formdata.get("email"),
-    contact_no: formdata.get("contact_no"),
-    home_address: formdata.get("home_address"),
-    bank_acc_no: formdata.get("bank_acc_no"),
-    bank_name: formdata.get("bank_name"),
-    bank_ifsc_code: formdata.get("bank_ifsc_code"),
-    salary_cut_per_day: formdata.get("salary_cut_per_day"),
-    ot_salary_per_hour: formdata.get("ot_salary_per_hour"),
-    allowed_leave_per_month: formdata.get("allowed_leave_per_month"),
-    username: formdata.get("username"),
-    password: formdata.get("password"),
-    updated_by: formdata.get("updated_by"),
-    rezorpay_contact_id: "temp_id",
-    rezorpay_fund_id: "temp_id",
-  });
+    const createEmp = new Employee({
+      image: image_name,
+      first_name: formdata.get("first_name"),
+      middle_name: formdata.get("middle_name"),
+      last_name: formdata.get("last_name"),
+      gender: formdata.get("gender"),
+      dob: new Date(formdata.get("dob")),
+      doj: new Date(),
+      prev_experience: formdata.get("prev_experience"),
+      expert_area: formdata.get("expert_area"),
+      course_studied: formdata.get("course_studied"),
+      designation: formdata.get("designation"),
+      attendance_coordinates: {
+        latitude: formdata.get("latitude"),
+        longitude: formdata.get("longitude"),
+      },
+      attendance_radius: formdata.get("attendance_radius"),
+      basic_salary: formdata.get("basic_salary"),
+      department_id: formdata.get("department_id"),
+      email: formdata.get("email"),
+      contact_no: formdata.get("contact_no"),
+      home_address: formdata.get("home_address"),
+      bank_acc_no: formdata.get("bank_acc_no"),
+      bank_name: formdata.get("bank_name"),
+      bank_ifsc_code: formdata.get("bank_ifsc_code"),
+      salary_cut_per_day: formdata.get("salary_cut_per_day"),
+      ot_salary_per_hour: formdata.get("ot_salary_per_hour"),
+      allowed_leave_per_month: formdata.get("allowed_leave_per_month"),
+      username: formdata.get("username"),
+      password: formdata.get("password"),
+      updated_by: formdata.get("updated_by"),
+      rezorpay_contact_id: "temp_id",
+      rezorpay_fund_id: "temp_id",
+    });
 
-  const emp = await createEmp.save();
+    const emp = await createEmp.save();
 
-  console.log(emp);
-  return NextResponse.json({ success: true });
+    console.log(emp);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.log(error.code, error.message);
+
+    if (
+      error.code === 11000 &&
+      error.message.includes("duplicate key error") &&
+      error.message.includes("username")
+    )
+      return NextResponse.json(
+        { field: "username", message: "This Username already exists" },
+        { status: 500, statusText: "DUPLICATE USERNAME" }
+      );
+
+    return NextResponse.error("serverside error");
+  }
 }
 
 export async function GET(req) {
@@ -122,51 +138,66 @@ export async function PUT(req) {
       console.log("file saved");
     });
   }
+  try {
+    await connectDB();
 
-  await connectDB();
-
-  const update = await Employee.updateOne(
-    { _id: id },
-    {
-      $set: {
-        ...image_obj,
-        first_name: formdata.get("first_name"),
-        middle_name: formdata.get("middle_name"),
-        last_name: formdata.get("last_name"),
-        gender: formdata.get("gender"),
-        // dob: new Date(formdata.get("dob")),
-        // prev_experience: formdata.get("prev_experience"),
-        expert_area: formdata.get("expert_area"),
-        course_studied: formdata.get("course_studied"),
-        // designation: formdata.get("designation"),
-        attendance_coordinates: {
-          latitude: formdata.get("latitude"),
-          longitude: formdata.get("longitude"),
+    const update = await Employee.updateOne(
+      { _id: id },
+      {
+        $set: {
+          ...image_obj,
+          first_name: formdata.get("first_name"),
+          middle_name: formdata.get("middle_name"),
+          last_name: formdata.get("last_name"),
+          gender: formdata.get("gender"),
+          // dob: new Date(formdata.get("dob")),
+          // prev_experience: formdata.get("prev_experience"),
+          expert_area: formdata.get("expert_area"),
+          course_studied: formdata.get("course_studied"),
+          // designation: formdata.get("designation"),
+          attendance_coordinates: {
+            latitude: formdata.get("latitude"),
+            longitude: formdata.get("longitude"),
+          },
+          attendance_radius: formdata.get("attendance_radius"),
+          basic_salary: formdata.get("basic_salary"),
+          department_id: formdata.get("department_id"),
+          email: formdata.get("email"),
+          contact_no: formdata.get("contact_no"),
+          home_address: formdata.get("home_address"),
+          bank_acc_no: formdata.get("bank_acc_no"),
+          bank_name: formdata.get("bank_name"),
+          bank_ifsc_code: formdata.get("bank_ifsc_code"),
+          salary_cut_per_day: formdata.get("salary_cut_per_day"),
+          ot_salary_per_hour: formdata.get("ot_salary_per_hour"),
+          allowed_leave_per_month: formdata.get("allowed_leave_per_month"),
+          username: formdata.get("username"),
+          password: formdata.get("password"),
+          updated_by: formdata.get("updated_by"),
+          rezorpay_contact_id: "temp_id",
+          rezorpay_fund_id: "temp_id",
         },
-        attendance_radius: formdata.get("attendance_radius"),
-        basic_salary: formdata.get("basic_salary"),
-        department_id: formdata.get("department_id"),
-        email: formdata.get("email"),
-        contact_no: formdata.get("contact_no"),
-        home_address: formdata.get("home_address"),
-        bank_acc_no: formdata.get("bank_acc_no"),
-        bank_name: formdata.get("bank_name"),
-        bank_ifsc_code: formdata.get("bank_ifsc_code"),
-        salary_cut_per_day: formdata.get("salary_cut_per_day"),
-        ot_salary_per_hour: formdata.get("ot_salary_per_hour"),
-        allowed_leave_per_month: formdata.get("allowed_leave_per_month"),
-        username: formdata.get("username"),
-        password: formdata.get("password"),
-        updated_by: formdata.get("updated_by"),
-        rezorpay_contact_id: "temp_id",
-        rezorpay_fund_id: "temp_id",
-      },
+      }
+    );
+    console.log(update);
+    if (update.acknowledged) {
+      revalidateTag("UpdateEmployees");
+      return NextResponse.json({ success: true });
     }
-  );
-  console.log(update);
-  if (update.acknowledged) {
-    revalidateTag("UpdateEmployees");
-    return NextResponse.json({ success: true });
+    return NextResponse.error("Failed To Update Details");
+  } catch (error) {
+    console.log(error.code, error.message);
+
+    if (
+      error.code === 11000 &&
+      error.message.includes("duplicate key error") &&
+      error.message.includes("username")
+    )
+      return NextResponse.json(
+        { field: "username", message: "This Username already exists" },
+        { status: 500, statusText: "DUPLICATE USERNAME" }
+      );
+
+    return NextResponse.error("serverside error");
   }
-  return NextResponse.error("Failed To Update Details");
 }

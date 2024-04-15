@@ -35,7 +35,7 @@ export default async function Home() {
       <Link href={"/customer"}>Go To Customer</Link> */}
 
       <div className="z-0 animate-pulse duration-1000 shadow-[300px_1px_500px_90px_#64748b] absolute rounded-full  w-60 h-0"></div>
-      <div className="z-0 animate-pulse duration-1000 shadow-[10px_100px_300px_90px_#64748b] absolute top-[800px] right-60 rounded-full  w-0 h-0"></div>
+      <div className="z-0 animate-pulse duration-1000 shadow-[10px_100px_300px_90px_#64748b] absolute top-[900px] right-20 rounded-full  w-0 h-0"></div>
       <section className=" snap-mandatory snap-start w-fit m-auto py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD]">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col gap-4 items-center justify-center text-center">
@@ -70,7 +70,7 @@ export default async function Home() {
                 alt="HR"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/hr_db.png"
                 width="600"
               />
             </div>
@@ -89,7 +89,7 @@ export default async function Home() {
                 alt="Inventory"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/inventory_db.png"
                 width="600"
               />
             </div>
@@ -108,7 +108,7 @@ export default async function Home() {
                 alt="Finance"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/finance_db.png"
                 width="600"
               />
             </div>
@@ -127,19 +127,19 @@ export default async function Home() {
                 alt="Admin Control Panel"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/general_department_db.png"
                 width="600"
               />
             </div>
           </div>
         </div>
       </section>
-      <section className=" snap-mandatory snap-start w-full py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD] relative">
-        <div className="z-0 animate-pulse duration-1000 shadow-[10px_100px_300px_90px_#64748b] absolute top-[80px] left-6 rounded-full  w-0 h-60"></div>
+      <section className=" snap-mandatory snap-start w-fit m-auto py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD] relative">
+        <div className="z-[100] animate-pulse duration-1000 shadow-[10px_100px_500px_60px_#64748b] absolute top-[500px] left-72 rounded-full  w-0 h-72"></div>
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col gap-4 items-center justify-center text-center">
+          <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="space-y-2">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
                 Payroll Management
               </h1>
               <p className="max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -150,17 +150,17 @@ export default async function Home() {
             </div>
             <div className="grid gap-4 md:gap-8 items-start">
               <img
-                alt="Payroll Management"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                alt="Employee Dashboard"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/payroll_1.png"
                 width="640"
               />
               <img
-                alt="Employee Dashboard"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                alt="Attendance Management"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/payroll_2.png"
                 width="640"
               />
             </div>
@@ -168,9 +168,25 @@ export default async function Home() {
         </div>
       </section>
       <section className=" snap-mandatory snap-start w-fit m-auto py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD] relative">
-        <div className="z-0 animate-pulse duration-1000 shadow-[10px_100px_500px_60px_#64748b] absolute top-[200px] right-96 rounded-full  w-0 h-72"></div>
+        <div className="z-0 animate-pulse duration-1000 shadow-[10px_100px_500px_60px_#64748b] absolute top-[550px] right-60 rounded-full  w-0 h-72"></div>
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <div className="grid gap-4 md:gap-8 items-start">
+              <img
+                alt="Employee Dashboard"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
+                height="360"
+                src="/images/employee_db_1.png"
+                width="640"
+              />
+              <img
+                alt="Attendance Management"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
+                height="360"
+                src="/images/employee_db_2.png"
+                width="640"
+              />
+            </div>
             <div className="space-y-2">
               <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl">
                 Employee Dashboard
@@ -180,22 +196,6 @@ export default async function Home() {
                 where they can access company announcements, submit time-off
                 requests, and collaborate with their colleagues.
               </p>
-            </div>
-            <div className="grid gap-4 md:gap-8 items-start">
-              <img
-                alt="Employee Dashboard"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-                height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
-                width="640"
-              />
-              <img
-                alt="Attendance Management"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-                height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
-                width="640"
-              />
             </div>
           </div>
         </div>
@@ -217,16 +217,16 @@ export default async function Home() {
             <div className="grid gap-4 md:gap-8 items-start">
               <img
                 alt="Attendance Management"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/attendance_1.png"
                 width="640"
               />
               <img
                 alt="Task Assignment"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/attendance_2.png"
                 width="640"
               />
             </div>
@@ -236,6 +236,22 @@ export default async function Home() {
       <section className=" snap-mandatory snap-start w-fit m-auto py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD]">
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <div className="grid gap-4 md:gap-8 items-start">
+              <img
+                alt="Task Assignment"
+                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                height="360"
+                src="/images/task_1.png"
+                width="640"
+              />
+              <img
+                alt="Inventory Management"
+                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                height="360"
+                src="/images/task_2.png"
+                width="640"
+              />
+            </div>
             <div className="space-y-2">
               <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl">
                 Task Assignment
@@ -246,22 +262,6 @@ export default async function Home() {
                 progress. Employees can view their tasks and update their
                 status.
               </p>
-            </div>
-            <div className="grid gap-4 md:gap-8 items-start">
-              <img
-                alt="Task Assignment"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-                height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
-                width="640"
-              />
-              <img
-                alt="Inventory Management"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-                height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
-                width="640"
-              />
             </div>
           </div>
         </div>
@@ -286,14 +286,14 @@ export default async function Home() {
                 alt="Inventory Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/inventory_1.png"
                 width="640"
               />
               <img
                 alt="Order Tracking"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/inventory_2.png"
                 width="640"
               />
             </div>
@@ -303,6 +303,15 @@ export default async function Home() {
       <section className=" snap-mandatory snap-start w-fit m-auto py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD]">
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <div className="grid gap-4 md:gap-8 items-start">
+              <img
+                alt="Financial Management"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
+                height="360"
+                src="/images/order.png"
+                width="640"
+              />
+            </div>
             <div className="space-y-2">
               <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl">
                 Order Tracking
@@ -314,22 +323,6 @@ export default async function Home() {
                 details, track shipments, and provide customers with real-time
                 updates.
               </p>
-            </div>
-            <div className="grid gap-4 md:gap-8 items-start">
-              <img
-                alt="Order Tracking"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-                height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
-                width="640"
-              />
-              <img
-                alt="CRM"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-                height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
-                width="640"
-              />
             </div>
           </div>
         </div>
@@ -351,16 +344,16 @@ export default async function Home() {
             <div className="grid gap-4 md:gap-8 items-start">
               <img
                 alt="CRM"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/crm_1.png"
                 width="640"
               />
               <img
                 alt="Financial Management"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
+                src="/images/crm_2.png"
                 width="640"
               />
             </div>
@@ -370,6 +363,22 @@ export default async function Home() {
       <section className=" snap-mandatory snap-start w-fit m-auto py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD]">
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <div className="grid gap-4 md:gap-8 items-start">
+              <img
+                alt="Order Tracking"
+                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                height="360"
+                src="/images/finance_1.png"
+                width="640"
+              />
+              <img
+                alt="CRM"
+                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
+                height="360"
+                src="/images/finance_2.png"
+                width="640"
+              />
+            </div>
             <div className="space-y-2">
               <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl">
                 Financial Management
@@ -380,15 +389,6 @@ export default async function Home() {
                 You can track income and expenses, generate financial reports,
                 and ensure compliance with accounting standards.
               </p>
-            </div>
-            <div className="grid gap-4 md:gap-8 items-start">
-              <img
-                alt="Financial Management"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-                height="360"
-                src="https://media.istockphoto.com/id/1322220448/photo/abstract-digital-futuristic-eye.jpg?s=612x612&w=0&k=20&c=oAMmGJxyTTNW0XcttULhkp5IxfW9ZTaoVdVwI2KwK5s="
-                width="640"
-              />
             </div>
           </div>
         </div>

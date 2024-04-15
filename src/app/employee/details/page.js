@@ -1,6 +1,13 @@
 "use client";
 
-import { Avatar, Button, Divider, Input, Textarea } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Input,
+  Snippet,
+  Textarea,
+} from "@nextui-org/react";
 import { TbExchange } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
@@ -12,6 +19,7 @@ import { redirect } from "next/navigation";
 
 export default function DetailsPage() {
   const [isEditable, setIsEditable] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const {
     register,
@@ -63,9 +71,11 @@ export default function DetailsPage() {
       method: "PUT",
       body: formData,
     });
-    if (result.ok) setIsEditable(false);
-
-    alert("Failed To Update Details.\nTry Again Later...");
+    if (result.ok) {
+      setIsEditable(false);
+      setSuccess("Details Has Been Updated Successfully");
+    } else setSuccess("Failed To Update Details");
+    setTimeout(() => setSuccess(false), [5000]);
   }
 
   return (
@@ -85,7 +95,7 @@ export default function DetailsPage() {
                     required: "username is required",
                     pattern: {
                       // value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-                      value: /[A-Za-z0-9]{8,}.*/,
+                      value: /[A-Za-z0-9_]{8,}.*/,
                       message:
                         "Username Does Not Match Required Pattern | a-z,A-Z,0-9",
                     },
@@ -262,11 +272,11 @@ export default function DetailsPage() {
               <Input
                 {...register("image", {
                   // required: "Please provide your image.",
-                  validate: (v) =>
-                    getValues("image")[0]
-                      ? v[0].size < 500 * 1024 ||
-                        "Imgae Size is Large, max 500kb"
-                      : true,
+                  // validate: (v) =>
+                  //   getValues("image")[0]
+                  //     ? v[0].size < 500 * 1024 ||
+                  //       "Imgae Size is Large, max 500kb"
+                  //     : true,
                 })}
                 type={"file"}
                 radius="sm"
@@ -409,6 +419,17 @@ export default function DetailsPage() {
                     Cancel
                   </Button>
                 </>
+              )}
+              {success !== false && (
+                <Snippet
+                  color={
+                    success.includes("Successfully") ? "success" : "danger"
+                  }
+                  hideCopyButton
+                  hideSymbol
+                >
+                  {success}
+                </Snippet>
               )}
             </span>
           </div>
