@@ -17,7 +17,7 @@ export async function applyLeave(formdata) {
 
   const res = await report.save();
 
-  console.log(res);
+  // console.log(res);
 
   revalidateTag("my-leave-report")
 

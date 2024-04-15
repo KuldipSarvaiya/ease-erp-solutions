@@ -8,7 +8,7 @@ export async function GET(req) {
   const job = new URL(req.url).searchParams.get("job");
   const id = new URL(req.url).searchParams.get("_id");
 
-  console.log("into attendance route get = ", id, job);
+  // console.log("into attendance route get = ", id, job);
 
   if (!!!job || !!!id) return NextResponse.error("Invalid Inputs");
 
@@ -32,7 +32,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   const data = await req.json();
-  console.log(data);
+  // console.log(data);
   await connectDB();
 
   const res = new Attendance({

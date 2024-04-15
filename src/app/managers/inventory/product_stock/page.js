@@ -21,7 +21,7 @@ export default async function ProdStockPage() {
             <h1>No Is Available For This Department</h1>
           )}
           {products?.map((product) => (
-            <ProductSmall product={product} />
+            <ProductSmall key={product?._id} product={product} />
           ))}
         </div>
       </div>

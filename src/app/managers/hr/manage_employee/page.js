@@ -19,7 +19,7 @@ export default function ManageEmpAdmin() {
           return alert("Can Not Get Employee Details Due To Network Error");
 
         const json = await res.json();
-        console.log(json);
+        // console.log(json);
 
         setData(json);
       })();
@@ -70,8 +70,8 @@ export default function ManageEmpAdmin() {
                 <Divider className="my-5" />
                 {/* person attendance chips */}
                 <div className="flex flex-wrap flex-row justify-items-stretch gap-3 max-md:justify-center ">
-                  {dept.employees?.map((emp) => (
-                    <EmployeeSmall emp={emp} />
+                  {dept.employees?.map((emp, i) => (
+                    <EmployeeSmall emp={emp} key={i} />
                   ))}
                   {dept?.employees.length === 0 && (
                     <h1>

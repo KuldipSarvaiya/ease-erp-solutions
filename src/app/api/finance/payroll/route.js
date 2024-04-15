@@ -134,7 +134,7 @@ export async function GET(req) {
     },
   ]);
 
-  console.log(data);
+  // console.log(data);
   return NextResponse.json(data, { status: 200 });
 }
 
@@ -145,7 +145,7 @@ export async function POST(req) {
     await connectDB();
 
     const metadata = await MetaData.findOne({}).lean();
-    console.log(metadata);
+    // console.log(metadata);
 
     // formate employee salary data
     const salary_slips = [];
@@ -219,7 +219,7 @@ export async function POST(req) {
 
     const salary_ids = salarys.map((sal) => sal._id);
 
-    console.log(salary_ids, exp_amount);
+    // console.log(salary_ids, exp_amount);
 
     const expense = await Expense.insertMany([
       {
@@ -231,12 +231,12 @@ export async function POST(req) {
       },
     ]);
 
-    console.log(salary_slips, emp_ids);
+    // console.log(salary_slips, emp_ids);
 
     revalidatePath("managers/finanace/payroll");
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return NextResponse.json(error, { status: 500 });
   }
 }

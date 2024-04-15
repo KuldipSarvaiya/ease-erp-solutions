@@ -49,10 +49,10 @@ function NewRawMaterial({ id, data }) {
         if (!res.ok) return;
 
         const depts = await res.json();
-        console.log(depts);
+        // console.log(depts);
         setDepts(depts);
       })();
-  }, []);
+  });
 
   useEffect(() => {
     if (id) {
@@ -78,7 +78,7 @@ function NewRawMaterial({ id, data }) {
       formdata._id = id;
       formdata.size = formdata.size[0];
     }
-    console.log(formdata);
+    // console.log(formdata);
 
     const formData = new FormData();
 
@@ -96,7 +96,7 @@ function NewRawMaterial({ id, data }) {
 
     const res = await result.json();
 
-    console.log(res);
+    // console.log(res);
 
     if (res.success === true)
       return id

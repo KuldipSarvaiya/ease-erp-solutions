@@ -94,7 +94,7 @@ function NewRawMaterialOrderPage() {
   }, [watch_raw_material_id]);
 
   async function createNewRawMaterial(formdata) {
-    console.log(formdata);
+    // console.log(formdata);
 
     const formData = new FormData();
 
@@ -116,7 +116,7 @@ function NewRawMaterialOrderPage() {
 
     const res = await result.json();
 
-    console.log(res);
+    // console.log(res);
 
     if (res.success === true) {
       reset();

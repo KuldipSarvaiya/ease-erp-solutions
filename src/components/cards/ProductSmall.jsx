@@ -34,7 +34,7 @@ async function ProductSmall({ product, no_decrement }) {
           { new: true }
         );
 
-        console.log(update);
+        // console.log(update);
 
         const product_history = {
           product_id: product_id,
@@ -59,11 +59,11 @@ async function ProductSmall({ product, no_decrement }) {
           ]);
         }
 
-        console.log(history);
+        // console.log(history);
         revalidateTag("ProductStockHistory");
         revalidatePath("/managers/inventory/product_stock");
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     }
 

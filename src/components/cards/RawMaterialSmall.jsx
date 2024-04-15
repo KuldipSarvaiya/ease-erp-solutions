@@ -50,9 +50,9 @@ async function RawMaterialSmall({ no_decrement, no_increment, material }) {
         ]);
         revalidateTag("RawMaterialStockHistory");
         revalidatePath("/managers/inventory/raw_material_stock");
-        console.log(stock, history);
+        // console.log(stock, history);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 

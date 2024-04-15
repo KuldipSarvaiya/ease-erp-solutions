@@ -23,7 +23,7 @@ export default async function TaskPage() {
     complete_task_P,
   ]);
 
-  console.log(pending_task, complete_task);
+  // console.log(pending_task, complete_task);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">

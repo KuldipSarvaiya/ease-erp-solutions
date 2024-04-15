@@ -11,7 +11,7 @@ import ProductStockHistory from "@/lib/models/product_stock_history.model";
 export async function POST(request) {
   const data = await request.formData();
 
-  console.log("api = ", data);
+  // console.log("api = ", data);
 
   const image_name = `${Date.now()}__${data.get("image").name}`.replaceAll(
     " ",
@@ -22,7 +22,7 @@ export async function POST(request) {
 
   const ulr = join(cwd(), "public", "kuldip_upload", image_name);
   writeFile(ulr, buffer, () => {
-    console.log("file saved");
+    // console.log("file saved");
   });
 
   const colors = data.getAll("color")[0].split(",");
@@ -31,7 +31,7 @@ export async function POST(request) {
   const chemical_property = data.get("chemical_property").split(";");
   const tags = data.getAll("tags")[0].split(",");
 
-  // console.log(colors, sizes, description, chemical_property, tags);
+  // // console.log(colors, sizes, description, chemical_property, tags);
   const products = [];
   for (let color of colors)
     for (let size of sizes) {
@@ -71,7 +71,7 @@ export async function POST(request) {
 
   const history = await ProductStockHistory.insertMany(product_history);
 
-  console.log(prod, history);
+  // console.log(prod, history);
   revalidatePath("/managers/inventory/product");
   return NextResponse.json({ success: true });
 }
@@ -80,7 +80,7 @@ export async function POST(request) {
 export async function PUT(request) {
   const data = await request.formData();
 
-  console.log("product put = ", data); 
+  // console.log("product put = ", data); 
 
   const img_obj = {};
   if (data.get("image").name) {
@@ -93,7 +93,7 @@ export async function PUT(request) {
 
     const ulr = join(cwd(), "public", "kuldip_upload", img_obj.image);
     writeFile(ulr, buffer, () => {
-      console.log("file saved");
+      // console.log("file saved");
     });
   }
 
@@ -123,7 +123,7 @@ export async function PUT(request) {
       },
     }
   );
-  // console.log(res, {
+  // // console.log(res, {
   //   _id: data.get("_id"),
   //   ...img_obj,
   //   name: data.get("name"),
@@ -158,7 +158,7 @@ export async function GET(request) {
     },
   ]);
 
-  console.log("product for this department = ", department, " =  ", res);
+  // console.log("product for this department = ", department, " =  ", res);
 
   return NextResponse.json(res);
 }

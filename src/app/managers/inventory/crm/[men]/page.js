@@ -23,7 +23,6 @@ import { FaBackward } from "react-icons/fa";
 import { GrMapLocation, GrPowerReset } from "react-icons/gr";
 
 function Page({ params: { men } }) {
-  if (men !== "customer" && men !== "supplier") return notFound();
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -44,7 +43,7 @@ function Page({ params: { men } }) {
   } = useForm();
 
   useEffect(() => {
-    console.log(men);
+    // console.log(men);
     if (men === "supplier" && rawMaterial.length === 0)
       fetch("/api/inventory/raw_material", {
         method: "GET",
@@ -64,8 +63,10 @@ function Page({ params: { men } }) {
         });
   }, []);
 
+  if (men !== "customer" && men !== "supplier") return notFound();
+
   async function submitForm(data) {
-    console.log(data);
+    // console.log(data);
 
     const formdata = new FormData();
 
@@ -80,7 +81,7 @@ function Page({ params: { men } }) {
         ? await createCustomer(formdata)
         : await createSupplier(formdata);
 
-    console.log(res);
+    // console.log(res);
 
     if (res.success === true) return router.push("/managers/inventory/crm");
     else alert("Failed To Create New " + men + ".\n Please Try Again");

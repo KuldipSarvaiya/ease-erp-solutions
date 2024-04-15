@@ -44,7 +44,7 @@ export default async function LowMaterialPage() {
     },
   ]);
 
-  console.log(materials);
+  // console.log(materials);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">

@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await getServerSession(options);
-  // console.log(session?.user, session?.user?.image);
+  // // console.log(session?.user, session?.user?.image);
 
   await connectDB();
 
@@ -18,7 +18,7 @@ export default async function ProfilePage() {
     model: Department,
   });
 
-  console.log(emp);
+  // console.log(emp);
 
   if (!emp) return notFound();
 

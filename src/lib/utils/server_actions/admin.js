@@ -46,8 +46,8 @@ export async function changeManager(formdata) {
     }
   );
 
-  console.log("Managers Updated = ", result.acknowledged);
-  console.log("Prev Managers Updated = ", prevMan.acknowledged);
+  // console.log("Managers Updated = ", result.acknowledged);
+  // console.log("Prev Managers Updated = ", prevMan.acknowledged);
 
   revalidatePath("/admin/managers");
   return result.acknowledged && prevMan.acknowledged;
@@ -71,7 +71,7 @@ export async function changeDesignation(formdata) {
     }
   );
 
-  console.log(res);
+  // console.log(res);
   if (res.acknowledged) revalidatePath("/admin/employees");
   return res.acknowledged;
 }
@@ -84,10 +84,10 @@ export async function deleteDepartment(formdata) {
   const materials = await RawMaterial.find({
     $or: [{ produced_by: dept_id }, { $in: { used_by: dept_id } }],
   }).countDocuments();
-  console.log(emps, materials);
+  // console.log(emps, materials);
   if (emps <= 0 && materials <= 0) {
     const ddpt = await Department.deleteOne({ _id: dept_id });
-    console.log(ddpt);
+    // console.log(ddpt);
     revalidatePath("/admin/departments/");
     return ddpt.acknowledged;
   }

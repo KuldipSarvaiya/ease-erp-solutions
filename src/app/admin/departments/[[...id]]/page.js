@@ -6,7 +6,7 @@ import Department from "@/lib/models/department.model";
 import { deleteDepartment } from "@/lib/utils/server_actions/admin";
 
 export default async function Page({ params: { id } }) {
-  console.log(id);
+  // console.log(id);
 
   // ? this pipeline only gets details of manager not about materials
   const departments = await Department.aggregate([
@@ -82,10 +82,10 @@ export default async function Page({ params: { id } }) {
     },
   ]);
 
-  console.log(departments);
+  // console.log(departments);
 
   const id_dept = departments?.find((d) => d?._id.toString() === id?.[0]);
-  console.log(id_dept);
+  // console.log(id_dept);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">

@@ -29,6 +29,6 @@ export async function GET(req) {
       },
     },
   ]);
-  console.log(id, res);
+  // console.log(id, res);
   return NextResponse.json(res);
 }

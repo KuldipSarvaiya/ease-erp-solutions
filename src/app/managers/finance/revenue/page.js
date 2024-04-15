@@ -69,11 +69,11 @@ export default function Page() {
           );
       })();
     }
-  }, []);
+  });
 
   async function handleGenerateRevenue(formdata) {
     formdata.updated_by = session?.user?._id;
-    console.log(formdata);
+    // console.log(formdata);
     setIsLoading(true);
 
     const res = await createRevenue(formdata);
@@ -90,9 +90,9 @@ export default function Page() {
   function handleSearchSubmit(event) {
     event.preventDefault();
     const formdata = new FormData(event.target);
-    console.log(formdata.get("from_date"));
-    console.log(formdata.get("to_date"));
-    console.log(formdata.get("type"));
+    // console.log(formdata.get("from_date"));
+    // console.log(formdata.get("to_date"));
+    // console.log(formdata.get("type"));
   }
 
   // table pagination math

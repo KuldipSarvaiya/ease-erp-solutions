@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function CustomerPage() {
@@ -19,7 +20,7 @@ export default function CustomerPage() {
                 </Link>
               </div>
             </div>
-            <img
+            <Image
               alt="Hero"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom lg:aspect-video/none lg:order-last"
               height="300"
@@ -47,7 +48,7 @@ export default function CustomerPage() {
             </p>
           </div>
         </div>
-        <img
+        <Image
           alt="Fabric Manufacturing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
@@ -61,7 +62,7 @@ export default function CustomerPage() {
           background: "#10151D",
         }}
       >
-        <img
+        <Image
           alt="Fabric Cleaning"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
@@ -94,33 +95,33 @@ export default function CustomerPage() {
             </h2>
             <p className="text-gray-500 md:text-xl dark:text-gray-400">
               Our printing experts unleash their creativity to adorn the fabric
-              with stunning designs. Whether it's vibrant patterns, elegant
+              with stunning designs. Whether it&#39;s vibrant patterns, elegant
               motifs, or custom artwork, our printing process brings your vision
               to life.
             </p>
           </div>
         </div>
-        <img
+        <Image
           alt="Creative Printing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
           src="/images/fabric_printing.jpg"
           width="700"
-          />
+        />
       </section>
       <section
         className="grid gap-12 lg:grid-cols-2 xl:gap-20"
         style={{
           background: "#10151D",
         }}
-        >
-        <img
+      >
+        <Image
           alt="Art of Sewing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
           src="/images/sewing.jpg"
           width="700"
-          />
+        />
         <div className="flex flex-col justify-center space-y-4">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#B2BECD]">
@@ -154,21 +155,21 @@ export default function CustomerPage() {
             </p>
           </div>
         </div>
-        <img
+        <Image
           alt="Packaging Perfection"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
           src="/images/packaging.png"
           width="700"
-          />
+        />
       </section>
       <section
         className="grid gap-12 lg:grid-cols-2 xl:gap-20 mb-10"
         style={{
           background: "#10151D",
         }}
-        >
-        <img
+      >
+        <Image
           alt="Elegant Designs"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"

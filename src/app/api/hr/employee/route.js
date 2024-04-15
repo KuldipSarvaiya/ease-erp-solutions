@@ -9,12 +9,12 @@ import Department from "@/lib/models/department.model";
 
 // create new employees
 export async function POST(request) {
-  console.log("new employee");
+  // console.log("new employee");
   const formdata = await request.formData();
   const image = formdata.get("image");
   const image_name = `${Date.now()}__${image.name}`.replaceAll(" ", "-");
   const dept = formdata.get("department_id");
-  console.log(dept);
+  // console.log(dept);
 
   try {
     // todo : file upload to own backend server
@@ -23,7 +23,7 @@ export async function POST(request) {
 
     const ulr = join(cwd(), "public", "kuldip_upload", image_name);
     writeFile(ulr, buffer, () => {
-      console.log("file saved");
+      // console.log("file saved");
     });
 
     await connectDB();
@@ -65,10 +65,10 @@ export async function POST(request) {
 
     const emp = await createEmp.save();
 
-    console.log(emp);
+    // console.log(emp);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.log(error.code, error.message);
+    // console.log(error.code, error.message);
 
     if (
       error.code === 11000 &&
@@ -113,7 +113,7 @@ export async function GET(req) {
     },
   ]);
 
-  console.log(employees);
+  // console.log(employees);
   if (!employees) return NextResponse.error("No Data Found");
 
   return NextResponse.json(employees);
@@ -135,7 +135,7 @@ export async function PUT(req) {
 
     const ulr = join(cwd(), "public", "kuldip_upload", image_name);
     writeFile(ulr, buffer, () => {
-      console.log("file saved");
+      // console.log("file saved");
     });
   }
   try {
@@ -179,14 +179,14 @@ export async function PUT(req) {
         },
       }
     );
-    console.log(update);
+    // console.log(update);
     if (update.acknowledged) {
       revalidateTag("UpdateEmployees");
       return NextResponse.json({ success: true });
     }
     return NextResponse.error("Failed To Update Details");
   } catch (error) {
-    console.log(error.code, error.message);
+    // console.log(error.code, error.message);
 
     if (
       error.code === 11000 &&

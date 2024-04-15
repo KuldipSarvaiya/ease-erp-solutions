@@ -38,7 +38,7 @@ export default function Page() {
           return alert("Can Not Get Employee Details Due To Network Error");
 
         const json = await res.json();
-        console.log(json);
+        // console.log(json);
         setData(json);
       })();
     }

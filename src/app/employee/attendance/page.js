@@ -29,7 +29,7 @@ export default function AttendancePage() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           setAttendance(data);
           setMyCoords(data?.employee_id);
         })
@@ -48,7 +48,7 @@ export default function AttendancePage() {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log("old attendance = ", data);
+            // console.log("old attendance = ", data);
             setOldAttendance(data);
           })
           .catch((err) => console.log(err));
@@ -57,7 +57,7 @@ export default function AttendancePage() {
 
   function handleDateChange(event) {
     setDate(event.target.value);
-    console.log(event.target.value);
+    // console.log(event.target.value);
   }
 
   function Banner() {
@@ -105,6 +105,7 @@ export default function AttendancePage() {
         <div className="mt-2 flex gap-3 flex-row flex-wrap justify-start items-stretch">
           {oldAttendance?.map((item) => (
             <AttendanceCard
+              key={item?._id}
               date={item.date}
               point={item.point}
               from={item.punch_in}

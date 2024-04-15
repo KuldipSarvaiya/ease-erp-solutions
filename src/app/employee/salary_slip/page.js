@@ -69,7 +69,7 @@ export default function SalarySlipPage() {
                   variant="light"
                   isIconOnly
                   onPress={() => {
-                    console.log(item);
+                    // console.log(item);
                     setPrintSal(item);
                     onOpen();
                   }}
@@ -81,7 +81,7 @@ export default function SalarySlipPage() {
           );
         })
         .catch((e) => {
-          console.log(e);
+          // console.log(e);
           setDataStatus("No Salary Found");
         });
   }, [session]);

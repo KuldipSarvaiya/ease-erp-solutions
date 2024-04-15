@@ -72,7 +72,7 @@ export async function POST(req) {
 
   const ulr = join(cwd(), "public", "kuldip_upload", image);
   writeFile(ulr, buffer, () => {
-    console.log("file saved");
+    // console.log("file saved");
   });
 
   const res = await RawMaterialOrder.insertMany([
@@ -95,7 +95,7 @@ export async function POST(req) {
       updated_by: updated_by,
     },
   ]);
-  console.log("*****create Raw MAterial Order = ", res);
+  // console.log("*****create Raw MAterial Order = ", res);
 
   const sup_update = await Supplier.updateOne(
     { _id: supplier_id },
@@ -106,7 +106,7 @@ export async function POST(req) {
       },
     }
   );
-  console.log("*****update suplliert total order = ", sup_update);
+  // console.log("*****update suplliert total order = ", sup_update);
 
   const inc_stock = await RawMaterialStock.findOneAndUpdate(
     { raw_material_id: raw_material_id },
@@ -115,7 +115,7 @@ export async function POST(req) {
       $set: { last_stock_changed_date: new Date(), updated_by: updated_by },
     }
   );
-  console.log("*****increase and find stock of raw material = ", inc_stock);
+  // console.log("*****increase and find stock of raw material = ", inc_stock);
 
   const history = await RawMaterialStockHistory.insertMany([
     {
@@ -128,7 +128,7 @@ export async function POST(req) {
       updated_by: updated_by,
     },
   ]);
-  console.log("*****create history or raw material = ", history);
+  // console.log("*****create history or raw material = ", history);
 
   const expense = await Expense.insertMany([
     {
@@ -140,7 +140,7 @@ export async function POST(req) {
       updated_by: updated_by,
     },
   ]);
-  console.log("*** expense of order = ", expense);
+  // console.log("*** expense of order = ", expense);
 
   return NextResponse.json({ success: true });
 }

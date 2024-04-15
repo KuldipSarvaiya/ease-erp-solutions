@@ -57,7 +57,7 @@ function Page({ params: { id } }) {
 
         if (res.ok) {
           const data = await res.json();
-          console.log("employee data = ", data);
+          // console.log("employee data = ", data);
           setData(data);
         } else {
           alert("Can Not Get Employee Details Due To Network Error");
@@ -87,7 +87,7 @@ function Page({ params: { id } }) {
         if (!res.ok) return;
 
         const depts = await res.json();
-        console.log(depts);
+        // console.log(depts);
         setDepts(depts);
       })();
   }, []);
@@ -900,7 +900,7 @@ function Page({ params: { id } }) {
                 const formdata = new FormData(e.target);
                 formdata.append("updated_by", session?.user?._id);
                 const res = await resignEmployee(formdata);
-                console.log(res);
+                // console.log(res);
                 if (res.success) {
                   onClose();
                   route.push("/managers/hr/manage_employee");

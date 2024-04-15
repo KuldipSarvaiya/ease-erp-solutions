@@ -79,7 +79,7 @@ export default async function Page() {
     },
   ]);
 
-  console.log("employee = ", session?.user?.department_id._id, employees);
+  // console.log("employee = ", session?.user?.department_id._id, employees);
   async function handleSubmit(formdata) {
     "use server";
 
@@ -100,7 +100,7 @@ export default async function Page() {
         }
       );
 
-      console.log(res);
+      // console.log(res);
       if (res.acknowledged) revalidateTag("myNotice");
     }
     // assign task
@@ -114,7 +114,7 @@ export default async function Page() {
 
       const res = await Task.insertMany(data);
 
-      console.log(res);
+      // console.log(res);
     }
   }
 

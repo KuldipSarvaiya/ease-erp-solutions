@@ -37,7 +37,7 @@ function NewProduct({ id, data }) {
   } = useForm({
     defaultValues: id ? data : {},
   });
-  console.log("this item data = ", data);
+  // console.log("this item data = ", data);
   // fetches departments
   useEffect(() => {
     if (depts.length === 0)
@@ -48,7 +48,7 @@ function NewProduct({ id, data }) {
         if (!res.ok) return;
 
         const depts = await res.json();
-        console.log(depts);
+        // console.log(depts);
         setDepts(depts);
       })();
   }, []);
@@ -73,7 +73,7 @@ function NewProduct({ id, data }) {
       formdata._id = id;
       formdata.size = formdata.size[0];
     }
-    console.log(formdata);
+    // console.log(formdata);
 
     const formData = new FormData();
 
@@ -91,7 +91,7 @@ function NewProduct({ id, data }) {
 
     const res = await result.json();
 
-    console.log(res);
+    // console.log(res);
 
     if (res.success === true)
       return id

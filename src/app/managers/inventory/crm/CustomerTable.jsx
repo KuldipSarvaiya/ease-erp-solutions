@@ -59,7 +59,7 @@ function CustomerTable({ id }) {
           );
         })
         .catch((e) => {
-          console.log(e);
+          // console.log(e);
           setDataStatus("No Customers Are Available");
         });
   }, []);

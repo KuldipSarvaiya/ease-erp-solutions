@@ -13,7 +13,7 @@ export async function myToday(id) {
     path: "employee_id",
     select: "attendance_coordinates attendance_radius",
   });
-  console.log("*******employee today attendance = ", res);
+  // console.log("*******employee today attendance = ", res);
   return res;
 }
 

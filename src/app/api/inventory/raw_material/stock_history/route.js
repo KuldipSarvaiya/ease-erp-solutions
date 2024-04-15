@@ -40,12 +40,12 @@ export async function GET(request) {
     },
   ]);
 
-  console.log(
-    "raw material stock for this department = ",
-    department,
-    " =  ",
-    res
-  );
+  // console.log(
+  //   "raw material stock for this department = ",
+  //   department,
+  //   " =  ",
+  //   res
+  // );
 
   return NextResponse.json(res);
 }

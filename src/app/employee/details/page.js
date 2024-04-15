@@ -38,7 +38,7 @@ export default function DetailsPage() {
   });
 
   const fetchEmpData = useCallback(async () => {
-    console.log("in callback");
+    // console.log("in callback");
     const res = await fetch("/api/employee/details/" + session?.user?._id, {
       method: "GET",
     });
@@ -53,13 +53,13 @@ export default function DetailsPage() {
   useEffect(() => {
     (async () => {
       const data = await fetchEmpData();
-      console.log("api data ", data);
+      // console.log("api data ", data);
       reset(data);
     })();
   }, [isEditable, session]);
 
   async function handleUpdate(formdata) {
-    console.log(formdata);
+    // console.log(formdata);
     const formData = new FormData();
 
     for (const key in formdata) {

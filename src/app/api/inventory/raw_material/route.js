@@ -12,7 +12,7 @@ import RawMaterialStock from "@/lib/models/raw_material_stock.model";
 export async function POST(request) {
   const data = await request.formData();
 
-  console.log("api = ", data);
+  // console.log("api = ", data);
 
   const image_name = `${Date.now()}__${data.get("image").name}`.replaceAll(
     " ",
@@ -23,7 +23,7 @@ export async function POST(request) {
 
   const ulr = join(cwd(), "public", "kuldip_upload", image_name);
   writeFile(ulr, buffer, () => {
-    console.log("file saved");
+    // console.log("file saved");
   });
 
   const colors = data.getAll("color")?.[0]?.split(",") || "";
@@ -34,19 +34,19 @@ export async function POST(request) {
   const used_by = data.getAll("used_by")?.[0]?.split(",");
   if (produced_by[0] === "") produced_by = undefined;
 
-  console.log(
-    colors,
-    sizes,
-    description,
-    chemical_property,
-    produced_by,
-    used_by
-  );
+  // console.log(
+   // colors,
+   // sizes,
+  //  description,
+   // chemical_property,
+  //  produced_by,
+  //  used_by
+  //);
   const raw_material = [];
   for (let color of colors) {
-    console.log("\n********* color = ", color);
+    // console.log("\n********* color = ", color);
     for (let size of sizes) {
-      console.log("\n********* size = ", size);
+      // console.log("\n********* size = ", size);
       raw_material.push({
         name: data.get("name"),
         raw_material_group_id: data.get("raw_material_group_id"),
@@ -63,7 +63,7 @@ export async function POST(request) {
       });
     }
   }
-  console.log(raw_material);
+  // console.log(raw_material);
 
   await connectDB();
 
@@ -94,7 +94,7 @@ export async function POST(request) {
   const stock = await RawMaterialStock.insertMany(material_stock);
   // const history = await RawMaterialStockHistory.insertMany(material_history);
 
-  console.log(material, stock);
+  // console.log(material, stock);
   revalidatePath("/managers/inventory/raaw_material");
   return NextResponse.json({ success: true });
 }
@@ -102,7 +102,7 @@ export async function POST(request) {
 export async function PUT(request) {
   const data = await request.formData();
 
-  console.log("raw material put = ", data);
+  // console.log("raw material put = ", data);
 
   const img_obj = {};
   if (data.get("image").name) {
@@ -115,7 +115,7 @@ export async function PUT(request) {
 
     const ulr = join(cwd(), "public", "kuldip_upload", img_obj.image);
     writeFile(ulr, buffer, () => {
-      console.log("file saved");
+      // console.log("file saved");
     });
   }
 
@@ -127,7 +127,7 @@ export async function PUT(request) {
   const used_by = data.getAll("used_by")?.[0]?.split(",");
   if (produced_by[0] === "") produced_by = [];
 
-  console.log(color);
+  // console.log(color);
   await connectDB();
 
   const res = await RawMaterial.updateOne(
@@ -152,7 +152,7 @@ export async function PUT(request) {
     }
   );
 
-  console.log(res);
+  // console.log(res);
 
   return NextResponse.json({
     success: true,

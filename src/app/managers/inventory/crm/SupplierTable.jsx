@@ -87,7 +87,7 @@ function SupplierTable({ id }) {
         );
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
         setDataStatus("No Suppliers Are Available");
       });
 

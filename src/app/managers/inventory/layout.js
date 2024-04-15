@@ -2,9 +2,9 @@ import DashBoardNavBar from "@/components/DashBoardNavBar";
 import SideBar from "@/components/SideBar";
 
 export const metadata = {
-  title: "finance manager's Dashboard",
+  title: "inventory manager's Dashboard",
   description:
-    "Dashboard for finance manager for managing finance related activities",
+    "Dashboard for inventory manager for managing inventory related activities",
 };
 
 export default function InventoryLayout({ children }) {

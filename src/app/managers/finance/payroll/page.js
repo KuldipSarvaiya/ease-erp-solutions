@@ -36,11 +36,11 @@ export default function PayrollPage() {
       (async () => {
         const res = await fetch("/api/finance/payroll", { method: "GET" });
         const data = await res.json();
-        console.log("\n\n*********** Employees Payroll DATA  =   ", data);
+        // console.log("\n\n*********** Employees Payroll DATA  =   ", data);
         setEmpData(data);
       })();
     }
-  }, []);
+  });
 
   // procced payroll work ahead for payment
   async function payrollConfirmed() {
@@ -64,7 +64,7 @@ export default function PayrollPage() {
         setSuccess("Salary Employees Has Been Distributed Successfully");
       else throw new Error(res);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setSuccess("Failed To Distribute Employees Salary");
     }
     setTimeout(() => setSuccess(false), [5000]);

@@ -14,7 +14,7 @@ import {
 import { FaDotCircle } from "react-icons/fa";
 import { GrUpdate } from "react-icons/gr";
 
-async function AttendanceChip({ status, emp, session }) {
+function AttendanceChip({ status, emp, session }) {
   const colors = {
     pending: "text-yellow-500",
     present: "text-emerald-500",
@@ -23,7 +23,7 @@ async function AttendanceChip({ status, emp, session }) {
   };
 
   function ChangeAttendance() {
-    console.log("this employee att = ", emp?.attendance);
+    // console.log("this employee att = ", emp?.attendance);
     const date1 = emp?.attendance?.punch_out
       ? new Date(emp?.attendance?.punch_out)
       : new Date();

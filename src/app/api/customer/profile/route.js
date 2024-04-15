@@ -19,7 +19,7 @@ export async function PUT(req) {
     }
   );
 
-  console.log(res);
+  // console.log(res);
 
   revalidatePath("/customer");
   revalidatePath("/customer/profile");

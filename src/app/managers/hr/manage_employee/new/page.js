@@ -48,7 +48,7 @@ function Page() {
       if (!res.ok) return;
 
       const depts = await res.json();
-      console.log(depts);
+      // console.log(depts);
       setDepts(depts);
     })();
   }, []);
@@ -78,13 +78,13 @@ function Page() {
       setTimeout(() => setSuccess(false), [5000]);
 
       const json = await res.json();
-      console.log(json);
+      // console.log(json);
       [json].forEach((item) => {
         reset({ [item.field]: "" });
         setError(item.field, { message: item.message });
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 

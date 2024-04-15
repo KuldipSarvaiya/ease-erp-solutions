@@ -73,7 +73,7 @@ function RMHistoryTable() {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           if (data.length === 0)
             return setDataStatus("No Stock History Available");
 
@@ -98,11 +98,11 @@ function RMHistoryTable() {
             ),
             raw_material_group_id: item?.raw_material?.raw_material_group_id,
           }));
-          console.log(data2);
+          // console.log(data2);
           setHistory(data2);
         })
         .catch((e) => {
-          console.log(e);
+          // console.log(e);
           setDataStatus("No Stock History Available");
         });
   }, [session]);

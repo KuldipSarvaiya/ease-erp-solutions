@@ -24,7 +24,7 @@ export async function PUT(req) {
     }
   );
 
-  console.log(res);
+  // console.log(res);
   revalidateTag("SalaryMetadata");
   revalidatePath("/managers/finance/salary_metadata");
   return NextResponse.json({ succes: res.acknowledged }, { status: 200 });

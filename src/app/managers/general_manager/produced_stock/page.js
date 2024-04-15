@@ -48,7 +48,7 @@ export default async function Page() {
     product_P,
   ]);
 
-  console.log(raw_material);
+  // console.log(raw_material);
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
       {/*  produced raw material  */}
@@ -93,7 +93,7 @@ export default async function Page() {
 
             <div className="grid gap-3 w-full manager_inventory_product_stock">
               {product?.map((product) => (
-                <ProductSmall product={product} no_decrement={true} />
+                <ProductSmall key={product?._id} product={product} no_decrement={true} />
               ))}
             </div>
           </div>

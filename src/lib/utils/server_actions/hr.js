@@ -33,19 +33,19 @@ export async function declareHoliday(formdata) {
 
   const create = await Attendance.insertMany(attendances);
 
-  console.log(create);
+  // console.log(create);
   if (create.length === emps.length) return "holiday is announced";
   return "holiday is not announced";
 }
 
 export async function announceEvent(formdata) {
-  console.log("event");
-  console.log(formdata.get("details").split("\n"));
+  // console.log("event");
+  // console.log(formdata.get("details").split("\n"));
 
   await connectDB();
   const emails = await Employee.find({}).select("email");
 
-  console.log(emails);
+  // console.log(emails);
 
   return false;
 }
@@ -84,7 +84,7 @@ export async function changeAttendanceStatus(formdata) {
         updated_by: updated_by,
       });
       const leave = await create.save();
-      console.log(leave);
+      // console.log(leave);
       setObj = { ...setObj, leave_report_id: leave._id, point: 1 };
       break;
     case "present":
@@ -96,7 +96,7 @@ export async function changeAttendanceStatus(formdata) {
       };
       break;
   }
-  console.log(setObj);
+  // console.log(setObj);
 
   await connectDB();
   if (state === "absent") {

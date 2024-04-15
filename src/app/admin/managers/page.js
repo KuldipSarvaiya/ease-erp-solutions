@@ -31,12 +31,12 @@ export default function ManagersAdminPage() {
           return alert("Can Not Get Manager Details Due To Network Error");
 
         const json = await res.json();
-        console.log(json);
+        // console.log(json);
 
         setData(json);
       })();
     }
-  }, []);
+  });
 
   async function handleChangeManager(event) {
     event.preventDefault();
@@ -68,7 +68,7 @@ export default function ManagersAdminPage() {
             >
               <span className="col-start-1 col-end-3 max-lg:col-start-1 max-lg:col-end-1">
                 <b className="uppercase tracking-widest">
-                &nbsp;&nbsp;{dept?.dept_name?.replaceAll("-", " ")} :
+                  &nbsp;&nbsp;{dept?.dept_name?.replaceAll("-", " ")} :
                 </b>
                 <EmployeeSmall
                   emp={

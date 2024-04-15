@@ -9,7 +9,7 @@ import { PiMinusBold, PiPlusBold } from "react-icons/pi";
 
 export default function Page({ params: { id } }) {
   const [units, setUnits] = useState(1);
-  console.log(id);
+  // console.log(id);
 
   return (
     <>

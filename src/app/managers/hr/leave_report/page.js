@@ -62,7 +62,7 @@ export default async function LeavePage() {
 
   const pending_leaves = leaves.filter((leave) => leave._id === "pending")[0];
   const accepted_leaves = leaves.filter((leave) => leave._id === "accepted")[0];
-  console.log(pending_leaves?.leave_reports, accepted_leaves?.leave_reports);
+  // console.log(pending_leaves?.leave_reports, accepted_leaves?.leave_reports);
 
   // server action to change leave report status
   async function leaveReportStatus(formdata) {
@@ -117,8 +117,8 @@ export default async function LeavePage() {
                     {leave?.department?.dept_name}
                   </td>
                   <td className="text-left align-middle">
-                    {leave.dates_of_leave.map((date) => (
-                      <p>{new Date(date).toLocaleDateString()}</p>
+                    {leave.dates_of_leave.map((date, i) => (
+                      <p key={i}>{new Date(date).toLocaleDateString()}</p>
                     ))}
                   </td>
                   <td className="text-left align-middle">
@@ -229,7 +229,7 @@ export default async function LeavePage() {
                 <th className=" bg-neutral-700 py-2 text-left">DAYS</th>
                 <th className=" bg-neutral-700 rounded-r-lg py-2 text-left">
                   REASON
-                </th> 
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -246,8 +246,8 @@ export default async function LeavePage() {
                     {leave?.department?.dept_name}
                   </td>
                   <td className="text-left align-middle">
-                    {leave.dates_of_leave.map((date) => (
-                      <p>{new Date(date).toLocaleDateString()}</p>
+                    {leave.dates_of_leave.map((date, i) => (
+                      <p key={i}>{new Date(date).toLocaleDateString()}</p>
                     ))}
                   </td>
                   <td className="text-left align-middle">
@@ -255,7 +255,7 @@ export default async function LeavePage() {
                   </td>
                   <td className="text-left align-middle max-w-96">
                     {leave.reason}
-                  </td> 
+                  </td>
                 </tr>
               ))}
             </tbody>

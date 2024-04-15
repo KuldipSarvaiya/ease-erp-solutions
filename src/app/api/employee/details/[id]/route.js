@@ -13,7 +13,7 @@ export async function GET(req, { params: { id } }) {
   const emp = await Employee.findOne({ _id: id });
 
   if (!emp) return NextResponse.error("No Data Found");
-  console.log(emp);
+  // console.log(emp);
   return NextResponse.json(emp);
 }
 
@@ -24,7 +24,7 @@ export async function PUT(req, { params: { id } }) {
   const image = formdata.get("image");
 
   let image_obj = {};
-  console.log(image);
+  // console.log(image);
   if (image.name) {
     // todo : file upload to own backend server
     const image_name = `${Date.now()}__${image.name}`.replaceAll(" ", "-");
@@ -35,7 +35,7 @@ export async function PUT(req, { params: { id } }) {
 
     const ulr = join(cwd(), "public", "kuldip_upload", image_name);
     writeFile(ulr, buffer, () => {
-      console.log("file saved");
+      // console.log("file saved");
     });
   }
 
@@ -63,7 +63,7 @@ export async function PUT(req, { params: { id } }) {
       },
     }
   );
-  console.log(update);
+  // console.log(update);
   if (update.acknowledged) return NextResponse.json({ success: true });
   return NextResponse.error("Failed To Update Details");
 }

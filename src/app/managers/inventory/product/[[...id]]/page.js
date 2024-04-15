@@ -9,7 +9,7 @@ import connectDB from "@/lib/mongoose";
 import Product from "@/lib/models/product.model";
 
 export default async function Page({ params: { id } }) {
-  console.log(id);
+  // console.log(id);
 
   await connectDB();
 
@@ -28,7 +28,7 @@ export default async function Page({ params: { id } }) {
     (item) => item._id.toString() === id?.[0]
   )[0];
 
-  console.log("tha toitem = ", id_product);
+  // console.log("tha toitem = ", id_product);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">

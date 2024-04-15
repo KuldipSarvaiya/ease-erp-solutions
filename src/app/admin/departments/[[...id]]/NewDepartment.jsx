@@ -31,7 +31,7 @@ function NewDepartment({ id, data }) {
   const [success, setSuccess] = useState(false);
 
   async function createNewDepartment(data) {
-    console.log(data);
+    // console.log(data);
 
     const formData = new FormData();
 
@@ -48,7 +48,7 @@ function NewDepartment({ id, data }) {
 
     const res = await result.json();
 
-    console.log(res);
+    // console.log(res);
 
     if (res.success === true) {
       setSuccess("Department Has Been Registered Successfully");

@@ -12,7 +12,7 @@ import { revalidatePath } from "next/cache";
 import { FaCheck, FaDotCircle } from "react-icons/fa";
 
 function TaskCard({ date, text, is_complete, id, updated_date }) {
-  console.log("Task card = ", { date, text, is_complete, id, updated_date });
+  // console.log("Task card = ", { date, text, is_complete, id, updated_date });
   async function completeTask(formdata) {
     "use server";
 
@@ -27,7 +27,7 @@ function TaskCard({ date, text, is_complete, id, updated_date }) {
     );
 
     if (update.acknowledged) {
-      console.log("task completed = ", id);
+      // console.log("task completed = ", id);
       revalidatePath("/app/**/*.tasks", "page");
     }
   }

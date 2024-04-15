@@ -84,7 +84,7 @@ export default function ExpensePage() {
           );
       })();
     }
-  }, []);
+  });
 
   const pages = Math.ceil(expense.length / rowsPerPage);
 

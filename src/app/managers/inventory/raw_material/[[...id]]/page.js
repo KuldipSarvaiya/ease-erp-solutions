@@ -9,7 +9,7 @@ import connectDB from "@/lib/mongoose";
 import RawMaterial from "@/lib/models/raw_material.model";
 
 export default async function Page({ params: { id } }) {
-  console.log(id);
+  // console.log(id);
 
   await connectDB();
 
@@ -36,7 +36,7 @@ export default async function Page({ params: { id } }) {
     (item) => item._id.toString() === id?.[0]
   )[0];
 
-  // console.log("\n\n*********** RAW MATERIALS = ", id_raw_material);
+  // // console.log("\n\n*********** RAW MATERIALS = ", id_raw_material);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">

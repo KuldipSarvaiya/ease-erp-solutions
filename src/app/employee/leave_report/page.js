@@ -37,7 +37,7 @@ export default function LeavePage() {
 
         if (res.ok) {
           const leaves = await res.json();
-          console.log(leaves);
+          // console.log(leaves);
           setMyLeave(leaves);
         }
       })();

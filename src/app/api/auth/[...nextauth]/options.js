@@ -16,7 +16,7 @@ export const options = {
         await connectDB();
 
         let customer = await Customer.findOne({ email: profile.email });
-        console.log("\n**** old Custommer = ", customer);
+        // console.log("\n**** old Custommer = ", customer);
 
         if (!customer) {
           customer = await Customer.insertMany([
@@ -32,7 +32,7 @@ export const options = {
             },
           ]);
           customer = customer[0]._doc;
-          console.log("\n**** new Custommer = ", customer);
+          // console.log("\n**** new Custommer = ", customer);
         }
 
         return {
@@ -112,10 +112,10 @@ export const options = {
           throw new Error("WRONG CREDENTIALS");
         }
 
-        console.log("\n*********from credential next auth = \t", {
-          ...profile,
-          ...emp._doc,
-        });
+        // console.log("\n*********from credential next auth = \t", {
+        //  ...profile,
+        //  ...emp._doc,
+        //});
 
         return {
           ...profile,

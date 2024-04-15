@@ -8,15 +8,6 @@ import { GiEntryDoor, GiExitDoor } from "react-icons/gi";
 // todo : add dynamic employee's attendance coordinates
 
 export function PunchIn({ id }) {
-  // if time is ealry or too late
-  const h = new Date().getHours();
-  if (h > 15 || h < 8)
-    return (
-      <center className="text-red-500 w-full py-10 font-semibold text-base">
-        Please punch in between 8am to 3pm
-      </center>
-    );
-
   const [myCoords, setMyCoords] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -38,17 +29,26 @@ export function PunchIn({ id }) {
           attendance_coordinates: json.attendance_coordinates,
           attendance_radius: json.attendance_radius,
         };
-        console.log("my coords = ", dt);
+        // console.log("my coords = ", dt);
         setMyCoords(dt);
       })();
     }
   }, [id]);
 
+  // if time is ealry or too late
+  const h = new Date().getHours();
+  if (h > 15 || h < 8)
+    return (
+      <center className="text-red-500 w-full py-10 font-semibold text-base">
+        Please punch in between 8am to 3pm
+      </center>
+    );
+
   function handlePunchIn() {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(async (a) => {
-      console.log("Latitude : " + a.coords.latitude);
-      console.log("Longitute : " + a.coords.longitude);
+      // console.log("Latitude : " + a.coords.latitude);
+      // console.log("Longitute : " + a.coords.longitude);
       try {
         const res = isWithinRange(
           myCoords.attendance_radius,
@@ -74,13 +74,13 @@ export function PunchIn({ id }) {
           if (res.ok) alert("success attendace");
         }
 
-        console.log("Function responce = ", res);
+        // console.log("Function responce = ", res);
         !res &&
           setError(
             "******Sorry, Failed To Verify Location. Please Try Again...******"
           );
       } catch (error) {
-        console.warn(error);
+        // console.warn(error);
         setError("******Sorry, Failed To Punch In. Please Try Again...******");
       }
       setLoading(false);
@@ -121,7 +121,7 @@ export function PunchOut({ data, myCoords }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  console.log("punch out = ", myCoords);
+  // console.log("punch out = ", myCoords);
 
   // punchin time
   const date1 = new Date();
@@ -134,8 +134,8 @@ export function PunchOut({ data, myCoords }) {
     setLoading(true);
 
     navigator.geolocation.getCurrentPosition(async (a) => {
-      console.log("Latitude : " + a.coords.latitude);
-      console.log("Longitute : " + a.coords.longitude);
+      // console.log("Latitude : " + a.coords.latitude);
+      // console.log("Longitute : " + a.coords.longitude);
       try {
         const res = isWithinRange(
           myCoords.attendance_radius,
@@ -145,7 +145,7 @@ export function PunchOut({ data, myCoords }) {
           myCoords.attendance_coordinates,
           a.coords
         );
-        console.log("Function responce = ", res);
+        // console.log("Function responce = ", res);
 
         if (res) {
           const point = total_hours >= 8 ? 1 : total_hours >= 4 ? 0.5 : 0;
@@ -174,7 +174,7 @@ export function PunchOut({ data, myCoords }) {
           if (response.ok) alert("success attendace");
         }
       } catch (error) {
-        console.warn(error);
+        // console.warn(error);
         setError(
           "******Sorry, Failed To Verify Location. Please Try Again...******"
         );

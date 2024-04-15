@@ -20,7 +20,7 @@ export async function POST(request) {
     });
     const res = await dept.save();
 
-    console.log(res);
+    // console.log(res);
     revalidatePath("/admin/departments")
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -52,7 +52,7 @@ export async function PUT(request) {
       }
     );
 
-    console.log(dept);
+    // console.log(dept);
     revalidatePath("/admin/departments")
     return NextResponse.json({ success: true });
   } catch (error) {

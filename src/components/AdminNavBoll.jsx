@@ -38,7 +38,7 @@ function AdminNavBoll() {
         setDepts(depts);
       })();
     }
-  }, []);
+  });
 
   // do not show ball if he is employee
   if (

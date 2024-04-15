@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import InputCon from "@/components/InputCon";
 import { GrMapLocation } from "react-icons/gr";
 
-async function ProfilePage() {
+function ProfilePage() {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -45,7 +45,7 @@ async function ProfilePage() {
   }, [session]);
 
   function saveAddress(data) {
-    console.log(data);
+    // console.log(data);
 
     fetch("/api/customer/profile", {
       method: "PUT",
@@ -66,7 +66,7 @@ async function ProfilePage() {
         }
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
         alert("Failed To Save Your Address\nTry Again");
       });
   }
@@ -126,7 +126,7 @@ async function ProfilePage() {
                   labelPlacement="outside"
                   variant="faded"
                   size="lg"
-                  color="secondary" 
+                  color="secondary"
                   name="address"
                   aria-label="address"
                   aria-labelledby="address"
@@ -194,7 +194,7 @@ async function ProfilePage() {
                           }
                         );
                       } catch (error) {
-                        console.error(error);
+                        // console.error(error);
                         setCurrLocation("Cannot Access Your Current Location");
                       }
                     }}

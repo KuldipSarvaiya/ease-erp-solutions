@@ -79,7 +79,7 @@ function DisplayTable({ data, remove, add, updated_by }) {
     return emp.slice(start, end);
   }, [page, emp]);
 
-  console.log(emp);
+  // console.log(emp);
 
   return (
     <Table

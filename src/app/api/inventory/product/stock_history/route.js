@@ -33,7 +33,7 @@ export async function GET(request) {
     },
   ]);
 
-  console.log("product stock for this department = ", department, " =  ", res);
+  // console.log("product stock for this department = ", department, " =  ", res);
 
   return NextResponse.json(res);
 }

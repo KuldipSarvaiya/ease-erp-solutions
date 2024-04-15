@@ -104,14 +104,14 @@ function HistoryTable() {
             ),
             raw_material_group_id: item?.raw_material?.raw_material_group_id,
           }));
-          console.log(data2);
+          // console.log(data2);
           setHistory(data2);
         })
         .catch((e) => {
-          console.log(e);
+          // console.log(e);
           setDataStatus("No Stock History Available");
         });
-  }, []);
+  });
 
   const rowsPerPage = 10;
   const pages = Math.ceil(history.length / rowsPerPage);

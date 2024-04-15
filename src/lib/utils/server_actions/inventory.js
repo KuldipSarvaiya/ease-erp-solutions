@@ -9,7 +9,7 @@ import { join } from "node:path";
 import { cwd } from "node:process";
 
 export async function createCustomer(formdata) {
-  console.log(formdata);
+  // console.log(formdata);
 
   const name = formdata.get("name");
   const updated_by = formdata.get("updated_by");
@@ -26,7 +26,7 @@ export async function createCustomer(formdata) {
 
   const ulr = join(cwd(), "public", "kuldip_upload", image_name);
   writeFile(ulr, buffer, () => {
-    console.log("file saved");
+    // console.log("file saved");
   });
 
   await connectDB();
@@ -45,13 +45,13 @@ export async function createCustomer(formdata) {
     },
   ]);
 
-  console.log(res);
+  // console.log(res);
 
   return { success: true };
 }
 
 export async function createSupplier(formdata) {
-  console.log(formdata);
+  // console.log(formdata);
 
   const name = formdata.get("name");
   const updated_by = formdata.get("updated_by");
@@ -67,7 +67,7 @@ export async function createSupplier(formdata) {
 
   const ulr = join(cwd(), "public", "kuldip_upload", image_name);
   writeFile(ulr, buffer, () => {
-    console.log("file saved");
+    // console.log("file saved");
   });
 
   await connectDB();
@@ -83,7 +83,7 @@ export async function createSupplier(formdata) {
     },
   ]);
 
-  console.log("new Supplier = ", newSupplier);
+  // console.log("new Supplier = ", newSupplier);
 
   return { success: true };
 }

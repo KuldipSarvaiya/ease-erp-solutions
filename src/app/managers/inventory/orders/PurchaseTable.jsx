@@ -129,7 +129,7 @@ function PurchaseTable() {
         .then((res) => res.json())
         .then((data) => {
           if (data.length === 0) return setDataStatus("No Orders Placed Yet");
-          // console.log(data);
+          // // console.log(data);
           setOrders(
             data?.map((order, i) => {
               return {
@@ -175,7 +175,7 @@ function PurchaseTable() {
           );
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           setDataStatus("No Orders Placed Yet");
         });
     }

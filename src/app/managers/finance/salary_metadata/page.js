@@ -38,7 +38,7 @@ export default function Page() {
         reset(json);
       }
     })();
-  }, []);
+  });
 
   async function handleChangeMetaData(formdata) {
     setIsLoading(true);

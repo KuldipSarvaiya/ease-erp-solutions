@@ -43,7 +43,7 @@ export default async function EmployeeAdminPage() {
     },
   ]);
 
-  console.log(employees);
+  // console.log(employees);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">

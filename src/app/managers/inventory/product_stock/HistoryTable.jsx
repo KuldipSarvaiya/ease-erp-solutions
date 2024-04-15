@@ -106,7 +106,7 @@ function HistoryTable() {
           setHistory(data2);
         })
         .catch(() => setDataStatus("No Stock History Available"));
-  }, []);
+  });
 
   const rowsPerPage = 10;
   const pages = Math.ceil(history.length / rowsPerPage);

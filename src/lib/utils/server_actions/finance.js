@@ -12,11 +12,11 @@ export async function createIncome(data) {
 
     const income = await Income.insertMany([data]);
 
-    console.log(income);
+    // console.log(income);
     revalidatePath("/managers/finance/incomes");
     return { success: true };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return { success: false };
   }
 }
@@ -41,11 +41,11 @@ export async function createExpense(data) {
 
     const expense = await Expense.insertMany([data]);
 
-    console.log(expense);
+    // console.log(expense);
     revalidatePath("/managers/finance/expenses");
     return { success: true };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return { success: false };
   }
 }
@@ -107,11 +107,11 @@ export async function createRevenue(data) {
       },
     ]);
 
-    console.log(revenue);
+    // console.log(revenue);
     revalidatePath("/managers/finance/revenue");
     return { success: true };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return { success: false };
   }
 }

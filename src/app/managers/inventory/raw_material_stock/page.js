@@ -22,7 +22,7 @@ export default async function Page() {
     },
   ]);
 
-  console.log(raw_material);
+  // console.log(raw_material);
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">

@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { options } from "./api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 export default async function Home() {
   const session = await getServerSession(options);
@@ -66,7 +67,7 @@ export default async function Home() {
                   team.
                 </p>
               </div>
-              <img
+              <Image
                 alt="HR"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
@@ -85,7 +86,7 @@ export default async function Home() {
                   supply chain.
                 </p>
               </div>
-              <img
+              <Image
                 alt="Inventory"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
@@ -100,11 +101,11 @@ export default async function Home() {
                 </h2>
                 <p className="max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Take control of your finances with our integrated accounting
-                  software. From invoicing to financial reporting, we've got you
+                  software. From invoicing to financial reporting, we&#39;ve got you
                   covered.
                 </p>
               </div>
-              <img
+              <Image
                 alt="Finance"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
@@ -120,10 +121,10 @@ export default async function Home() {
                 <p className="max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Our ERP system comes with a powerful production department
                   control panel that allows you to handle diffrent department
-                  activity as organization's unique needs.
+                  activity as organization&#39;s unique needs.
                 </p>
               </div>
-              <img
+              <Image
                 alt="Admin Control Panel"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
@@ -149,14 +150,14 @@ export default async function Home() {
               </p>
             </div>
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="Employee Dashboard"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
                 src="/images/payroll_1.png"
                 width="640"
               />
-              <img
+              <Image
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
@@ -172,14 +173,14 @@ export default async function Home() {
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="Employee Dashboard"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
                 src="/images/employee_db_1.png"
                 width="640"
               />
-              <img
+              <Image
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
@@ -215,14 +216,14 @@ export default async function Home() {
               </p>
             </div>
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
                 src="/images/attendance_1.png"
                 width="640"
               />
-              <img
+              <Image
                 alt="Task Assignment"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
@@ -237,14 +238,14 @@ export default async function Home() {
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="Task Assignment"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
                 src="/images/task_1.png"
                 width="640"
               />
-              <img
+              <Image
                 alt="Inventory Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
@@ -282,14 +283,14 @@ export default async function Home() {
               </p>
             </div>
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="Inventory Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
                 src="/images/inventory_1.png"
                 width="640"
               />
-              <img
+              <Image
                 alt="Order Tracking"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
@@ -304,7 +305,7 @@ export default async function Home() {
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="Financial Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
@@ -342,14 +343,14 @@ export default async function Home() {
               </p>
             </div>
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="CRM"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
                 src="/images/crm_1.png"
                 width="640"
               />
-              <img
+              <Image
                 alt="Financial Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
@@ -364,14 +365,14 @@ export default async function Home() {
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="grid gap-4 md:gap-8 items-start">
-              <img
+              <Image
                 alt="Order Tracking"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
                 src="/images/finance_1.png"
                 width="640"
               />
-              <img
+              <Image
                 alt="CRM"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
@@ -385,7 +386,7 @@ export default async function Home() {
               </h2>
               <p className="max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Our ERP system includes a financial management module that
-                allows you to manage your company's finances more effectively.
+                allows you to manage your company&#39;s finances more effectively.
                 You can track income and expenses, generate financial reports,
                 and ensure compliance with accounting standards.
               </p>
