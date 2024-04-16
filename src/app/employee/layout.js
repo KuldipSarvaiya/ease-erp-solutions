@@ -25,7 +25,7 @@ export default async function EmployeeLayout({ children }) {
   ];
   return (
     <section>
-      <DashBoardNavBar menuItems={menuItems} />
+      <DashBoardNavBar mainPath={"/employee/"} menuItems={menuItems} />
       <div className="hidden md:block">
         <SideBar mainPath={"/employee/"} menuItems={menuItems} />
       </div>

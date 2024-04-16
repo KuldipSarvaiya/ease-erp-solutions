@@ -13,7 +13,7 @@ const chatroomSchema = new Schema({
   },
   date_time: {
     type: Date,
-    default: Date.now(),
+    default: new Date(),
     required: true,
     immutable: true,
   },

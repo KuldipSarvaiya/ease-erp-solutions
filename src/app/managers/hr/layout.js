@@ -20,7 +20,7 @@ export default function HrLayout({ children }) {
   ];
   return (
     <section>
-      <DashBoardNavBar menuItems={menuItems} />
+      <DashBoardNavBar mainPath="/managers/hr/" menuItems={menuItems} />
       <div className="hidden md:block">
         <SideBar mainPath="/managers/hr/" menuItems={menuItems} />
       </div>

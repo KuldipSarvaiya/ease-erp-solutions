@@ -20,7 +20,7 @@ import NotifyModel from "./NotifyModel";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
-function DashBoardNavBar({ menuItems }) {
+function DashBoardNavBar({ menuItems, mainPath }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { data: session } = useSession({
@@ -70,7 +70,11 @@ function DashBoardNavBar({ menuItems }) {
             isBordered
             color="secondary"
             about="profile"
-            src={`/kuldip_upload/${session?.user?.image}`}
+            src={
+              session?.user?.image
+                ? "/kuldip_upload/" + session?.user?.image
+                : ""
+            }
           />
         </NavbarItem>
         <NavbarItem>
@@ -91,7 +95,7 @@ function DashBoardNavBar({ menuItems }) {
       <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
-            <SideBarButton item={item} />
+            <SideBarButton mainPath={mainPath} item={item} />
           </NavbarMenuItem>
         ))}
         <NavbarMenuItem>

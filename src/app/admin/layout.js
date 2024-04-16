@@ -27,7 +27,7 @@ export default async function AdminLayout({ children }) {
   ];
   return (
     <section>
-      <DashBoardNavBar menuItems={menuItems} />
+      <DashBoardNavBar mainPath="/admin/" menuItems={menuItems} />
       <div className="hidden md:block">
         <SideBar mainPath="/admin/" menuItems={menuItems} />
       </div>

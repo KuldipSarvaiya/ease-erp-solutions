@@ -20,7 +20,7 @@ export default function FinanceLayout({ children }) {
   ];
   return (
     <section>
-      <DashBoardNavBar menuItems={menuItems} />
+      <DashBoardNavBar mainPath={"/managers/finance/"} menuItems={menuItems} />
       <div className="hidden md:block">
         <SideBar mainPath={"/managers/finance/"} menuItems={menuItems} />
       </div>

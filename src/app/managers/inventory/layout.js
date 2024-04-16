@@ -21,7 +21,7 @@ export default function InventoryLayout({ children }) {
   ];
   return (
     <section>
-      <DashBoardNavBar menuItems={menuItems} />
+      <DashBoardNavBar mainPath="/managers/inventory/" menuItems={menuItems} />
       <div className="hidden md:block">
         <SideBar mainPath="/managers/inventory/" menuItems={menuItems} />
       </div>

@@ -19,7 +19,7 @@ export default function GenManagerLayout({ children }) {
   ];
   return (
     <section>
-      <DashBoardNavBar menuItems={menuItems} />
+      <DashBoardNavBar mainPath="/managers/general_manager/" menuItems={menuItems} />
       <div className="hidden md:block">
         <SideBar mainPath="/managers/general_manager/" menuItems={menuItems} />
       </div>
