@@ -10,16 +10,28 @@ MONGODB_URL=your_mongodb_connection_string
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install 
+```
+
+To run the development server:
+
+```bash
+npm run dev 
+```
+
+To  build and start a production-like environment:
+
+```bash
+npm run build
+```
+
+Then,
+
+```bash
+npm run start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
