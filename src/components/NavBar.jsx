@@ -74,7 +74,7 @@ export default function NavBar() {
                 alt="Ease ERP Solutions"
                 width={250}
                 height={60}
-                className="scale-110 translate-y-1  max-md:scale-[3] max-md:translate-x-1/4"
+                className="scale-110 translate-y-1 max-sm:scale-[2] md:scale-110 md:translate-x-1/4"
               />
             </Link>
           </p>

@@ -2,9 +2,21 @@
 
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { BsSearch } from "react-icons/bs";
-import ProductSellCard from "./ProductSellCard";
+import ProductSellCard from "@/components/cards/ProductSellCard";
+import { useEffect, useState } from "react";
+import Loading from "@/components/Loading";
 
 function ProductsPage() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    if (products.length <= 0)
+      fetch("/api/customer/product", { method: "GET" })
+        .then((res) => res.json())
+        .then((data) => setProducts(data))
+        .catch((e) => console.log(e));
+  });
+
   async function searchProduct(e) {
     e.preventDefault();
     const search_string = new FormData(e.target).get("search_string");
@@ -18,7 +30,7 @@ function ProductsPage() {
   return (
     <div className="w-10/12 m-auto my-5">
       {/* top search and filter line */}
-      <div className="w-full flex flex-row justify-between">
+      <div className="w-full flex flex-row flex-wrap justify-between gap-y-1">
         <form onSubmit={searchProduct}>
           <Input
             variant="faded"
@@ -30,7 +42,7 @@ function ProductsPage() {
             title="Search Products Here... "
             aria-label="search product"
             aria-labelledby="search product"
-            className="w-96"
+            className="w-80"
             endContent={
               <Button
                 isIconOnly
@@ -54,6 +66,7 @@ function ProductsPage() {
             aria-labelledby="Sort Product By :"
             defaultSelectedKeys={"0"}
             onChange={sortProduct}
+            className="w-80"
           >
             <SelectItem key={"0"} value={"0"}>
               NONE
@@ -69,13 +82,15 @@ function ProductsPage() {
       </div>
 
       {/* products container */}
-      <div className="w-full my-10 grid manager_inventory_product_stock place-items-center gap-y-7">
-        <ProductSellCard />
-        <ProductSellCard />
-        <ProductSellCard />
-        <ProductSellCard />
-        <ProductSellCard />
-      </div>
+      {products.length <= 0 ? (
+        <Loading />
+      ) : (
+        <div className="w-full my-10 max-lg:mx-10 max-md:mx-5 max-sm:mx-1 grid manager_inventory_product_stock place-items-center gap-y-7">
+          {products?.map((item) => (
+            <ProductSellCard product={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

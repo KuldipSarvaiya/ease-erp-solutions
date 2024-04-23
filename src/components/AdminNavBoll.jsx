@@ -9,8 +9,8 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsMenuButtonWideFill } from "react-icons/bs";
 function AdminNavBoll() {
