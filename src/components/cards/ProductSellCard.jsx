@@ -12,7 +12,7 @@ function ProductSellCard({ product }) {
       <Card
         isFooterBlurred
         radius="lg"
-        className="border-2 border-slate-900 text-slate-800"
+        className="border-2 border-slate-900 text-slate-800 group"
       >
         <Image
           alt="Woman listing to music"
@@ -22,7 +22,7 @@ function ProductSellCard({ product }) {
           width={300}
         />
         <CardFooter
-          className="justify-between flex-col hover:bg-white group before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10"
+          className="justify-between flex-col group-hover:bg-white before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10"
           style={{ textShadow: "0px 0px 1px white" }}
         >
           <p className="text-base flex items-center flex-row justify-between w-full px-2 capitalize">

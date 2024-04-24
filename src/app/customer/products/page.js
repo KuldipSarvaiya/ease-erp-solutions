@@ -87,7 +87,7 @@ function ProductsPage() {
       ) : (
         <div className="w-full my-10 max-lg:mx-10 max-md:mx-5 max-sm:mx-1 grid manager_inventory_product_stock place-items-center gap-y-7">
           {products?.map((item) => (
-            <ProductSellCard product={item} />
+            <ProductSellCard key={item._id} product={item} />
           ))}
         </div>
       )}

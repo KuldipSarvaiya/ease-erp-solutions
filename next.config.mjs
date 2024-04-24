@@ -8,6 +8,9 @@ const nextConfig = {
   // api: {
   //   bodyParser: false, // this is used with form in api
   // },
+  images: {
+    domains: ["lh3.googleusercontent.com", "localhost"],
+  },
 };
 
 export default nextConfig;

@@ -4,22 +4,20 @@ import Loading from "@/components/Loading";
 import { Button, ButtonGroup } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BsCart2, BsCircleFill } from "react-icons/bs";
 import { PiMinusBold, PiPlusBold } from "react-icons/pi";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 
 export default function Page({ params: { id }, searchParams }) {
-  const { data: session } = useSession({
-    required: false,
-  });
+  const { data: session } = useSession({ required: !true });
   const [units, setUnits] = useState(1);
   const [data, setData] = useState(false);
+  const [loading, setLoading] = useState(false);
   // console.log(id, searchParams, data);
 
-  if (!id && !searchParams?.size && !searchParams?.color) notFound();
+  if (!id || (!searchParams?.size && !searchParams?.color)) notFound();
 
   // fetch product details
   useEffect(() => {
@@ -35,12 +33,50 @@ export default function Page({ params: { id }, searchParams }) {
       .catch((e) => console.error(e));
   }, [searchParams?.size, searchParams?.color]);
 
+  // place order function
   function placeOrder() {
-    if (
-      (!id && !searchParams?.size && !searchParams?.color) ||
-      session?.user?.id
-    )
-      return;
+    if (!session?.user?.id) {
+      redirect(
+        "/api/auth/signin?callback_url=/customer/products/" +
+          id +
+          `?size=${searchParams?.size}&color=${searchParams?.color}`
+      );
+    }
+
+    if (data === false) return;
+
+    setLoading(true);
+
+    const sub_total = units * (data?.price + data?.discount);
+    fetch("/api/inventory/product/order", {
+      method: "POST",
+      body: JSON.stringify({
+        customer_id: session?.user?.id,
+        product: data?._id,
+        units: units,
+        payment_mode: "cod",
+        check_no: "",
+        transaction_no: "",
+        sub_total: sub_total,
+        tax: Math.floor(sub_total * 0.18),
+        discount: units * data?.discount,
+        net_total:
+          sub_total + Math.floor(sub_total * 0.18) - units * data?.discount,
+      }),
+    })
+      .then((res) => res.json())
+      .then((ans) => {
+        setLoading(false);
+        if (ans.success) {
+          alert("Order Placed Successfully");
+          setUnits(1);
+        } else alert("Failed To Place Your Order");
+      })
+      .catch((e) => {
+        setLoading(false);
+        console.error(e);
+        alert("Failed To Place Your Order.\nPlease Try Again...");
+      });
   }
 
   return (
@@ -84,14 +120,12 @@ export default function Page({ params: { id }, searchParams }) {
                 </b>
               </p>
               <p className="row-start-4 row-end-5">
-                <b>
-                  This Product Is Available In Following Color And Size
-                  Combinations :
-                </b>
+                <b>Try Out More Combinations :</b>
                 <br />
                 <span className="flex flex-row flex-wrap gap-5 w-full">
-                  {data?.group_products?.map((item) => (
+                  {data?.group_products?.map((item, i) => (
                     <Button
+                      key={i}
                       as={Link}
                       href={`/customer/products/${id}?size=${
                         item?.size
@@ -106,10 +140,12 @@ export default function Page({ params: { id }, searchParams }) {
                         item?.color === "#" + searchParams?.color &&
                         item?.size === searchParams?.size
                       }
-                      onPress={placeOrder}
+                      className="uppercase"
                     >
-                      <BsCircleFill style={{ color: item?.color }} /> |{" "}
-                      {item.size}
+                      <BsCircleFill
+                        style={{ color: item?.color || "transparent" }}
+                      />{" "}
+                      | {item.size}
                     </Button>
                   ))}
                 </span>
@@ -119,11 +155,16 @@ export default function Page({ params: { id }, searchParams }) {
                 <b>Expiry Timing : {data?.expiry_timing}</b>
               </p>
               <p className="row-start-6 row-end-7">
-                <b>Unit Of Measurement : {data?.unit_of_measurement} </b>
+                <b className="capitalize">
+                  Unit Of Measurement : {data?.unit_of_measurement}{" "}
+                </b>
               </p>
               {data?.available_stock_units < 20 && (
-                <p className="row-start-7 row-end-8 text-red-500">
-                  <b>Hurry Up!! Only Few Stock Left...</b>
+                <p className="row-start-7 row-end-8 text-red-500 capitalize">
+                  <b>
+                    {data?.available_stock_units} {data?.unit_of_measurement} |
+                    Hurry Up!! Only Few Stock Left...
+                  </b>
                 </p>
               )}
               <div className="row-start-8 row-end-10">
@@ -145,7 +186,13 @@ export default function Page({ params: { id }, searchParams }) {
                   color="secondary"
                   size="lg"
                   endContent={<BsCart2 />}
-                  isDisabled={units <= 0 || data?.available_stock_units <= 0}
+                  isDisabled={
+                    units <= 0 ||
+                    data?.available_stock_units <= 0 ||
+                    !session?.user?.id
+                  }
+                  isLoading={loading}
+                  onPress={placeOrder}
                 >
                   ORDER NOW
                 </Button>
@@ -154,25 +201,25 @@ export default function Page({ params: { id }, searchParams }) {
           </div>
 
           {/* chemical property */}
-          <div className="w-full">
-            <p className="font-extrabold text-2xl">
+          <div className="w-full my-5">
+            <p className="font-extrabold text-2xl my-3">
               Chemical Properties Of The Product
             </p>
             <div className="ml-10">
               {data?.chemical_property?.map((item) => (
-                <li>{item}</li>
+                <li key={item}>{item}</li>
               ))}
             </div>
           </div>
 
           {/* description */}
-          <div className="w-full">
-            <p className="font-extrabold text-2xl">
+          <div className="w-full mb-5">
+            <p className="font-extrabold text-2xl my-3">
               Description Of The Product
             </p>
             <div className="ml-10">
               {data?.description?.map((item) => (
-                <li>{item}</li>
+                <li key={item}>{item}</li>
               ))}
             </div>
           </div>

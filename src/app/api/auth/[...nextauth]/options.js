@@ -36,7 +36,7 @@ export const options = {
         }
 
         return {
-          id: profile.sub,
+          id: customer._id,
           ...profile,
           ...customer,
           role: "customer",

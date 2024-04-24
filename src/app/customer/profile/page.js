@@ -74,7 +74,7 @@ function ProfilePage() {
   return (
     <>
       <div>
-        <h4>{session?.user?._id}</h4>
+        <h4>{session?.user?.id}</h4>
         <h4>{session?.user?.role}</h4>
         <h4>{session?.user?.name}</h4>
         <h4>{session?.user?.email}</h4>

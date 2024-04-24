@@ -54,15 +54,15 @@ const customer_orderSchema = new Schema(
       type: Number,
       required: true,
     },
-    total_tax: {
+    tax: {
       type: Number,
       required: true,
     },
-    delivery_charge: {
-      type: Number,
-      required: true,
-    },
-    total_discount: {
+    // delivery_charge: {
+    //   type: Number,
+    //   required: true,
+    // },
+    discount: {
       type: Number,
       required: true,
     },

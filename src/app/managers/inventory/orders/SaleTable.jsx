@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import {
   Pagination,
   Table,
@@ -10,12 +11,17 @@ import {
   TableRow,
   Tooltip,
   getKeyValue,
+  Button,
 } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+// import Download from "@/components/Dowload";
+import { Divider } from "@nextui-org/react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { FaDownload } from "react-icons/fa";
 
-// todo : place google map link with given coordinates
 const CustomerTooltip = ({ customer }) => {
   return (
     <Tooltip
@@ -27,13 +33,13 @@ const CustomerTooltip = ({ customer }) => {
             radius="sm"
             src={customer?.image}
             width={100}
-            className="object-contain rounded-lg bg-slate-800"
+            className="object-contain rounded-lg bg-slate-800 aspect-square"
             aria-label="photo of customer"
             aria-labelledby="photo of customer"
           />
           <div className="flex flex-col gap-1">
             <p className="text-xs text-default-500">
-              CUSTOMER ID : {customer?.customer_id}
+              CUSTOMER ID : {customer?._id}
             </p>
             <p className="text-xs text-default-500">
               CONTANCT NO : {customer?.contact_no}
@@ -44,12 +50,17 @@ const CustomerTooltip = ({ customer }) => {
             <p className="text-xs text-default-500">
               ADDRESS : {customer?.address}
             </p>
-            <p className="text-xs text-default-500">
-              <Link href={"http://localhost:3000/employee"} target="_blank">
-                {" "}
-                Go To Address {"(Google Map)"} ↗️{" "}
-              </Link>
-            </p>
+            {customer?.address_coordinates?.latitude && (
+              <p className="text-xs text-default-500">
+                <Link
+                  href={`https://www.google.com/maps/search/?api=1&query=${customer?.address_coordinates?.latitude},${customer?.address_coordinates?.longitude}`}
+                  target="_blank"
+                >
+                  {" "}
+                  Go To Address {"(Google Map)"} ↗️{" "}
+                </Link>
+              </p>
+            )}
           </div>
         </div>
       }
@@ -70,15 +81,15 @@ const ProductTooltip = ({ product }) => {
             alt="product img"
             height={100}
             radius="sm"
-            src={product?.image}
+            src={"/kuldip_upload/" + product?.image}
             width={100}
-            className="object-contain rounded-lg bg-slate-800"
+            className="object-contain rounded-lg bg-slate-800 aspect-square"
             aria-label="photo of product"
             aria-labelledby="photo of product"
           />
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <p className="text-xs text-default-500">
-              PRODUCT ID : {product?.product_id}
+              PRODUCT GROUP : {product?.product_group_id}
             </p>
             <p className="text-xs text-default-500">
               COLOR :{" "}
@@ -90,12 +101,10 @@ const ProductTooltip = ({ product }) => {
               </span>
             </p>
             <p className="text-xs text-default-500">SIZE : {product?.size}</p>
+            <p className="text-xs text-default-500">PRICE : {product?.price}</p>
 
             <p className="text-xs text-default-500">
-              <Link
-                href={"/managers/product/" + product.product_id}
-                target="_blank"
-              >
+              <Link href={"/managers/product/" + product?._id} target="_blank">
                 {" "}
                 Visit Product Details↗️{" "}
               </Link>
@@ -111,15 +120,37 @@ const ProductTooltip = ({ product }) => {
     </Tooltip>
   );
 };
-// to change order status
-const OrderStatus = ({ order_state }) => {
+const OrderStatus = ({ order_state, id }) => {
   const [state, setState] = useState(order_state);
+
+  function updateState(e) {
+    const newState = e.target.value;
+    const oldState = state;
+
+    setState(newState);
+
+    fetch("/api/inventory/product/order", {
+      method: "PUT",
+      body: JSON.stringify({
+        _id: id,
+        order_state: newState,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => console.log(res))
+      .catch((e) => {
+        console.log(e);
+        setState(oldState);
+      });
+  }
+
+  if (order_state === "canceled") return <span>❌CANCELED</span>;
+  if (order_state === "complete") return <span>✔️COMPLETE</span>;
+
   return (
     <select
       className="p-0 m-0 rounded-md bg-transparent outline-none"
-      onChange={(e) => {
-        setState(e.target.value);
-      }}
+      onChange={updateState}
       value={state}
     >
       <option
@@ -175,24 +206,61 @@ const OrderStatus = ({ order_state }) => {
 function SaleTable({ data }) {
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState([]);
+  const [dataStatus, setDataStatus] = useState(<Loading />);
 
+  // fetch details
   useEffect(() => {
-    const temp = data?.map((order) => {
-      return {
-        ...order,
-        customer: <CustomerTooltip customer={order.customer} />,
-        product: <ProductTooltip product={order.product} />,
-        order_state: <OrderStatus order_state={order.order_state} />,
-        ref:
-          order.payment_mode === "online"
-            ? order.transaction_no
-            : order.payment_mode === "check"
-            ? order.check_no
-            : "-",
-      };
+    if (orders.length === 0) {
+      fetch("/api/inventory/product/order", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.length === 0) return setDataStatus("No Orders Placed Yet");
+          setOrders(
+            data?.map((order, i) => {
+              return {
+                key: i,
+                ...order,
+                customer: <CustomerTooltip customer={order.customer} />,
+                product: <ProductTooltip product={order.product} />,
+                order_state: (
+                  <OrderStatus id={order._id} order_state={order.order_state} />
+                ),
+                ref:
+                  order.payment_mode === "online"
+                    ? order.transaction_no
+                    : order.payment_mode === "check"
+                    ? order.check_no
+                    : "-",
+              };
+            })
+          );
+        })
+        .catch((error) => {
+          // console.log(error);
+          setDataStatus("No Orders Placed Yet");
+        });
+    }
+  }, []);
+
+  function downloadPdf() {
+    const doc = new jsPDF("landscape", "mm", "a4");
+    doc.page =
+      doc.internal.pageSize.getWidth() / doc.internal.pageSize.getHeight();
+    autoTable(doc, {
+      html: "#download-table-sales",
+      theme: "grid",
+      head: "Kuldip Head",
+      foot: "Kuldip Foot",
+      showFoot: "everyPage",
+      showHead: "everyPage",
+      headStyles: { fillColor: "red" },
     });
-    setOrders(temp);
-  }, [data]);
+
+    doc.save("customer_order_records.pdf");
+  }
 
   const rowsPerPage = 10;
   const pages = Math.ceil(orders?.length / rowsPerPage);
@@ -205,48 +273,63 @@ function SaleTable({ data }) {
   }, [page, orders]);
 
   return (
-    <Table
-      id="download-table-sales"
-      aria-label="expenses of company for the all time"
-      aria-labelledby="expenses of company for the all time"
-      bottomContent={
-        <div className="flex w-full justify-center">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="secondary"
-            page={page}
-            total={pages}
-            onChange={(page) => setPage(page)}
-          />
-        </div>
-      }
-    >
-      <TableHeader>
-        <TableColumn key={"customer"}>CUSTOMER</TableColumn>
-        <TableColumn key={"product"}>PRODUCT</TableColumn>
-        <TableColumn key={"units"}>UNITS</TableColumn>
-        <TableColumn key={"payment_mode"}>PAYMENT</TableColumn>
-        <TableColumn key={"ref"}>REFERENCE</TableColumn>
-        <TableColumn key={"sub_total"}>SUB TOTAL</TableColumn>
-        <TableColumn key={"total_tax"}>TAX</TableColumn>
-        <TableColumn key={"delivery_charge"}>CHARGE</TableColumn>
-        <TableColumn key={"total_discount"}>DISCOUNT</TableColumn>
-        <TableColumn key={"net_total"}>NET TOTAL</TableColumn>
-        <TableColumn key={"order_state"}>STATUS</TableColumn>
-        {/* <TableColumn key={"description"}>DESCRIPTION</TableColumn> */}
-      </TableHeader>
-      <TableBody items={items} emptyContent={"NO DATA AVAILABLE"}>
-        {(item) => (
-          <TableRow key={item?.name}>
-            {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
+      <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
+        PRODUCT SALES ORDERS
+        {/* <Download /> */}
+        <Button
+          size="sm"
+          variant="shadow"
+          color="secondary"
+          aria-label="download-pdf"
+          onClick={downloadPdf}
+        >
+          <FaDownload /> PDF
+        </Button>
+      </p>
+      <Divider className="my-2" />
+
+      <Table
+        id="download-table-sales"
+        aria-label="expenses of company for the all time"
+        aria-labelledby="expenses of company for the all time"
+        bottomContent={
+          <div className="flex w-full justify-center">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
+        }
+      >
+        <TableHeader>
+          <TableColumn key={"customer"}>CUSTOMER</TableColumn>
+          <TableColumn key={"product"}>PRODUCT</TableColumn>
+          <TableColumn key={"units"}>UNITS</TableColumn>
+          <TableColumn key={"payment_mode"}>PAYMENT</TableColumn>
+          <TableColumn key={"ref"}>REFERENCE</TableColumn>
+          <TableColumn key={"sub_total"}>SUB TOTAL</TableColumn>
+          <TableColumn key={"tax"}>TAX</TableColumn>
+          <TableColumn key={"discount"}>DISCOUNT</TableColumn>
+          <TableColumn key={"net_total"}>NET TOTAL</TableColumn>
+          <TableColumn key={"order_state"}>STATUS</TableColumn>
+        </TableHeader>
+        <TableBody items={items} emptyContent={dataStatus}>
+          {(item) => (
+            <TableRow key={item?.name}>
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 

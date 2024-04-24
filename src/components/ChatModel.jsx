@@ -86,14 +86,14 @@ function ChatModel() {
     <>
       <Modal
         isOpen={isOpen}
-        placement="bottom"
+        placement="bottom-center"
         backdrop="opaque"
         onOpenChange={onOpenChange}
       >
         <ModalContent>
           <ModalHeader>Managerial Chats</ModalHeader>
           <ModalBody>
-            <div className="flex flex-col gap-3 text-foreground-700  max-h-[460px] max-md::max-h-[550px] overflow-x-hidden overflow-y-scroll">
+            <div className="flex flex-col gap-3 text-foreground-700  max-h-[400px] max-md::max-h-[550px] overflow-x-hidden overflow-y-scroll">
               {msgs?.map((msg, i) => {
                 return msg?.sent_by?._id?.toString() !==
                   session?.user?._id?.toString() ? (
