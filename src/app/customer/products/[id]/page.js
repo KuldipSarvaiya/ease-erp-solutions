@@ -45,6 +45,9 @@ export default function Page({ params: { id }, searchParams }) {
 
     if (data === false) return;
 
+    if (!session?.user?.address && !session?.user?.contact_no && !localData)
+      return alert("Add Address Details First");
+
     setLoading(true);
 
     const sub_total = units * (data?.price + data?.discount);

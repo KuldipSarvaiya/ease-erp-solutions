@@ -33,7 +33,7 @@ const SupplierTooltip = ({ supplier }) => {
             radius="sm"
             src={"/kuldip_upload/" + supplier?.image}
             width={100}
-            className="object-cover rounded-lg bg-slate-800"
+            className="object-cover rounded-lg bg-transparent aspect-square"
             aria-label="photo of supplier"
             aria-labelledby="photo of supplier"
           />
@@ -54,7 +54,7 @@ const SupplierTooltip = ({ supplier }) => {
           </div>
         </div>
       }
-      placement="bottom"
+      placement="right"
       delay={1000}
       className="bg-transparent border-none shadow-none inline-block"
     >
@@ -73,7 +73,7 @@ const RawMaterialTooltip = ({ raw_material }) => {
             radius="sm"
             src={"/kuldip_upload/" + raw_material?.image}
             width={100}
-            className="object-cover rounded-lg bg-slate-800"
+            className="object-cover rounded-lg bg-transparent aspect-square"
             aria-label="photo of raw_material"
             aria-labelledby="photo of raw_material"
           />
@@ -107,7 +107,7 @@ const RawMaterialTooltip = ({ raw_material }) => {
           </div>
         </div>
       }
-      placement="bottom"
+      placement="right"
       delay={1000}
       className="bg-transparent border-none shadow-none inline-block"
     >
@@ -135,6 +135,9 @@ function PurchaseTable() {
               return {
                 ...order,
                 key: i,
+                date: (
+                  <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                ),
                 payment_mode: (
                   <Tooltip
                     content={
@@ -257,6 +260,7 @@ function PurchaseTable() {
         <TableHeader>
           <TableColumn key={"supplier"}>SUPPLIER</TableColumn>
           <TableColumn key={"raw_material"}>RAW MATERIAL</TableColumn>
+          <TableColumn key={"date"}>DATE</TableColumn>
           <TableColumn key={"ordered_units"}>UNITS</TableColumn>
           <TableColumn key={"payment_mode"}>PAYMENT</TableColumn>
           <TableColumn key={"ref"}>REFERENCE</TableColumn>

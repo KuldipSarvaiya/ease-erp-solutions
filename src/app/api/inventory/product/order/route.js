@@ -17,10 +17,16 @@ export async function POST(req) {
   return NextResponse.json({ success: true });
 }
 
-export async function GET() {
+export async function GET(req) {
+  const customer_id = new URL(req.url).searchParams.get("customer_id");
+
+  const qry = {};
+  if (customer_id) qry.customer_id = new mongoose.Types.ObjectId(customer_id);
+
   await connectDB();
 
   const res = await CustomerOrder.aggregate([
+    { $match: qry },
     {
       $lookup: {
         from: "customers",

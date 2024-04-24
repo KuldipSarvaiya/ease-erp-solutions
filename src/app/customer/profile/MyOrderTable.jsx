@@ -13,8 +13,7 @@ import {
   getKeyValue,
   Button,
 } from "@nextui-org/react";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "next/image"; 
 import { useEffect, useMemo, useState } from "react";
 // import Download from "@/components/Dowload";
 import { Divider } from "@nextui-org/react";
@@ -22,56 +21,6 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FaDownload } from "react-icons/fa";
 
-const CustomerTooltip = ({ customer }) => {
-  return (
-    <Tooltip
-      content={
-        <div className="flex flex-row gap-3 bg-purple-900/10 backdrop-blur-2xl p-3 rounded-xl border-1 border-purple-900">
-          <Image
-            alt="customer img"
-            height={100}
-            radius="sm"
-            src={customer?.image}
-            width={100}
-            className="object-contain rounded-lg bg-transparent aspect-square"
-            aria-label="photo of customer"
-            aria-labelledby="photo of customer"
-          />
-          <div className="flex flex-col gap-1">
-            <p className="text-xs text-default-500">
-              CUSTOMER ID : {customer?._id}
-            </p>
-            <p className="text-xs text-default-500">
-              CONTANCT NO : {customer?.contact_no}
-            </p>
-            <p className="text-xs text-default-500">
-              EMAIL : {customer?.email}
-            </p>
-            <p className="text-xs text-default-500">
-              ADDRESS : {customer?.address}
-            </p>
-            {customer?.address_coordinates?.latitude && (
-              <p className="text-xs text-default-500">
-                <Link
-                  href={`https://www.google.com/maps/search/?api=1&query=${customer?.address_coordinates?.latitude},${customer?.address_coordinates?.longitude}`}
-                  target="_blank"
-                >
-                  {" "}
-                  Go To Address {"(Google Map)"} ↗️{" "}
-                </Link>
-              </p>
-            )}
-          </div>
-        </div>
-      }
-      placement="right"
-      delay={1000}
-      className="bg-transparent border-none shadow-none inline-block"
-    >
-      <span>{customer?.name}</span>
-    </Tooltip>
-  );
-};
 const ProductTooltip = ({ product }) => {
   return (
     <Tooltip
@@ -102,13 +51,6 @@ const ProductTooltip = ({ product }) => {
             </p>
             <p className="text-xs text-default-500">SIZE : {product?.size}</p>
             <p className="text-xs text-default-500">PRICE : {product?.price}</p>
-
-            <p className="text-xs text-default-500">
-              <Link href={"/managers/product/" + product?._id} target="_blank">
-                {" "}
-                Visit Product Details↗️{" "}
-              </Link>
-            </p>
           </div>
         </div>
       }
@@ -120,115 +62,29 @@ const ProductTooltip = ({ product }) => {
     </Tooltip>
   );
 };
-const OrderStatus = ({ order_state, id }) => {
-  const [state, setState] = useState(order_state);
 
-  function updateState(e) {
-    const newState = e.target.value;
-    const oldState = state;
-
-    setState(newState);
-
-    fetch("/api/inventory/product/order", {
-      method: "PUT",
-      body: JSON.stringify({
-        _id: id,
-        order_state: newState,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => console.log(res))
-      .catch((e) => {
-        console.log(e);
-        setState(oldState);
-      });
-  }
-
-  if (order_state === "canceled") return <span>❌CANCELED</span>;
-  if (order_state === "complete") return <span>✔️COMPLETE</span>;
-
-  return (
-    <select
-      className="p-0 m-0 rounded-md bg-transparent outline-none"
-      onChange={updateState}
-      value={state}
-    >
-      <option
-        className="text-slate-800 disabled:text-slate-400 bg-purple-200"
-        disabled={[
-          "none",
-          "canceled",
-          "pending",
-          "shiped",
-          "complete",
-        ].includes(state)}
-        value={"none"}
-        title="none"
-      >
-        NONE
-      </option>
-      <option
-        className="text-slate-800 disabled:text-slate-400 bg-purple-200"
-        disabled={["canceled", "pending", "shiped", "complete"].includes(state)}
-        value={"canceled"}
-        title="canceled"
-      >
-        CANCELED
-      </option>
-      <option
-        className="text-slate-800 disabled:text-slate-400 bg-purple-200"
-        disabled={["pending", "shiped", "complete"].includes(state)}
-        value={"pending"}
-        title="pending"
-      >
-        PENDING
-      </option>
-      <option
-        className="text-slate-800 disabled:text-slate-400 bg-purple-200"
-        disabled={["shiped", "complete"].includes(state)}
-        value={"shiped"}
-        title="shiped"
-      >
-        SHIPED
-      </option>
-      <option
-        className="text-slate-800 disabled:text-slate-400 bg-purple-200"
-        disabled={["complete"].includes(state)}
-        value={"complete"}
-        title="complete"
-      >
-        COMPLETE
-      </option>
-    </select>
-  );
-};
-
-function SaleTable({ data }) {
+function MyOrderTable({ customer_id }) {
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState([]);
   const [dataStatus, setDataStatus] = useState(<Loading />);
 
   // fetch details
   useEffect(() => {
-    if (orders.length === 0) {
-      fetch("/api/inventory/product/order", {
+    if (orders.length === 0 && customer_id) {
+      fetch("/api/inventory/product/order?customer_id=" + customer_id, {
         method: "GET",
       })
         .then((res) => res.json())
         .then((data) => {
-          // console.log(data);
           if (data.length === 0) return setDataStatus("No Orders Placed Yet");
           setOrders(
             data?.map((order, i) => {
               return {
                 key: i,
-                ...order, date: (
-                  <span>{new Date(order.createdAt).toLocaleDateString()}</span>
-                ),
-                customer: <CustomerTooltip customer={order.customer} />,
+                ...order,
                 product: <ProductTooltip product={order.product} />,
-                order_state: (
-                  <OrderStatus id={order._id} order_state={order.order_state} />
+                date: (
+                  <span>{new Date(order.createdAt).toLocaleDateString()}</span>
                 ),
                 ref:
                   order.payment_mode === "online"
@@ -245,7 +101,7 @@ function SaleTable({ data }) {
           setDataStatus("No Orders Placed Yet");
         });
     }
-  }, []);
+  }, [customer_id]);
 
   function downloadPdf() {
     const doc = new jsPDF("landscape", "mm", "a4");
@@ -275,9 +131,9 @@ function SaleTable({ data }) {
   }, [page, orders]);
 
   return (
-    <div className="border-4 rounded-3xl mx-10 mt-4 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
+    <div className="border-4 rounded-3xl mt-8 mb-10 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
       <p className="text-2xl font-bold tracking-wide w-full flex flex-row justify-between">
-        PRODUCT SALES ORDERS
+        PRODUCT ORDERS
         {/* <Download /> */}
         <Button
           size="sm"
@@ -310,7 +166,6 @@ function SaleTable({ data }) {
         }
       >
         <TableHeader>
-          <TableColumn key={"customer"}>CUSTOMER</TableColumn>
           <TableColumn key={"product"}>PRODUCT</TableColumn>
           <TableColumn key={"date"}>DATE</TableColumn>
           <TableColumn key={"units"}>UNITS</TableColumn>
@@ -336,4 +191,4 @@ function SaleTable({ data }) {
   );
 }
 
-export default SaleTable;
+export default MyOrderTable;

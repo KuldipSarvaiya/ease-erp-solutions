@@ -14,7 +14,7 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import { useState } from "react";
-import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaSignInAlt } from "react-icons/fa";
 import { VscAccount } from "react-icons/vsc";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -74,7 +74,7 @@ export default function NavBar() {
                 alt="Ease ERP Solutions"
                 width={250}
                 height={60}
-                className="scale-110 translate-y-1 max-sm:scale-[2] md:scale-110 md:translate-x-1/4"
+                className="translate-y-1 scale-110 max-sm:scale-[2] md:translate-x-1/4"
               />
             </Link>
           </p>
@@ -111,51 +111,28 @@ export default function NavBar() {
       <NavbarContent justify="end">
         <NavbarItem className="flex">
           {session?.user ? (
-            <>
-              <Button
-                variant="flat"
-                className="max-md:-scale-75 max-md:translate-x-1/2 max-md:rotate-180"
+            <Button
+              variant="flat"
+              className="max-md:-scale-75 max-md:rotate-180"
+            >
+              <UiLink
+                as={Link}
+                href="/customer/profile"
+                color="foreground"
+                size="sm"
+                onClick={() => {
+                  setActive("account");
+                }}
+                className="md:text-base"
               >
-                <UiLink
-                  as={Link}
-                  href="/customer/profile"
-                  color="foreground"
-                  size="sm"
-                  onClick={() => {
-                    setActive("account");
-                  }}
-                  className="md:text-base"
-                >
-                  {session?.user?.picture ? (
-                    <Avatar
-                      size="sm"
-                      src={session.user.picture}
-                    />
-                  ) : (
-                    <VscAccount />
-                  )}
-                  &nbsp; Account
-                </UiLink>
-              </Button>
-              &nbsp;
-              <Button
-                variant="flat"
-                className="max-md:-scale-75 max-md:translate-x-1/3 max-md:rotate-180"
-              >
-                <UiLink
-                  as={Link}
-                  href="/api/auth/signout?callbackUrl=/"
-                  size="sm"
-                  color="foreground"
-                  onClick={() => {
-                    setActive("signout");
-                  }}
-                >
-                  <FaSignOutAlt />
-                  &nbsp;Sign Out
-                </UiLink>
-              </Button>
-            </>
+                {session?.user?.picture ? (
+                  <Avatar size="sm" src={session.user.picture} />
+                ) : (
+                  <VscAccount />
+                )}
+                &nbsp; Account
+              </UiLink>
+            </Button>
           ) : (
             <Button variant="flat">
               <UiLink

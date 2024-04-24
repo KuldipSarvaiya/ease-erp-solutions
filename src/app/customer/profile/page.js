@@ -3,22 +3,24 @@
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
+  Link as UiLink,
   useDisclosure,
   Textarea,
   Input,
+  Divider,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputCon from "@/components/InputCon";
 import { GrMapLocation } from "react-icons/gr";
+import Link from "next/link";
+import { FaSignOutAlt } from "react-icons/fa";
+import MyOrderTable from "./MyOrderTable";
+import Image from "next/image";
 
 function ProfilePage() {
+  const [localData, setLocalData] = useState(null);
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -37,6 +39,11 @@ function ProfilePage() {
   const [currLocation, setCurrLocation] = useState(false);
 
   useEffect(() => {
+    if (localStorage)
+      setLocalData(JSON.parse(localStorage.getItem?.("my_address")));
+  }, []);
+
+  useEffect(() => {
     if (isOpen === false) {
       if (session?.user?.address === "") {
         onOpen();
@@ -44,9 +51,30 @@ function ProfilePage() {
     }
   }, [session]);
 
+  // change address data
   function saveAddress(data) {
     // console.log(data);
+    localStorage?.setItem(
+      "my_address",
+      JSON.stringify({
+        address: data.address,
+        contact_no: data.contact_no,
+        address_coordinates: {
+          longitude: data.longitude,
+          latitude: data.latitude,
+        },
+      })
+    );
+    setLocalData({
+      address: data.address,
+      contact_no: data.contact_no,
+      address_coordinates: {
+        longitude: data.longitude,
+        latitude: data.latitude,
+      },
+    });
 
+    //
     fetch("/api/customer/profile", {
       method: "PUT",
       body: JSON.stringify({
@@ -72,40 +100,116 @@ function ProfilePage() {
   }
 
   return (
-    <>
-      <div>
-        <h4>{session?.user?.id}</h4>
-        <h4>{session?.user?.role}</h4>
-        <h4>{session?.user?.name}</h4>
-        <h4>{session?.user?.email}</h4>
-        <h4>{session?.user?.picture}</h4>
-        <h4>{session?.user?.address}</h4>
-        <h4>{session?.user?.address_coordinates?.latitude}</h4>
-        <h4>{session?.user?.address_coordinates?.longitude}</h4>
-      </div>
-      <Modal
-        isOpen={isOpen}
-        placement="bottom"
-        backdrop="opaque"
-        onOpenChange={onOpenChange}
-        closeButton={<></>}
-        isDismissable={false}
-        isKeyboardDismissDisabled={true}
-      >
-        <ModalContent>
+    <section className="lg:mx-32 relative">
+      <div className="flex flex-row gap-8 flex-wrap lg:flex-nowrap max-w-full justify-center">
+        {/* my details */}
+        <div className="flex-grow max-w-full border-4 rounded-3xl my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500">
+          <p className="text-xl font-bold tracking-wide">PERSONAL DETAILS</p>
+          <Divider className="my-5" />
+          <div className="flex flex-row flex-nowrap gap-10 items-center mr-10">
+            <Image
+              src={session?.user?.picture}
+              height={200}
+              width={200}
+              alt="profile picture"
+              className="rounded-full ring-slate-200 ring-2 bg-transparent aspect-square"
+            />
+            <div className="text-xl max-md:text-base text-balance max-sm:text-sm ">
+              <p>NAME : {session?.user?.name}</p>
+              <p className="my-5 max-sm:break-all">
+                EMAIL : {session?.user?.email}
+              </p>
+              <p className="mb-5">
+                CONTACT :
+                {session?.user?.contact_no || localData?.contact_no || ""}
+              </p>
+              <Button
+                variant="flat"
+                className="max-md:-scale-75 max-md:translate-x-1/3 max-md:rotate-180"
+              >
+                <UiLink
+                  as={Link}
+                  href="/api/auth/signout?callbackUrl=/"
+                  size="sm"
+                  color="foreground"
+                  onClick={() => {
+                    setActive("signout");
+                  }}
+                >
+                  <FaSignOutAlt />
+                  &nbsp;Sign Out
+                </UiLink>
+              </Button>
+            </div>
+          </div>
+          <br />
+          <div className="ml-5 text-xl font-normal flex flex-row flex-nowrap max-md:text-base max-sm:text-sm">
+            <span> ADDRESS&nbsp;:&nbsp;</span>{" "}
+            <span className="text-balance">
+              {session?.user?.address || localData?.address || ""}
+            </span>
+          </div>
+          <div className="ml-5 mt-5 text-xl font-normal flex flex-row flex-nowrap max-md:text-base max-sm:text-sm">
+            <Link
+              href={`https://www.google.com/maps/search/?api=1&query=${
+                session?.user?.address_coordinates?.latitude ||
+                localData?.address_coordinates?.latitude
+              },${
+                session?.user?.address_coordinates?.longitude ||
+                localData?.address_coordinates?.longitude
+              }`}
+              target="_blank"
+            >
+              CURRENT&nbsp;ADDRESS&nbsp;{"(Google Map) "}↗️{" "}
+            </Link>
+          </div>
+        </div>
+
+        {/* change address */}
+        <div
+          className={
+            "w-1/4 lg:w-1/3 min-w-80 border-4 rounded-3xl my-4 p-4 max-md:mx-2 shadow-lg shadow-slate-500" +
+            `${
+              !session?.user?.address &&
+              !session?.user?.contact_no &&
+              !localData
+                ? " border-red-500"
+                : " border-white"
+            }`
+          }
+        >
           <form
             onSubmit={handleSubmit(saveAddress)}
             className="flex flex-col flex-nowrap gap-5 md:flex-nowrap w-full"
           >
-            <ModalHeader>Customer Onboarding</ModalHeader>
-            <ModalBody>
+            <p
+              className={
+                "text-xl font-bold tracking-wide" +
+                `${
+                  !session?.user?.address &&
+                  !session?.user?.contact_no &&
+                  !localData
+                    ? " text-red-500 animate-pulse"
+                    : ""
+                }`
+              }
+            >
+              {" "}
+              {!session?.user?.address &&
+              !session?.user?.contact_no &&
+              !localData
+                ? "ONBOARDING : ADD DETAILS "
+                : "CHANGE ADDRESS"}
+            </p>
+            <Divider />
+            <div className="flex flex-col gap-5">
               <span className="columns-1">
                 <Input
                   {...register("contact_no", {
                     required: "Please Enter Your Contact No",
                   })}
                   label="Contact Number"
-                  labelPlacement="outside"
+                  labelPlacement="inside"
                   variant="faded"
                   size="lg"
                   color="secondary"
@@ -123,7 +227,7 @@ function ProfilePage() {
                     required: "Please Enter Your Address",
                   })}
                   label="Address"
-                  labelPlacement="outside"
+                  labelPlacement="inside"
                   variant="faded"
                   size="lg"
                   color="secondary"
@@ -179,10 +283,10 @@ function ProfilePage() {
                   <Button
                     variant={currLocation === false ? "ghost" : "faded"}
                     size="lg"
-                    title="use current coordinates"
+                    title="Make Sure To Connect To Internet"
                     color="secondary"
                     startContent={<GrMapLocation />}
-                    onClick={() => {
+                    onPress={() => {
                       try {
                         if (!navigator.geolocation)
                           return alert("Please Allow location Permission");
@@ -206,8 +310,8 @@ function ProfilePage() {
                   )}
                 </span>
               </span>
-            </ModalBody>
-            <ModalFooter className="flex flex-row justify-center">
+            </div>
+            <center>
               <Button
                 type="submit"
                 variant="shadow"
@@ -216,11 +320,14 @@ function ProfilePage() {
               >
                 SAVE ADDRESS
               </Button>
-            </ModalFooter>
+            </center>
           </form>
-        </ModalContent>
-      </Modal>
-    </>
+        </div>
+      </div>
+
+      {/* orders */}
+      <MyOrderTable customer_id={session?.user?.id} />
+    </section>
   );
 }
 
