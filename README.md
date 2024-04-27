@@ -6,6 +6,11 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 NEXTAUTH_SECRET=your_nextauth_secret
 NEXTAUTH_URL=http://localhost:3000  # changed in production
 MONGODB_URL=your_mongodb_connection_string
+MAIL_USER=your_email_of_gmail_servise
+CLIENT_ID=client_id_of_gmail_service_google_cloud_gmail_api
+CLIENT_SECRET=client_secret_of_gmail_service_google_cloud_gmail_api
+REDIRECT_URI=https://developers.google.com/oauthplayground
+REFRESH_TOKEN=get_it_from_https://developers.google.com/oauthplayground_with_id,secret_of_Gmail_API
 ```
 
 ## Getting Started
