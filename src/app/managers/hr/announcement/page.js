@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Divider,
   Input,
+  Snippet,
   Textarea,
 } from "@nextui-org/react";
 import { useState } from "react";
@@ -13,6 +14,7 @@ import { FaMinus } from "react-icons/fa";
 import { GrAdd, GrAnnounce } from "react-icons/gr";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 export default function Page() {
   const { data: session } = useSession({
@@ -21,7 +23,15 @@ export default function Page() {
       redirect("/api/auth/signin?callbackUrl=/managers/hr/attendance");
     },
   });
-  const [days, setDays] = useState(1);
+  // const [days, setDays] = useState(1);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handelDeclareHoliday(formdata) {
     const res = await declareHoliday(formdata);
@@ -30,27 +40,35 @@ export default function Page() {
     document.querySelector("#holiday_form").reset();
   }
 
-  function DatePicker() {
-    return Array.from({ length: days }).map((d, i) => (
-      <Input
-        key={i + Math.random()}
-        variant="faded"
-        color="secondary"
-        type="date"
-        name={`date${i + 1}`}
-        isRequired
-        min={today}
-        className="w-52"
-      />
-    ));
-  }
-
   const today =
     new Date().getFullYear() +
     "-" +
     (new Date().getMonth() + 1).toString().padStart(2, "0") +
     "-" +
     (new Date().getUTCDate() + 1).toString().padStart(2, "0");
+
+  function handleEventSubmit(data) {
+    console.log(data);
+    setLoading(true);
+    data.formalities = data.formalities.replaceAll("\n", " ").split(";");
+    fetch("/api/sendmail", {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setSuccess("Event Email Has Been Sent To Employees Successfully");
+        reset();
+        setTimeout(() => setSuccess(false), [5000]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSuccess("Failed To Send Event Email To Employees");
+        setTimeout(() => setSuccess(false), [5000]);
+        setLoading(false);
+      });
+  }
 
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
@@ -105,15 +123,9 @@ export default function Page() {
           Organize event
         </p>
         <Divider className="my-5" />
-        <form
-          id="event_form"
-          action={async (fd) => {
-            await announceEvent(fd);
-            document.querySelector("#event_form").reset();
-          }}
-        >
+        <form id="event_form" onSubmit={handleSubmit(handleEventSubmit)}>
           <div className="flex flex-col flex-nowrap gap-5 md:flex-nowrap">
-            <span className="uppercase text-base max-sm:text-sm tracking-wider font-normal">
+            {/* <span className="uppercase text-base max-sm:text-sm tracking-wider font-normal">
               event will held For &nbsp;&nbsp;
               <ButtonGroup size="sm" variant="faded" color="secondary">
                 <Button
@@ -128,98 +140,157 @@ export default function Page() {
                 </Button>
               </ButtonGroup>
               &nbsp;&nbsp;Days.
-            </span>
+            </span> */}
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 row-auto gap-4">
               <span className="text-xl font-semibold row-span-2">
-                Select Event Dates :
+                Select Event Date :
               </span>
-              <DatePicker />
+              <Input
+                {...register("date", {
+                  required: "Please Select The Date",
+                })}
+                variant="faded"
+                color="secondary"
+                type="date"
+                min={today}
+                isDisabled={loading}
+                className="w-52"
+              />
+              <p className="text-red-500">{errors?.date?.message}</p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 gap-3">
               <span className="text-xl font-semibold">Time Stamp : </span>
               <Input
+                {...register("start_time", {
+                  required: "Please Select Event Start Time",
+                })}
                 variant="faded"
                 color="secondary"
+                isDisabled={loading}
                 type="time"
                 size="lg"
-                name="start_time"
+                // name="start_time"
                 label="Event Start Time"
                 labelPlacement="outside"
-                isRequired
+                // isRequired
                 className="md:col-start-2 md:col-end-3"
               />
               <Input
+                {...register("end_time", {
+                  required: "Please Select Event End Time",
+                })}
                 variant="faded"
                 size="lg"
                 color="secondary"
+                isDisabled={loading}
                 type="time"
-                name="end_time"
+                // name="end_time"
                 label="Event End Time"
                 labelPlacement="outside"
-                isRequired
+                // isRequired
                 className="md:col-start-3 md:col-end-4"
-              /> 
+              />
+              <p>
+                <p className="text-red-500">{errors?.start_time?.message}</p>
+                <p className="text-red-500">{errors?.end_time?.message}</p>
+              </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
-              <span className="text-xl font-semibold">Title : </span>
+              <span className="text-xl font-semibold">Event Title : </span>
               <Input
+                {...register("title", {
+                  required: "Please Enter Event Title",
+                })}
                 size="lg"
                 variant="faded"
+                isDisabled={loading}
                 color="secondary"
                 type="text"
-                name="title"
-                isRequired
+                // name="title"
+                // isRequired
                 className="md:col-start-2 md:col-end-4"
-              /> 
+              />
+              <p className="text-red-500">{errors?.title?.message}</p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
-              <span className="text-xl font-semibold">Subject : </span>
+              <span className="text-xl font-semibold">Subject Of Event : </span>
               <Textarea
+                {...register("subject", {
+                  required: "Please Enter The Subject of Event Email",
+                })}
                 size="lg"
                 variant="faded"
                 color="secondary"
+                isDisabled={loading}
                 type="text"
-                name="subject"
-                isRequired
+                // name="subject"
+                // isRequired
                 className="md:col-start-2 md:col-end-4"
-              /> 
+              />
+              <p className="text-red-500">{errors?.subject?.message}</p>
             </span>
-
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
-              <span className="text-xl font-semibold">Details : </span>
+              <span className="text-xl font-semibold">Details Of Event : </span>
               <Textarea
+                {...register("details", {
+                  required: "Please Enter Details of Event",
+                })}
                 size="lg"
                 variant="faded"
+                isDisabled={loading}
                 color="secondary"
-                name="details"
-                isRequired
+                // name="details"
+                // isRequired
                 className="md:col-start-2 md:col-end-4"
-              /> 
+              />
+              <p className="text-red-500">{errors?.details?.message}</p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">
                 Formalities To Follow :{" "}
               </span>
               <Textarea
+                {...register("formalities", {
+                  required: "Please Enter Formalities To Follow in Event",
+                })}
                 size="lg"
                 variant="faded"
                 color="secondary"
-                name="formalities"
-                isRequired
+                isDisabled={loading}
+                // name="formalities"
+                // isRequired
                 className="md:col-start-2 md:col-end-4"
               />
-              <p className="text-orange-500"> Press Enter↩️  For New Line </p>
+              <p className="text-red-500">
+                {errors?.formalities?.message || (
+                  <span className="text-orange-500">
+                    Put (;)Sign For New Line
+                  </span>
+                )}
+              </p>
             </span>
-            <span className="flex w-full">
+            <span className="flex gap-5 w-full">
               <Button
                 type="submit"
                 variant="solid"
                 size="lg"
                 color="secondary"
+                isLoading={loading}
                 endContent={<GrAnnounce />}
               >
                 ANNOUNCE
               </Button>
+              {success !== false && (
+                <Snippet
+                  color={
+                    success.includes("Successfully") ? "success" : "danger"
+                  }
+                  hideCopyButton
+                  hideSymbol
+                >
+                  {success}
+                </Snippet>
+              )}
             </span>
           </div>
         </form>

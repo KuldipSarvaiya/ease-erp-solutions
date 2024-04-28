@@ -38,18 +38,6 @@ export async function declareHoliday(formdata) {
   return "holiday is not announced";
 }
 
-export async function announceEvent(formdata) {
-  // console.log("event");
-  // console.log(formdata.get("details").split("\n"));
-
-  await connectDB();
-  const emails = await Employee.find({}).select("email");
-
-  // console.log(emails);
-
-  return false;
-}
-
 export async function changeAttendanceStatus(formdata) {
   const _id = formdata.get("_id");
   const state = formdata.get("state");
