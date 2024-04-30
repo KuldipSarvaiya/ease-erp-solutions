@@ -113,7 +113,7 @@ function AdminNavBoll() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                TAKE DEPARTMENT VISITS
+                TAKE DASHBOARD VISITS OF . . .
               </ModalHeader>
               <ModalBody className="w-fit">
                 <p>

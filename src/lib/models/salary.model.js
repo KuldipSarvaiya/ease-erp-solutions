@@ -73,10 +73,10 @@ const salarySchema = new Schema(
     //   type: String,
     //   required: false,
     // },
-    transaction_no: {
-      type: String,
-      required: false,
-    },
+    // transaction_no: {
+    //   type: String,
+    //   required: false,
+    // },
     // updated_by: {
     //   type: Schema.ObjectId,
     //   ref: "Employee",

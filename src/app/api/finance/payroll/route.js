@@ -147,13 +147,11 @@ export async function POST(req) {
     const metadata = await MetaData.findOne({}).lean();
     // console.log(metadata);
 
-    // formate employee salary data
+    // !---- formate employee salary slip data ------
     const salary_slips = [];
     const emp_ids = [];
     let exp_amount = 0;
     for (let emp of data.employees) {
-      emp_ids.push(emp._id);
-
       // deside basic salary based on working days
       const tt = new Date(new Date(data.month));
       tt.setDate(0);
@@ -184,7 +182,7 @@ export async function POST(req) {
         profession_tax: Math.floor(metadata.salary_professionl_tax),
         travel_expense: Math.floor(metadata.salary_travel_expense),
         payment_mode: "Account",
-        transaction_no: "trn-no",
+        // transaction_no: "trn-no",
         basic_salary: emp.basic_salary,
         overtime_salary: emp.total_ot_hours * emp.ot_salary_per_hour,
       };
@@ -200,27 +198,60 @@ export async function POST(req) {
 
       exp_amount += dtl.net_salary;
 
-      salary_slips.push(dtl);
+      // !----- make payment using payouts ------
+      const payout_res = await fetch("https://api.razorpay.com/v1/payouts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+          ).toString("base64")}`,
+        },
+        body: JSON.stringify({
+          account_number: process.env.RZP_CUSTOMER_ID,
+          fund_account_id: emp.rezorpay_fund_id,
+          amount: dtl.net_salary * 100,
+          currency: "INR",
+          mode: "IMPS",
+          purpose: "salary",
+          queue_if_low_balance: true,
+          reference_id: "Acme Transaction ID 12345",
+        }),
+      });
+
+      const payout_data = await payout_res.json();
+      console.log(payout_data);
+
+      if (payout_res.ok) {
+        if (dtl.net_salary > 0) {
+          dtl.rezorpay_payout_id = payout_data.id;
+          salary_slips.push(dtl);
+          emp_ids.push(emp._id);
+        }
+      }
     }
 
+    // ----- make entry of salary in db -----
     const salarys = await Salary.insertMany(salary_slips);
 
-    // const notices = await Employee.updateMany(
-    //   { _id: { $in: emp_ids } },
-    //   {
-    //     $push: {
-    //       notice:
-    //         "Your Salary of " +
-    //         data.month +
-    //         " Has Been Creadited In Your Account 👍",
-    //     },
-    //   }
-    // );
+    // ----- sending notice of salary credited -----
+    const notices = await Employee.updateMany(
+      { _id: { $in: emp_ids } },
+      {
+        $push: {
+          notice:
+            "Your Salary of " +
+            data.month +
+            " Has Been Creadited In Your Account 👍",
+        },
+      }
+    );
 
     const salary_ids = salarys.map((sal) => sal._id);
 
     // console.log(salary_ids, exp_amount);
 
+    // ------ registering expense hit by giving salary ------
     const expense = await Expense.insertMany([
       {
         type: "employee_expense",

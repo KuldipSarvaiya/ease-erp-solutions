@@ -30,6 +30,7 @@ export default function PayrollPage() {
   const [salMon, setSalMon] = useState();
   const [empData, setEmpData] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   useEffect(() => {
     if (empData.length === 0) {
@@ -47,6 +48,7 @@ export default function PayrollPage() {
     if (getSelectedEmployees().length <= 0 || !salMon)
       return alert("!! No Employees Has Selected For Payroll");
 
+    setPaymentLoading(true);
     const selectedEmployees = getSelectedEmployees();
     makeAllEmployeesSelected(false);
     try {
@@ -67,6 +69,7 @@ export default function PayrollPage() {
       // console.log(error);
       setSuccess("Failed To Distribute Employees Salary");
     }
+    setPaymentLoading(false);
     setTimeout(() => setSuccess(false), [5000]);
   }
 
@@ -164,6 +167,7 @@ export default function PayrollPage() {
               size="md"
               className="uppercase tracking-widest"
               startContent={<MdUpdate className="scale-150" />}
+              isDisabled={paymentLoading}
             >
               Change salary metadata
             </Button>
@@ -174,6 +178,7 @@ export default function PayrollPage() {
           <div className="flex flex-row justify-between gap-10 mr-2">
             <span className="flex flex-row gap-5 justify-center">
               <Input
+                isDisabled={paymentLoading}
                 type="month"
                 value={salMon}
                 onChange={(e) => setSalMon(e.target.value)}
@@ -185,6 +190,7 @@ export default function PayrollPage() {
                 title="Select Month Of SALARY"
               />
               <Checkbox
+                isDisabled={paymentLoading}
                 title="Select All Employees for SALARY Payroll"
                 color="secondary"
                 size="lg"
@@ -197,6 +203,7 @@ export default function PayrollPage() {
               </Checkbox>
             </span>
             <Button
+              isLoading={paymentLoading}
               variant="shadow"
               size="md"
               color="secondary"
@@ -234,6 +241,7 @@ export default function PayrollPage() {
                     <Checkbox
                       color="secondary"
                       size="lg"
+                      isDisabled={paymentLoading}
                       className="text-base font-normal"
                       onChange={(e) => {
                         setEmpData((prev) =>

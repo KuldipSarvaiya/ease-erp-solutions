@@ -6,8 +6,8 @@ import { join } from "node:path";
 import { cwd } from "node:process";
 import { revalidateTag } from "next/cache";
 import Department from "@/lib/models/department.model";
+import mongoose from "mongoose";
 
-// create new employees
 export async function POST(request) {
   // console.log("new employee");
   const formdata = await request.formData();
@@ -16,8 +16,95 @@ export async function POST(request) {
   const dept = formdata.get("department_id");
   // console.log(dept);
 
+  // !-----  creating contact in razorpay -----
+  const contact_response = await fetch("https://api.razorpay.com/v1/contacts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${Buffer.from(
+        `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+      ).toString("base64")}`,
+    },
+    body: JSON.stringify({
+      name:
+        formdata.get("first_name") +
+        " " +
+        formdata.get("middle_name") +
+        " " +
+        formdata.get("last_name"),
+      email: formdata.get("email"),
+      contact: formdata.get("contact_no"),
+      type: "employee",
+      reference_id: formdata.get("username"),
+      notes: {
+        address: formdata.get("home_address"),
+      },
+    }),
+  });
+
+  const contact_data = await contact_response.json();
+  console.log("Contact Data = ", contact_data);
+
+  if (!contact_response.ok) {
+    return NextResponse.json(contact_data.error, { status: 500 });
+  }
+
+  //  !----- creating fund in razorpay -----
+  const fund_response = await fetch(
+    "https://api.razorpay.com/v1/fund_accounts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+        ).toString("base64")}`,
+      },
+      body: JSON.stringify({
+        contact_id: contact_data.id,
+        account_type: "bank_account",
+        bank_account: {
+          name:
+            formdata.get("first_name") +
+            " " +
+            formdata.get("middle_name") +
+            " " +
+            formdata.get("last_name"),
+          ifsc: formdata.get("bank_ifsc_code"),
+          account_number: formdata.get("bank_acc_no"),
+        },
+      }),
+    }
+  );
+
+  const fund_data = await fund_response.json();
+  console.log("Fund Data = ", fund_data);
+
+  if (!fund_response.ok) {
+    // !----- deactivate contact if fund not created ------
+    const deactivate_contact_response = await fetch(
+      "https://api.razorpay.com/v1/contacts/" + contact_data.id,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+          ).toString("base64")}`,
+        },
+        body: JSON.stringify({ active: false }),
+      }
+    );
+    console.log(
+      "Contact Deactivated Due To Fund Can Not Generated = ",
+      await deactivate_contact_response.json()
+    );
+
+    return NextResponse.json(fund_data.error, { status: 500 });
+  }
+
+  // create new employeee
   try {
-    // todo : file upload to own backend server
     const arrBuf = await image.arrayBuffer();
     const buffer = new Buffer.from(arrBuf);
 
@@ -51,7 +138,8 @@ export async function POST(request) {
       contact_no: formdata.get("contact_no"),
       home_address: formdata.get("home_address"),
       bank_acc_no: formdata.get("bank_acc_no"),
-      bank_name: formdata.get("bank_name"),
+      bank_name:
+        fund_data?.bank_account?.bank_name || formdata.get("bank_name"),
       bank_ifsc_code: formdata.get("bank_ifsc_code"),
       salary_cut_per_day: formdata.get("salary_cut_per_day"),
       ot_salary_per_hour: formdata.get("ot_salary_per_hour"),
@@ -59,8 +147,8 @@ export async function POST(request) {
       username: formdata.get("username"),
       password: formdata.get("password"),
       updated_by: formdata.get("updated_by"),
-      rezorpay_contact_id: "temp_id",
-      rezorpay_fund_id: "temp_id",
+      rezorpay_contact_id: contact_data.id || "temp_id",
+      rezorpay_fund_id: fund_data.id || "temp_id",
     });
 
     const emp = await createEmp.save();
@@ -79,6 +167,44 @@ export async function POST(request) {
         { field: "username", message: "This Username already exists" },
         { status: 500, statusText: "DUPLICATE USERNAME" }
       );
+
+    // !----- deactivating contact if any error occurs -------
+    const deactivate_contact_response = await fetch(
+      "https://api.razorpay.com/v1/contacts/" + contact_data.id,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+          ).toString("base64")}`,
+        },
+        body: JSON.stringify({ active: false }),
+      }
+    );
+    console.log(
+      "Contact Deactivated Due To Error = ",
+      await deactivate_contact_response.json()
+    );
+
+    // !----- deactivating fund if any error occurs -------
+    const deactivate_fund_response = await fetch(
+      " https://api.razorpay.com/v1/fund_accounts/" + fund_data.id,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+          ).toString("base64")}`,
+        },
+        body: JSON.stringify({ active: false }),
+      }
+    );
+    console.log(
+      "Fund Deactivated Due To Error = ",
+      await deactivate_fund_response.json()
+    );
 
     return NextResponse.error("serverside error");
   }
@@ -124,9 +250,116 @@ export async function PUT(req) {
   const image = formdata.get("image");
   const id = formdata.get("id");
 
+  // !----- updating contact in razorpay -----
+  const contact_response = await fetch(
+    "https://api.razorpay.com/v1/contacts/" +
+      formdata.get("rezorpay_contact_id"),
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+        ).toString("base64")}`,
+      },
+      body: JSON.stringify({
+        name:
+          formdata.get("first_name") +
+          " " +
+          formdata.get("middle_name") +
+          " " +
+          formdata.get("last_name"),
+        email: formdata.get("email"),
+        contact: formdata.get("contact_no"),
+        type: "employee",
+        reference_id: formdata.get("username"),
+        notes: {
+          address: formdata.get("home_address"),
+        },
+      }),
+    }
+  );
+
+  const contact_data = await contact_response.json();
+  console.log("Contact Data = ", contact_data);
+
+  if (!contact_response.ok) {
+    return NextResponse.json(contact_data.error, { status: 500 });
+  }
+
+  // !------ deactivating old fund -------
+  const deactivate_fund_response = await fetch(
+    " https://api.razorpay.com/v1/fund_accounts/" +
+      formdata.get("rezorpay_fund_id"),
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+        ).toString("base64")}`,
+      },
+      body: JSON.stringify({ active: false }),
+    }
+  );
+  console.log("Old Fund Deactivated = ", await deactivate_fund_response.json());
+
+  //  !----- creating fund in razorpay -----
+  const fund_response = await fetch(
+    "https://api.razorpay.com/v1/fund_accounts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+        ).toString("base64")}`,
+      },
+      body: JSON.stringify({
+        contact_id: contact_data.id,
+        account_type: "bank_account",
+        bank_account: {
+          name:
+            formdata.get("first_name") +
+            " " +
+            formdata.get("middle_name") +
+            " " +
+            formdata.get("last_name"),
+          ifsc: formdata.get("bank_ifsc_code"),
+          account_number: formdata.get("bank_acc_no"),
+        },
+      }),
+    }
+  );
+
+  const fund_data = await fund_response.json();
+  console.log("Fund Data = ", fund_data);
+
+  if (!fund_response.ok) {
+    const deactivate_contact_response = await fetch(
+      "https://api.razorpay.com/v1/contacts/" + contact_data.id,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.RZP_KEY}:${process.env.RZP_SECRET}`
+          ).toString("base64")}`,
+        },
+        body: JSON.stringify({ active: false }),
+      }
+    );
+    console.log(
+      "Contact Deactivated Due To Fund Can Not Generated = ",
+      await deactivate_contact_response.json()
+    );
+
+    return NextResponse.json(fund_data.error, { status: 500 });
+  }
+
+  // ---- storing image in public/kuldip_upload ----
   let image_obj = {};
   if (image.name) {
-    // todo : file upload to own backend server
     const image_name = `${Date.now()}__${image.name}`.replaceAll(" ", "-");
     image_obj.image = image_name;
 
@@ -138,11 +371,15 @@ export async function PUT(req) {
       // console.log("file saved");
     });
   }
+
+  console.log("depat_id = ", formdata.get("department_id"));
+
+  // ----- updating employee details -----
   try {
     await connectDB();
 
     const update = await Employee.updateOne(
-      { _id: id },
+      { _id: new mongoose.Types.ObjectId(id) },
       {
         $set: {
           ...image_obj,
@@ -166,7 +403,8 @@ export async function PUT(req) {
           contact_no: formdata.get("contact_no"),
           home_address: formdata.get("home_address"),
           bank_acc_no: formdata.get("bank_acc_no"),
-          bank_name: formdata.get("bank_name"),
+          bank_name:
+            fund_data?.bank_account?.bank_name || formdata.get("bank_name"),
           bank_ifsc_code: formdata.get("bank_ifsc_code"),
           salary_cut_per_day: formdata.get("salary_cut_per_day"),
           ot_salary_per_hour: formdata.get("ot_salary_per_hour"),
@@ -174,8 +412,8 @@ export async function PUT(req) {
           username: formdata.get("username"),
           password: formdata.get("password"),
           updated_by: formdata.get("updated_by"),
-          rezorpay_contact_id: "temp_id",
-          rezorpay_fund_id: "temp_id",
+          rezorpay_contact_id: contact_data?.id || "temp_id",
+          rezorpay_fund_id: fund_data?.id || "temp_id",
         },
       }
     );
@@ -185,8 +423,10 @@ export async function PUT(req) {
       return NextResponse.json({ success: true });
     }
     return NextResponse.error("Failed To Update Details");
+
+    // handeling errors
   } catch (error) {
-    // console.log(error.code, error.message);
+    console.log(error, error.message);
 
     if (
       error.code === 11000 &&
@@ -198,6 +438,6 @@ export async function PUT(req) {
         { status: 500, statusText: "DUPLICATE USERNAME" }
       );
 
-    return NextResponse.error("serverside error");
+    return NextResponse.json({ error: "serverside error" }, { status: 500 });
   }
 }

@@ -39,6 +39,7 @@ function Page() {
   } = useForm();
   const [depts, setDepts] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async function () {
@@ -54,6 +55,7 @@ function Page() {
   }, []);
 
   async function handelAction(formdata) {
+    setLoading(true);
     const formData = new FormData();
 
     for (const key in formdata) {
@@ -67,25 +69,25 @@ function Page() {
         method: "POST",
         body: formData,
       });
-      if (res.ok)
-        return (() => {
-          setSuccess("Employee Has Been Registered Successfully");
-          reset();
-          setTimeout(() => setSuccess(false), [5000]);
-        })();
+      if (res.ok) {
+        setSuccess("Employee Has Been Registered Successfully");
+        reset();
+        setTimeout(() => setSuccess(false), [5000]);
+      } else {
+        setSuccess("Failed To Registere Employee");
+        setTimeout(() => setSuccess(false), [5000]);
 
-      setSuccess("Failed To Registere Employee");
-      setTimeout(() => setSuccess(false), [5000]);
-
-      const json = await res.json();
-      // console.log(json);
-      [json].forEach((item) => {
-        reset({ [item.field]: "" });
-        setError(item.field, { message: item.message });
-      });
+        const json = await res.json();
+        // console.log(json);
+        [json].forEach((item) => {
+          reset({ [item.field]: "" });
+          setError(item.field, { message: item.message });
+        });
+      }
     } catch (error) {
       // console.log(error);
     }
+    setLoading(false);
   }
 
   return (
@@ -766,6 +768,7 @@ function Page() {
               type="submit"
               endContent={<BsPersonFillAdd className="scale-125" />}
               aria-label="submit"
+              isLoading={loading}
             >
               CREATE EMPLOYEE
             </Button>
@@ -777,6 +780,7 @@ function Page() {
               type="reset"
               endContent={<GrPowerReset className="scale-125" />}
               aria-label="submit"
+              isDisabled={loading}
             >
               RESET DETAILS
             </Button>

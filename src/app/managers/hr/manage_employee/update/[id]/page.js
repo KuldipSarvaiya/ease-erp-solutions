@@ -14,6 +14,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
+  Snippet,
   Textarea,
   useDisclosure,
 } from "@nextui-org/react";
@@ -22,7 +23,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { BsPersonFillAdd } from "react-icons/bs";
+import { BsFillPersonCheckFill } from "react-icons/bs";
 import { GrMapLocation, GrPowerReset } from "react-icons/gr";
 import { IoPersonRemoveSharp } from "react-icons/io5";
 
@@ -37,6 +38,8 @@ function Page({ params: { id } }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [data, setData] = useState(false);
   const [depts, setDepts] = useState([]);
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const {
     register,
     reset,
@@ -69,13 +72,13 @@ function Page({ params: { id } }) {
 
   // reset form with employee data
   useEffect(() => {
-    if (data) {
+    if (data && depts.length !== 0) {
       data.latitude = data.attendance_coordinates.latitude;
       data.longitude = data.attendance_coordinates.longitude;
       reset(data);
       // setValue("home_address", data.home_address );
     }
-  }, [data]);
+  }, [data, depts]);
 
   // fetch departments
   useEffect(() => {
@@ -93,8 +96,16 @@ function Page({ params: { id } }) {
   }, []);
 
   async function handelAction(formdata) {
+    setLoading(true);
     formdata.append("id", id);
+    // formdata.append("rezorpay_contact_id", "cont_O4qRcGPLF7j0Gv");
+    // formdata.append("rezorpay_fund_id", "fa_O4rgIpJkcKVLgk");
+    formdata.append("rezorpay_contact_id", data?.rezorpay_contact_id);
+    formdata.append("rezorpay_fund_id", data?.rezorpay_fund_id);
     formdata.append("updated_by", session?.user?._id);
+    if (formdata.get("department_id") === "") {
+      formdata.append("department_id", data?.department_id);
+    }
 
     const res = await fetch("/api/hr/employee", {
       method: "PUT",
@@ -102,8 +113,10 @@ function Page({ params: { id } }) {
     });
 
     if (res.ok) {
-      alert("Employee Details Has Updated Successfully");
-    } else alert("Faild To Update Employee Due to Network Issue");
+      setSuccess("Employee Details Has Updated Successfully");
+    } else setSuccess("Faild To Update Employee. Try Again Later");
+    setTimeout(() => setSuccess(false), [5000]);
+    setLoading(false);
   }
 
   return (
@@ -573,13 +586,19 @@ function Page({ params: { id } }) {
                 {...register("department_id", {
                   required: "Please select department of the employee",
                 })}
-                defaultSelectedKeys={[data?.department_id?.toString()]}
-                label={
-                  depts.filter((item) => item._id === data?.department_id)?.[0]
-                    ?.dept_name
-                }
+                selectedKeys={[data?.department_id]}
+                onChange={(e) => {
+                  setData((prev) => ({
+                    ...prev,
+                    department_id: e.target.value,
+                  }));
+                }}
+                // label={depts
+                //   .filter((item) => item._id === data?.department_id)?.[0]
+                //   ?.dept_name?.toUpperCase()
+                //   .replaceAll("-", " ")}
+                // labelPlacement="outside"
                 isDisabled={!data}
-                labelPlacement="outside"
                 variant="faded"
                 size="md"
                 color="secondary"
@@ -590,12 +609,9 @@ function Page({ params: { id } }) {
                 // isRequired
                 className="md:col-start-2 md:col-end-4"
               >
-                {depts?.map((item, i) => {
+                {depts?.map((item) => {
                   return (
-                    <SelectItem
-                      key={item._id.toString()}
-                      value={item._id.toString()}
-                    >
+                    <SelectItem key={item._id} value={item._id}>
                       {item.dept_name.toUpperCase().replaceAll("-", " ")}
                     </SelectItem>
                   );
@@ -861,15 +877,17 @@ function Page({ params: { id } }) {
                 color="secondary"
                 variant="shadow"
                 type="submit"
-                endContent={<BsPersonFillAdd className="scale-125" />}
+                endContent={<BsFillPersonCheckFill className="scale-125" />}
                 aria-label="submit"
-                isLoading={!data}
+                isDisabled={!data}
+                isLoading={loading}
               >
                 UPDATE EMPLOYEE
               </Button>
               &nbsp; &nbsp; &nbsp;
               <Button
-                isLoading={!data}
+                isLoading={loading}
+                isDisabled={!data}
                 size="md"
                 color="secondary"
                 variant="shadow"
@@ -884,6 +902,18 @@ function Page({ params: { id } }) {
               >
                 RESET DETAILS
               </Button>
+              &nbsp; &nbsp; &nbsp;
+              {success !== false && (
+                <Snippet
+                  color={
+                    success.includes("Successfully") ? "success" : "danger"
+                  }
+                  hideCopyButton
+                  hideSymbol
+                >
+                  {success}
+                </Snippet>
+              )}
             </span>
           </form>
         </div>

@@ -36,6 +36,7 @@ function InputCon({ controller, input }) {
             endContent={input.endContent || ""}
             // accept={input.accept || ""}
             // multiple={input.multiple || ""}
+            readOnly={input.readOnly || false}
           />
         </>
       )}

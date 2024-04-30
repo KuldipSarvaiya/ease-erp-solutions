@@ -116,7 +116,7 @@ const employeeSchema = new Schema(
         true,
         "\n\n**********RAZORPAY contact id is required, get is by creating contact in razorpay for this employee",
       ],
-      immutable: true,
+      immutable: false,
     },
     rezorpay_fund_id: {
       type: String,
@@ -124,7 +124,7 @@ const employeeSchema = new Schema(
         true,
         "\n\n**********RAZORPAY fund id is required, get is by creating fund in razorpay for this employee",
       ],
-      immutable: true,
+      immutable: false,
     },
     // salary_id: {
     //   type: [Schema.ObjectId],

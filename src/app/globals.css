@@ -5,6 +5,7 @@
 body {
   color: #b2becd;
   padding: 0px 1px 1px;
+  position: relative;
 }
 html {
   cursor: url("/cursor.svg"), auto !important;
@@ -32,4 +33,24 @@ html {
 
 .can_you_please_hide {
   @apply hidden;
+}
+
+.scroll_indicator {
+  z-index: 1000;
+  position: fixed;
+  top: 0px;
+  transform-origin: left;
+  width: 100%;
+  height: 5px;
+  background-color: #b2becd;
+  scale: 0 1;
+  animation: scrolling-div linear;
+  animation-timeline: scroll();
+  border-bottom-right-radius: 100%;
+}
+
+@keyframes scrolling-div {
+  to {
+    scale: 1 1;
+  }
 }

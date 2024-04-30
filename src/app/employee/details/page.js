@@ -20,7 +20,7 @@ import { redirect } from "next/navigation";
 export default function DetailsPage() {
   const [isEditable, setIsEditable] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const [empdata, setEmpdata] = useState({});
   const {
     register,
     setError,
@@ -53,6 +53,7 @@ export default function DetailsPage() {
   useEffect(() => {
     (async () => {
       const data = await fetchEmpData();
+      setEmpdata(data);
       // console.log("api data ", data);
       reset(data);
     })();
@@ -66,6 +67,8 @@ export default function DetailsPage() {
       if (key === "image") formData.append(key, formdata[key][0]);
       else formData.append(key, formdata[key]);
     }
+    formData.append("rezorpay_contact_id", empdata?.rezorpay_contact_id);
+    formData.append("rezorpay_fund_id", empdata?.rezorpay_fund_id);
 
     const result = await fetch("/api/employee/details/" + session?.user?._id, {
       method: "PUT",
@@ -306,9 +309,7 @@ export default function DetailsPage() {
                 }}
                 render={({ field }) => (
                   <>
-                    <Textarea
-                      cols={10}
-                      rows={5}
+                    <Textarea 
                       radius="sm"
                       size="lg"
                       variant="faded"
@@ -341,6 +342,7 @@ export default function DetailsPage() {
                   size: "lg",
                   name: "bank_name",
                   isRequired: true,
+                  readOnly: true,
                   disabled: !isEditable,
                   className: "md:col-start-2 md:col-end-4",
                 }}

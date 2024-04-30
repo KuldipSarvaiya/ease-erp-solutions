@@ -34,7 +34,7 @@ export default async function Home() {
     <>
       {/* <h1>Welcom to Ease ERP Solutions</h1>
       <Link href={"/customer"}>Go To Customer</Link> */}
-
+      <div className="scroll_indicator"></div>
       <div className="z-0 animate-pulse duration-1000 shadow-[300px_1px_500px_90px_#64748b] absolute rounded-full  w-60 h-0"></div>
       <div className="z-0 animate-pulse duration-1000 shadow-[10px_100px_300px_90px_#64748b] absolute top-[900px] right-20 rounded-full  w-0 h-0"></div>
       <section className=" snap-mandatory snap-start w-fit m-auto py-12 md:py-24 lg:py-32 bg-[#10151D] text-[#B2BECD]">
@@ -101,8 +101,8 @@ export default async function Home() {
                 </h2>
                 <p className="max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Take control of your finances with our integrated accounting
-                  software. From invoicing to financial reporting, we&#39;ve got you
-                  covered.
+                  software. From invoicing to financial reporting, we&#39;ve got
+                  you covered.
                 </p>
               </div>
               <Image
@@ -386,9 +386,10 @@ export default async function Home() {
               </h2>
               <p className="max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Our ERP system includes a financial management module that
-                allows you to manage your company&#39;s finances more effectively.
-                You can track income and expenses, generate financial reports,
-                and ensure compliance with accounting standards.
+                allows you to manage your company&#39;s finances more
+                effectively. You can track income and expenses, generate
+                financial reports, and ensure compliance with accounting
+                standards.
               </p>
             </div>
           </div>
