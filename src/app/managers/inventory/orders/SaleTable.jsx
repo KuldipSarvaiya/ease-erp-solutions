@@ -222,7 +222,8 @@ function SaleTable({ data }) {
             data?.map((order, i) => {
               return {
                 key: i,
-                ...order, date: (
+                ...order,
+                date: (
                   <span>{new Date(order.createdAt).toLocaleDateString()}</span>
                 ),
                 customer: <CustomerTooltip customer={order.customer} />,
@@ -230,12 +231,7 @@ function SaleTable({ data }) {
                 order_state: (
                   <OrderStatus id={order._id} order_state={order.order_state} />
                 ),
-                ref:
-                  order.payment_mode === "online"
-                    ? order.transaction_no
-                    : order.payment_mode === "check"
-                    ? order.check_no
-                    : "-",
+                ref: order.razorpay_payment_id || "-",
               };
             })
           );

@@ -23,7 +23,7 @@ module.exports = {
       themes: {
         dark: {
           colors: {
-            background: `#10151D`,
+            background: "#10151D",
             foreground: "#B2BECD",
           },
         },

@@ -13,13 +13,14 @@ import {
   getKeyValue,
   Button,
 } from "@nextui-org/react";
-import Image from "next/image"; 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 // import Download from "@/components/Dowload";
 import { Divider } from "@nextui-org/react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FaDownload } from "react-icons/fa";
+import Link from "next/link";
 
 const ProductTooltip = ({ product }) => {
   return (
@@ -51,6 +52,14 @@ const ProductTooltip = ({ product }) => {
             </p>
             <p className="text-xs text-default-500">SIZE : {product?.size}</p>
             <p className="text-xs text-default-500">PRICE : {product?.price}</p>
+            <Link
+              href={`/customer/products/${
+                product?.product_group_id
+              }?color=${product?.color.substr(1, 10)}&size=${product?.size}`}
+              className="text-xs text-default-500"
+            >
+              visit product ↗️
+            </Link>
           </div>
         </div>
       }
@@ -86,12 +95,7 @@ function MyOrderTable({ customer_id }) {
                 date: (
                   <span>{new Date(order.createdAt).toLocaleDateString()}</span>
                 ),
-                ref:
-                  order.payment_mode === "online"
-                    ? order.transaction_no
-                    : order.payment_mode === "check"
-                    ? order.check_no
-                    : "-",
+                ref: order.razorpay_payment_id || "-",
               };
             })
           );

@@ -27,11 +27,11 @@ const customer_orderSchema = new Schema(
       required: false,
       immutable: true,
     },
-    check_no: {
+    order_id: {
       type: String,
       required: false,
     },
-    transaction_no: {
+    razorpay_payment_id: {
       type: String,
       required: false,
     },

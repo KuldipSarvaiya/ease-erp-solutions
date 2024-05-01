@@ -165,13 +165,13 @@ export async function PUT(req, { params: { id } }) {
         contact_no: formdata.get("contact_no"),
         home_address: formdata.get("home_address"),
         bank_acc_no: formdata.get("bank_acc_no"),
-        bank_name: formdata.get("bank_name"),
+        bank_name: fund_data?.bank_account?.bank_name || formdata.get("bank_name"),
         bank_ifsc_code: formdata.get("bank_ifsc_code"),
         username: formdata.get("username"),
         password: formdata.get("password"),
         updated_by: id,
-        rezorpay_contact_id: "temp_id",
-        rezorpay_fund_id: "temp_id",
+        rezorpay_contact_id: contact_data.id,
+        rezorpay_fund_id: fund_data.id,
       },
     }
   );

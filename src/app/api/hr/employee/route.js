@@ -147,8 +147,8 @@ export async function POST(request) {
       username: formdata.get("username"),
       password: formdata.get("password"),
       updated_by: formdata.get("updated_by"),
-      rezorpay_contact_id: contact_data.id || "temp_id",
-      rezorpay_fund_id: fund_data.id || "temp_id",
+      rezorpay_contact_id: contact_data.id,
+      rezorpay_fund_id: fund_data.id,
     });
 
     const emp = await createEmp.save();
@@ -412,8 +412,8 @@ export async function PUT(req) {
           username: formdata.get("username"),
           password: formdata.get("password"),
           updated_by: formdata.get("updated_by"),
-          rezorpay_contact_id: contact_data?.id || "temp_id",
-          rezorpay_fund_id: fund_data?.id || "temp_id",
+          rezorpay_contact_id: contact_data?.id,
+          rezorpay_fund_id: fund_data?.id,
         },
       }
     );
