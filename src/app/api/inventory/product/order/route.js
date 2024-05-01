@@ -1,4 +1,5 @@
 import CustomerOrder from "@/lib/models/customer_order.model";
+import Income from "@/lib/models/income.model";
 import connectDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
@@ -55,6 +56,18 @@ export async function POST(req) {
   await connectDB();
   const res = await CustomerOrder.insertMany([data]);
   console.log(res);
+
+  const income = await Income.insertMany([
+    {
+      customer_order_id: res[0]._id,
+      type: "sells",
+      date: new Date(),
+      amount: data.net_total,
+      description: "Order Placed By Customer",
+    },
+  ]);
+  console.log(income);
+
   revalidatePath("/managers/inventory/orders");
   return NextResponse.json({ success: true });
 }
