@@ -50,6 +50,7 @@ function DisplayTable({ data, remove, add, updated_by }) {
             name="designation"
           />
           <Button
+            isDisabled={data.length === 1 && remove}
             type="submit"
             isIconOnly
             size="sm"

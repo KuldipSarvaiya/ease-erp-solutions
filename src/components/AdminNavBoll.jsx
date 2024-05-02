@@ -199,7 +199,7 @@ function AdminNavBoll() {
                                 className="font-semibold tracking-[0.15rem] uppercase"
                                 as={Link} 
                                 href={
-                                  "/managers/general_manager?department=" + dept.dept_name
+                                  "/managers/general_manager?department=" + dept._id
                                 }
                                 color="secondary"
                                 variant="shadow"

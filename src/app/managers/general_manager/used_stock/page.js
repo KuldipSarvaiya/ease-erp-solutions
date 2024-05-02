@@ -7,9 +7,18 @@ import RawMaterialStock from "@/lib/models/raw_material_stock.model";
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import mongoose from "mongoose";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 export default async function Page() {
   const session = await getServerSession(options);
+
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = cookies().get("department_id")?.value;
+    if (!department_id) return notFound();
+  }
 
   await connectDB();
 
@@ -17,7 +26,7 @@ export default async function Page() {
     {
       $match: {
         used_by: {
-          $in: [new mongoose.Types.ObjectId(session?.user?.department_id?._id)],
+          $in: [new mongoose.Types.ObjectId(department_id)],
         },
       },
     },

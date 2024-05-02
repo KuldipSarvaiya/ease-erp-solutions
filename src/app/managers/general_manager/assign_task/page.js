@@ -8,6 +8,8 @@ import { FaDotCircle } from "react-icons/fa";
 import { revalidateTag } from "next/cache";
 import Task from "@/lib/models/task.model";
 import SubmitBtn from "./SubmitBtn";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 export default async function Page() {
   const colors = {
@@ -20,14 +22,20 @@ export default async function Page() {
   if (!session?.user?.department_id) {
     return;
   }
+
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = cookies().get("department_id")?.value;
+    if (!department_id) return notFound();
+  }
+
   await connectDB();
   const employees = await Employee.aggregate([
     {
       $match: {
         designation: "Employee",
-        department_id: new mongoose.Types.ObjectId(
-          session.user.department_id._id
-        ),
+        department_id: new mongoose.Types.ObjectId(department_id),
       },
     },
     {
@@ -79,7 +87,7 @@ export default async function Page() {
     },
   ]);
 
-  // console.log("employee = ", session?.user?.department_id._id, employees);
+  // console.log("employee = ", department_id, employees);
   async function handleSubmit(formdata) {
     "use server";
 

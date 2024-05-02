@@ -6,16 +6,25 @@ import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import mongoose from "mongoose";
 import ProductCard from "@/components/cards/ProductCard";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 export default async function LowMaterialPage() {
   const session = await getServerSession(options);
+
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = cookies().get("department_id")?.value;
+    if (!department_id) return notFound();
+  }
 
   await connectDB();
 
   const materials = await Department.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(session?.user?.department_id?._id),
+        _id: new mongoose.Types.ObjectId(department_id),
       },
     },
     {

@@ -5,19 +5,26 @@ import { options } from "@/app/api/auth/[...nextauth]/options";
 import Employee from "@/lib/models/employee.model";
 import mongoose from "mongoose";
 import connectDB from "@/lib/mongoose";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 export default async function EmpPage() {
   const session = await getServerSession(options);
+
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = cookies().get("department_id")?.value;
+    if (!department_id) return notFound();
+  }
 
   await connectDB();
 
   const employees = await Employee.aggregate([
     {
       $match: {
-        // designation: "Employee",
-        department_id: new mongoose.Types.ObjectId(
-          session?.user?.department_id?._id
-        ),
+        designation: "Employee",
+        department_id: new mongoose.Types.ObjectId(department_id),
       },
     },
     {

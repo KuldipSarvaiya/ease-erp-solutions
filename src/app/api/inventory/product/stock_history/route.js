@@ -18,6 +18,11 @@ export async function GET(request) {
       $match: matchQry,
     },
     {
+      $sort: {
+        stock_produced_date: -1,
+      },
+    },
+    {
       $lookup: {
         from: "products",
         localField: "product_id",

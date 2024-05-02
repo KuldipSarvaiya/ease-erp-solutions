@@ -1,9 +1,19 @@
 import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
-    // console.log("\n******Middleware = ", req.nextUrl.pathname);
-    // console.log(req.nextauth.token);
+    if (
+      req.nextUrl.pathname === "/managers/general_manager" &&
+      req.nextauth.token.userData.designation === "Admin"
+    ) {
+      const id = new URL(req.url).searchParams.get("department");
+      const res = NextResponse.next();
+
+      res.cookies.set("department_id", id);
+
+      return res;
+    }
   },
   {
     callbacks: {
@@ -13,5 +23,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/customer/profile"],
+  matcher: ["/customer/profile", "/managers/general_manager"],
 };

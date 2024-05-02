@@ -10,9 +10,19 @@ import mongoose from "mongoose";
 import Product from "@/lib/models/product.model";
 import ProductSmall from "@/components/cards/ProductSmall";
 import PHistoryTable from "./PHistoryTable";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 export default async function Page() {
   const session = await getServerSession(options);
+  
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = cookies().get("department_id")?.value;
+    if (!department_id) return notFound();
+  }
+
 
   await connectDB();
 
@@ -20,7 +30,7 @@ export default async function Page() {
     {
       $match: {
         produced_by: {
-          $in: [new mongoose.Types.ObjectId(session?.user?.department_id?._id)],
+          $in: [new mongoose.Types.ObjectId(department_id)],
         },
       },
     },
@@ -39,7 +49,7 @@ export default async function Page() {
 
   const product_P = Product.find({
     produced_by: {
-      $in: [new mongoose.Types.ObjectId(session?.user?.department_id?._id)],
+      $in: [new mongoose.Types.ObjectId(department_id)],
     },
   });
 

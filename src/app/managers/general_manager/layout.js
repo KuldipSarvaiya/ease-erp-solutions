@@ -7,7 +7,7 @@ export const metadata = {
     "Dashboard for general department manager for managing departmental work flow",
 };
 
-export default function GenManagerLayout({ children }) {
+export default async function GenManagerLayout({ children }) {
   const menuItems = [
     "tasks",
     "assign_task",
@@ -17,9 +17,13 @@ export default function GenManagerLayout({ children }) {
     "produced_stock",
     // "reports",
   ];
+
   return (
     <section>
-      <DashBoardNavBar mainPath="/managers/general_manager/" menuItems={menuItems} />
+      <DashBoardNavBar
+        mainPath="/managers/general_manager/"
+        menuItems={menuItems}
+      />
       <div className="hidden md:block">
         <SideBar mainPath="/managers/general_manager/" menuItems={menuItems} />
       </div>

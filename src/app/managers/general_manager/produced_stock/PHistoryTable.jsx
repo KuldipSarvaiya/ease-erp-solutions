@@ -15,6 +15,8 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BsCircleFill } from "react-icons/bs";
+import { notFound } from "next/navigation";
+import getCookie from "@/lib/utils/getCookie";
 
 const Increase = () => {
   return (
@@ -54,6 +56,14 @@ function PHistoryTable({ id }) {
       );
     },
   });
+
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = getCookie("department_id");
+    if (!department_id) return notFound();
+  }
+
   const change_type = {
     Increase: <Increase />,
     Decrease: <Decrease />,
@@ -63,10 +73,9 @@ function PHistoryTable({ id }) {
   const [dataStatus, setDataStatus] = useState(<Loading />);
 
   useEffect(() => {
-    if (history.length === 0 && session?.user?.department_id?._id)
+    if (history.length === 0 && department_id)
       fetch(
-        "/api/inventory/product/stock_history?department=" +
-          session?.user?.department_id?._id,
+        "/api/inventory/product/stock_history?department=" + department_id,
         {
           method: "GET",
           next: { tags: ["ProductStockHistory"] },

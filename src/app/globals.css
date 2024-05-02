@@ -5,7 +5,7 @@
 body {
   color: #b2becd;
   padding: 0px 1px 1px;
-  position: relative;
+  /* position: relative; */
 }
 html {
   cursor: url("/cursor.svg"), auto !important;
@@ -27,7 +27,7 @@ html {
 }
 
 .manager_inventory_product_stock {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 350px));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 360px));
   justify-content: center;
 }
 
