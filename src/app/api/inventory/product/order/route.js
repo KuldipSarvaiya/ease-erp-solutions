@@ -128,14 +128,46 @@ export async function PUT(req) {
 
   await connectDB();
 
-  const res = await CustomerOrder.updateOne(
-    { _id: new mongoose.Types.ObjectId(data._id) },
-    { $set: { order_state: data.order_state } }
-  );
-  console.log(res);
-  if (res.acknowledged)
-    return NextResponse.json({ success: true }, { status: 200 });
-  return NextResponse.error({ success: false }, { status: 500 });
+  if (data.order_state === "canceled") {
+    const rzp = new Razorpay({
+      key_id: process.env.RZP_KEY,
+      key_secret: process.env.RZP_SECRET,
+    });
+
+    const refundOrder = () => {
+      return new Promise((resolve, reject) => {
+        rzp.payments.refund(data.razorpay_payment_id, (err, order) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(order);
+          }
+        });
+      });
+    };
+
+    try {
+      const refund = await refundOrder();
+
+      const res = await CustomerOrder.updateOne(
+        { _id: new mongoose.Types.ObjectId(data._id) },
+        { $set: { order_state: data.order_state } }
+      );
+      console.log(res);
+    } catch (e) {
+      return NextResponse.error({ success: false }, { status: 500 });
+    }
+  } else {
+    const res = await CustomerOrder.updateOne(
+      { _id: new mongoose.Types.ObjectId(data._id) },
+      { $set: { order_state: data.order_state } }
+    );
+    console.log(res);
+
+    if (res.acknowledged)
+      return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.error({ success: false }, { status: 500 });
+  }
 }
 
 export async function DELETE(req) {
@@ -146,7 +178,7 @@ export async function DELETE(req) {
     key_secret: process.env.RZP_SECRET,
   });
 
-  const createOrder = () => {
+  const refundOrder = () => {
     return new Promise((resolve, reject) => {
       rzp.payments.refund(payment_id, (err, order) => {
         if (err) {
@@ -159,7 +191,7 @@ export async function DELETE(req) {
   };
 
   try {
-    const order = await createOrder();
+    const order = await refundOrder();
     console.log(order);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {

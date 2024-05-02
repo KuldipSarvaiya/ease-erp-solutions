@@ -120,7 +120,7 @@ const ProductTooltip = ({ product }) => {
     </Tooltip>
   );
 };
-const OrderStatus = ({ order_state, id }) => {
+const OrderStatus = ({ order_state, id, razorpay_payment_id }) => {
   const [state, setState] = useState(order_state);
 
   function updateState(e) {
@@ -134,6 +134,7 @@ const OrderStatus = ({ order_state, id }) => {
       body: JSON.stringify({
         _id: id,
         order_state: newState,
+        razorpay_payment_id: razorpay_payment_id,
       }),
     })
       .then((res) => res.json())
@@ -229,7 +230,11 @@ function SaleTable({ data }) {
                 customer: <CustomerTooltip customer={order.customer} />,
                 product: <ProductTooltip product={order.product} />,
                 order_state: (
-                  <OrderStatus id={order._id} order_state={order.order_state} />
+                  <OrderStatus
+                    id={order._id}
+                    razorpay_payment_id={order.razorpay_payment_id}
+                    order_state={order.order_state}
+                  />
                 ),
                 ref: order.razorpay_payment_id || "-",
               };
