@@ -115,6 +115,8 @@ export default function Page({ params: { id }, searchParams }) {
                 body: JSON.stringify({
                   customer_id: session?.user?.id,
                   product: data?._id,
+                  product_group_id: data?.product_group_id,
+                  produced_by: data?.produced_by,
                   units: units,
                   payment_mode: "online",
                   order_id: response.razorpay_order_id,
@@ -138,7 +140,27 @@ export default function Page({ params: { id }, searchParams }) {
                 })
                 .catch((e) => {
                   console.log(e);
-                  alert("Failed To Store Your Order.\nPlease Try Again...");
+
+                  // !----- refund request to razorpay if we Failed To store order in DB ------
+                  fetch(
+                    "/api/inventory/product/order?payment_id=" +
+                      response.razorpay_payment_id,
+                    {
+                      method: "DELETE",
+                    }
+                  )
+                    .then((res) => res.json())
+                    .then((res) =>
+                      alert(
+                        "Failed To Store Your Order.\nYour Money Will Be Refunded In 7 Working Days"
+                      )
+                    )
+                    .catch((e) =>
+                      alert(
+                        "Failed To Process Your Order.\nContact Us With Payment ID = " +
+                          response.razorpay_payment_id
+                      )
+                    );
                 });
               // }
             },
@@ -146,7 +168,7 @@ export default function Page({ params: { id }, searchParams }) {
               name: session?.user?.name,
               email: session?.user?.email,
               contact: session?.user?.contact_no || localData?.contact_no,
-              method: ["upi", "card", "netbanking", "wallet"],
+              // method: "upi",
             },
             notes: {
               address: session?.user?.address || localData?.address,
@@ -173,11 +195,11 @@ export default function Page({ params: { id }, searchParams }) {
           paymentObject.on("payment.failed", function (response) {
             alert("Payment Failed.\nPlease Try Again...");
             console.log(response);
-            setLoading(false);
           });
 
           // rzp.open();
           paymentObject.open();
+          setLoading(false);
 
           //
         } else alert("Failed To Place Your Order");

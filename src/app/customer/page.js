@@ -1,9 +1,12 @@
+"use client";
+
+import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function CustomerPage() {
   return (
-    <section className="lg:mx-8">
+    <section className="lg:mx-8 mx-2 flex flex-col gap-5 text-balance">
       <div className="bg-[#10151D] w-full py-12">
         <div className="container px-4 md:px-6">
           <div className="grid items-center gap-6 lg:grid-cols-[600px_1fr] xl:grid-cols-[800px_1fr]">
@@ -30,6 +33,19 @@ export default function CustomerPage() {
           </div>
         </div>
       </div>
+      <center
+        style={{ background: "#10151D" }}
+        className="w-full uppercase text-xl tracking-widest font-bold text-balance"
+      >
+        <Breadcrumbs radius="md" size="lg" variant="solid" color="foreground">
+          <BreadcrumbItem isCurrent>fabric manufacturing</BreadcrumbItem>
+          <BreadcrumbItem isCurrent>cleaning & finishing</BreadcrumbItem>
+          <BreadcrumbItem isCurrent>Dying & printing</BreadcrumbItem>
+          <BreadcrumbItem isCurrent>cutting</BreadcrumbItem>
+          <BreadcrumbItem isCurrent>sewing</BreadcrumbItem>
+          <BreadcrumbItem isCurrent>packing & labeling</BreadcrumbItem>
+        </Breadcrumbs>
+      </center>
       <section
         className="grid gap-12 lg:grid-cols-2 xl:gap-20"
         style={{

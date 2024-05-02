@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import {
   Button,
   Link as UiLink,
-  useDisclosure,
   Textarea,
   Input,
   Divider,
@@ -27,11 +26,10 @@ function ProfilePage() {
       redirect("/api/auth/signin?callbackUrl=/customer/profile");
     },
   });
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const {
     register,
     control,
-    getValues,
+    reset,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -42,14 +40,6 @@ function ProfilePage() {
     if (localStorage)
       setLocalData(JSON.parse(localStorage.getItem?.("my_address")));
   }, []);
-
-  useEffect(() => {
-    if (isOpen === false) {
-      if (session?.user?.address === "") {
-        onOpen();
-      }
-    }
-  }, [session]);
 
   // change address data
   function saveAddress(data) {
@@ -90,7 +80,7 @@ function ProfilePage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          onClose();
+          reset();
         }
       })
       .catch((e) => {
@@ -121,7 +111,7 @@ function ProfilePage() {
               </p>
               <p className="mb-5">
                 CONTACT :
-                {session?.user?.contact_no || localData?.contact_no || ""}
+                {localData?.contact_no || session?.user?.contact_no || ""}
               </p>
               <Button
                 variant="flat"
@@ -146,17 +136,17 @@ function ProfilePage() {
           <div className="ml-5 text-xl font-normal flex flex-row flex-nowrap max-md:text-base max-sm:text-sm">
             <span> ADDRESS&nbsp;:&nbsp;</span>{" "}
             <span className="text-balance">
-              {session?.user?.address || localData?.address || ""}
+              {localData?.address || session?.user?.address || ""}
             </span>
           </div>
           <div className="ml-5 mt-5 text-xl font-normal flex flex-row flex-nowrap max-md:text-base max-sm:text-sm">
             <Link
               href={`https://www.google.com/maps/search/?api=1&query=${
-                session?.user?.address_coordinates?.latitude ||
-                localData?.address_coordinates?.latitude
+                localData?.address_coordinates?.latitude ||
+                session?.user?.address_coordinates?.latitude
               },${
-                session?.user?.address_coordinates?.longitude ||
-                localData?.address_coordinates?.longitude
+                localData?.address_coordinates?.longitude ||
+                session?.user?.address_coordinates?.longitude
               }`}
               target="_blank"
             >
@@ -228,6 +218,7 @@ function ProfilePage() {
                   })}
                   label="Address"
                   labelPlacement="inside"
+                  placeholder="Ex : HouseNo, Street/Socity, City/Village, Tehsil, District, State, PIN"
                   variant="faded"
                   size="lg"
                   color="secondary"

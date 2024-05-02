@@ -1,5 +1,6 @@
 import CustomerOrder from "@/lib/models/customer_order.model";
 import Income from "@/lib/models/income.model";
+import ProductStockHistory from "@/lib/models/product_stock_history.model";
 import connectDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
@@ -54,7 +55,9 @@ export async function POST(req) {
   const data = await req.json();
 
   await connectDB();
-  const res = await CustomerOrder.insertMany([data]);
+  const res = await CustomerOrder.insertMany([
+    { ...data, product_group_id: undefined, produced_by: undefined },
+  ]);
   console.log(res);
 
   const income = await Income.insertMany([
@@ -67,6 +70,17 @@ export async function POST(req) {
     },
   ]);
   console.log(income);
+
+  const history = await ProductStockHistory.insertMany([
+    {
+      product_id: data.product,
+      product_group_id: data.product_group_id,
+      units: data.units,
+      change_type: "Decrease",
+      produced_by: data.produced_by,
+    },
+  ]);
+  console.log(history);
 
   revalidatePath("/managers/inventory/orders");
   return NextResponse.json({ success: true });
@@ -122,4 +136,36 @@ export async function PUT(req) {
   if (res.acknowledged)
     return NextResponse.json({ success: true }, { status: 200 });
   return NextResponse.error({ success: false }, { status: 500 });
+}
+
+export async function DELETE(req) {
+  const payment_id = new URL(req.url).searchParams.get("payment_id");
+
+  const rzp = new Razorpay({
+    key_id: process.env.RZP_KEY,
+    key_secret: process.env.RZP_SECRET,
+  });
+
+  const createOrder = () => {
+    return new Promise((resolve, reject) => {
+      rzp.payments.refund(payment_id, (err, order) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(order);
+        }
+      });
+    });
+  };
+
+  try {
+    const order = await createOrder();
+    console.log(order);
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json(
+      { success: false, error: err.message },
+      { status: 500 }
+    );
+  }
 }

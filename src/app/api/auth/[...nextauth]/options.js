@@ -6,7 +6,7 @@ import Customer from "@/lib/models/customer.model";
 
 export const options = {
   pages: {
-  error: "/unauth",
+    error: "/unauth",
   },
   providers: [
     GoogleProvider({
@@ -15,11 +15,11 @@ export const options = {
       async profile(profile) {
         await connectDB();
 
-        let customer = await Customer.findOne({ email: profile.email });
+        const customer = await Customer.findOne({ email: profile.email });
         // console.log("\n**** old Custommer = ", customer);
 
         if (!customer) {
-          customer = await Customer.insertMany([
+          const new_customer = await Customer.insertMany([
             {
               name: profile?.name,
               image: profile?.picture,
@@ -31,14 +31,19 @@ export const options = {
               },
             },
           ]);
-          customer = customer[0]._doc;
-          // console.log("\n**** new Custommer = ", customer);
+          // console.log("\n**** new Custommer = ", new_customer[0]._doc);
+          return {
+            id: customer._id,
+            ...profile,
+            ...new_customer[0]._doc,
+            role: "customer",
+          };
         }
 
         return {
           id: customer._id,
           ...profile,
-          ...customer,
+          ...customer?._doc,
           role: "customer",
         };
       },
@@ -108,7 +113,7 @@ export const options = {
             },
           ]);
 
-        if (!emp?._doc) {
+        if (!emp._doc) {
           throw new Error("WRONG CREDENTIALS");
         }
 
@@ -119,7 +124,7 @@ export const options = {
 
         return {
           ...profile,
-          ...emp?._doc,
+          ...emp._doc,
         };
       },
     }),
