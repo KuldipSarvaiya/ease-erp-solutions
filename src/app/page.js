@@ -71,7 +71,7 @@ export default async function Home() {
                 alt="HR"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/images/hr_db.png"
+                src="https://utfs.io/f/11a7588b-2758-4cac-bd92-0249371f3980-1n9f4j.png"
                 width="600"
               />
             </div>
@@ -90,7 +90,7 @@ export default async function Home() {
                 alt="Inventory"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/images/inventory_db.png"
+                src="https://utfs.io/f/c36befd9-faca-487a-8f7a-27aa4b8fe0db-sb529r.png"
                 width="600"
               />
             </div>
@@ -109,7 +109,7 @@ export default async function Home() {
                 alt="Finance"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/images/finance_db.png"
+                src="https://utfs.io/f/d0c49699-cd0b-4a33-a83d-b7117defaac3-ts5k3h.png"
                 width="600"
               />
             </div>
@@ -128,7 +128,7 @@ export default async function Home() {
                 alt="Admin Control Panel"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="340"
-                src="/images/general_department_db.png"
+                src="https://utfs.io/f/f3208662-4e6c-4afe-b85a-5434eea926d7-jwqnpo.png"
                 width="600"
               />
             </div>
@@ -154,14 +154,14 @@ export default async function Home() {
                 alt="Employee Dashboard"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/payroll_1.png"
+                src="https://utfs.io/f/78b4e9c3-d628-4bdd-b5e9-66aad9b37cf3-1367pz.png"
                 width="640"
               />
               <Image
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/payroll_2.png"
+                src="https://utfs.io/f/54446e5c-5e0c-4b93-a265-dbc2c106a08e-1367q0.png"
                 width="640"
               />
             </div>
@@ -177,14 +177,14 @@ export default async function Home() {
                 alt="Employee Dashboard"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/employee_db_1.png"
+                src="https://utfs.io/f/0c08c2f5-4ac1-4a54-9acf-e013c2c35ab8-xjxxsv.png"
                 width="640"
               />
               <Image
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/employee_db_2.png"
+                src="https://utfs.io/f/b6ae6e12-9643-4ed9-9ab6-2477cd90e700-xjxxsu.png"
                 width="640"
               />
             </div>
@@ -220,14 +220,14 @@ export default async function Home() {
                 alt="Attendance Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/attendance_1.png"
+                src="https://utfs.io/f/9a6cde40-a355-414d-8087-c650ef51263e-wk03vp.png"
                 width="640"
               />
               <Image
                 alt="Task Assignment"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/attendance_2.png"
+                src="https://utfs.io/f/fec77fe4-b636-4e18-87c3-a4fc8993896b-wk03vo.png"
                 width="640"
               />
             </div>
@@ -242,14 +242,14 @@ export default async function Home() {
                 alt="Task Assignment"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/images/task_1.png"
+                src="https://utfs.io/f/2b0a15d7-b50f-4650-afcc-f6e797e8bab7-ekg5jd.png"
                 width="640"
               />
               <Image
                 alt="Inventory Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/images/task_2.png"
+                src="https://utfs.io/f/80bbfdfd-80d9-43f9-b8bd-3c7f66eb172a-ekg5jc.png"
                 width="640"
               />
             </div>
@@ -287,14 +287,14 @@ export default async function Home() {
                 alt="Inventory Management"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/images/inventory_1.png"
+                src="https://utfs.io/f/3f9ba072-0017-4bf3-b4c3-79bc7b0978c5-7sc642.png"
                 width="640"
               />
               <Image
                 alt="Order Tracking"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/images/inventory_2.png"
+                src="https://utfs.io/f/20e562a3-39f2-487a-afb3-174a4231b91c-7sc641.png"
                 width="640"
               />
             </div>
@@ -306,10 +306,10 @@ export default async function Home() {
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="grid gap-4 md:gap-8 items-start">
               <Image
-                alt="Financial Management"
+                alt="Order Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/order.png"
+                src="https://utfs.io/f/81a406ca-35c8-4f86-bc50-2f82172859f5-1r430u.png"
                 width="640"
               />
             </div>
@@ -347,14 +347,14 @@ export default async function Home() {
                 alt="CRM"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/crm_1.png"
+                src="https://utfs.io/f/c7cce760-21aa-40e2-9594-463e5a6d4bae-1kiqds.png"
                 width="640"
               />
               <Image
                 alt="Financial Management"
                 className="aspect-video overflow-hidden rounded-xl object-fill object-center"
                 height="360"
-                src="/images/crm_2.png"
+                src="https://utfs.io/f/3c8b042c-5c57-4a05-9c88-021f1e4879dd-1kiqdt.png"
                 width="640"
               />
             </div>
@@ -369,14 +369,14 @@ export default async function Home() {
                 alt="Order Tracking"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/images/finance_1.png"
+                src="https://utfs.io/f/3f83f455-e35b-48b2-96ef-e28a3b40ca7f-5wvkek.png"
                 width="640"
               />
               <Image
                 alt="CRM"
                 className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                 height="360"
-                src="/images/finance_2.png"
+                src="https://utfs.io/f/dc71f8d7-98a5-4786-a11d-9f266498b645-5wvkel.png"
                 width="640"
               />
             </div>

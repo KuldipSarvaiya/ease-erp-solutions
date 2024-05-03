@@ -27,7 +27,7 @@ export default function CustomerPage() {
               alt="Hero"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom lg:aspect-video/none lg:order-last"
               height="300"
-              src="/images/textile_process.png"
+              src="https://utfs.io/f/8556b9e8-6ccc-4823-8f9e-cf78ce70ba93-fgq4xx.png"
               width="600"
             />
           </div>
@@ -68,7 +68,7 @@ export default function CustomerPage() {
           alt="Fabric Manufacturing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/images/fabric_manufaturing.webp"
+          src="https://utfs.io/f/e1e9a50f-b60a-416c-80f2-9d9e8b0d502d-8nqkip.webp"
           width="700"
         />
       </section>
@@ -82,7 +82,7 @@ export default function CustomerPage() {
           alt="Fabric Cleaning"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/images/fabric_cleaning.jpg"
+          src="https://utfs.io/f/9dc3b7a1-e49a-4b6b-8938-4c9d9cb16b3f-9vd2gd.jpg"
           width="700"
         />
         <div className="flex flex-col justify-center space-y-4">
@@ -121,7 +121,7 @@ export default function CustomerPage() {
           alt="Creative Printing"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/images/fabric_printing.jpg"
+          src="https://utfs.io/f/e25624ae-3f97-4d3a-9a3c-68a82bd3905d-ssw41b.jpg"
           width="700"
         />
       </section>
@@ -175,7 +175,7 @@ export default function CustomerPage() {
           alt="Packaging Perfection"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/images/packaging.png"
+          src="https://utfs.io/f/e00fe1de-d115-4b42-a621-225fb884ef21-tswiv7.png"
           width="700"
         />
       </section>
@@ -189,7 +189,7 @@ export default function CustomerPage() {
           alt="Elegant Designs"
           className="aspect-video rounded-lg overflow-hidden object-center object-cover"
           height="350"
-          src="/images/designing.jpg"
+          src="https://utfs.io/f/077dda1e-0d7a-48bd-b4e0-021632912b4d-rhao2s.jpg"
           width="700"
         />
         <div className="flex flex-col justify-center space-y-4">
