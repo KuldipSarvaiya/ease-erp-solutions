@@ -190,7 +190,7 @@ export default async function Page() {
                     &nbsp;
                     <Avatar
                       size="md"
-                      src={"/kuldip_upload/" + emp?.image}
+                      src={emp?.image}
                       aria-label="employee avatar"
                       aria-labelledby="employee avatar"
                     />

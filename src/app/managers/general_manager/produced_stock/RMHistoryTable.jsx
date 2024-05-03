@@ -57,13 +57,6 @@ function RMHistoryTable() {
     },
   });
 
-  let department_id = session?.user?.department_id?._id;
-
-  if (session?.user?.designation === "Admin") {
-    department_id = getCookie("department_id");
-    if (!department_id) return notFound();
-  }
-
   const [page, setPage] = useState(1);
   const change_type = {
     Increase: <Increase />,
@@ -126,6 +119,14 @@ function RMHistoryTable() {
 
     return history.slice(start, end);
   }, [page, history]);
+
+  // return if admin and department id is not found
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = getCookie("department_id");
+    if (!department_id) return notFound();
+  }
 
   return (
     <Table

@@ -57,13 +57,6 @@ function PHistoryTable({ id }) {
     },
   });
 
-  let department_id = session?.user?.department_id?._id;
-
-  if (session?.user?.designation === "Admin") {
-    department_id = getCookie("department_id");
-    if (!department_id) return notFound();
-  }
-
   const change_type = {
     Increase: <Increase />,
     Decrease: <Decrease />,
@@ -120,6 +113,14 @@ function PHistoryTable({ id }) {
 
     return history.slice(start, end);
   }, [page, history]);
+
+  // return if admin and department id not found
+  let department_id = session?.user?.department_id?._id;
+
+  if (session?.user?.designation === "Admin") {
+    department_id = getCookie("department_id");
+    if (!department_id) return notFound();
+  }
 
   return (
     <Table
