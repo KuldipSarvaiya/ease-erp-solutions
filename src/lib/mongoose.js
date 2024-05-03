@@ -10,7 +10,9 @@ async function connectDB() {
 
   try {
     mongoose.set("strictQuery", true);
-    await mongoose.connect(process.env.MONGODB_URL);
+    await mongoose.connect(process.env.MONGODB_URL, {
+      dbName: "ease-erp-solutions",
+    });
     isConnected = true;
     console.log("\n***********Mongodb Connected\n");
   } catch (error) {
