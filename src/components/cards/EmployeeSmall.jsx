@@ -11,7 +11,7 @@ function EmployeeSmall({ emp, manager }) {
           alt="profile image"
           height={100}
           radius="sm"
-          src={"/kuldip_upload/" + emp?.image}
+          src={emp?.image}
           width={250}
           className="object-contain overflow-hidden rounded-lg bg-slate-800"
         />
@@ -70,7 +70,7 @@ function EmployeeSmall({ emp, manager }) {
           alt="employee logo"
           height={60}
           radius="sm"
-          src={"/kuldip_upload/" + emp?.image}
+          src={emp?.image}
           width={60}
           className="object-cover rounded-lg bg-slate-800"
         />

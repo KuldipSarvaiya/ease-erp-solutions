@@ -145,7 +145,7 @@ function AttendanceChip({ status, emp, session }) {
         color="default"
         size="lg"
         // className="min-w-48 uppercase"
-        avatar={<Avatar src={"/kuldip_upload/" + emp.image} size="lg" />}
+        avatar={<Avatar src={emp.image} size="lg" />}
       >
         <span className="flex justify-between w-full gap-1 items-center uppercase">
           {emp.middle_name} {emp.first_name}

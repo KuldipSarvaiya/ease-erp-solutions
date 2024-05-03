@@ -1,5 +1,6 @@
 "use client";
 
+import { ImageUploadButton } from "@/lib/utils/uploadthing";
 import {
   Avatar,
   Button,
@@ -29,17 +30,23 @@ function NewRawMaterialOrderPage() {
   const [suppliers, setSuppliers] = useState([]);
   const [rawMaterial, setRawMaterial] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [image, setImage] = useState("");
   const {
     register,
     getValues,
     reset,
     setError,
+    setValue,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
   const watch_raw_material_id = watch(["raw_material_id"]);
   const [prevMaterial, setPrevMaterial] = useState("");
+
+  useEffect(() => {
+    setValue("bill_image", image);
+  }, [image]);
 
   // fetching raw material
   useEffect(() => {
@@ -99,8 +106,7 @@ function NewRawMaterialOrderPage() {
     const formData = new FormData();
 
     for (const key in formdata) {
-      if (key === "bill_image") formData.append(key, formdata[key][0]);
-      else formData.append(key, formdata[key]);
+      formData.append(key, formdata[key]);
     }
     formData.append("updated_by", session?.user?._id);
 
@@ -109,6 +115,7 @@ function NewRawMaterialOrderPage() {
       body: formData,
     });
     if (!result.ok) {
+      setImage("");
       setSuccess("Failed To Distribute Employees Salary");
       setTimeout(() => setSuccess(false), [5000]);
       return;
@@ -246,34 +253,16 @@ function NewRawMaterialOrderPage() {
           </span>
           <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
             <span className="text-xl font-semibold">Bill Image : </span>
-            <Input
+            <input
               {...register("bill_image", {
-                required: "Please Drop a Bill Image",
-                validate: (v) =>
-                  v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
+                required: "Please Upload The Bill Image",
               })}
-              startContent={
-                <Avatar
-                  radius="lg"
-                  size="md"
-                  src={
-                    getValues("bill_image")?.[0]
-                      ? URL.createObjectURL(getValues("bill_image")[0])
-                      : null
-                  }
-                />
-              }
-              variant="faded"
-              size="md"
-              color="secondary"
-              type="file"
-              multiple={false}
-              accept=".png, .jpg, .jpeg"
-              name="bill_image"
-              aria-label="bill_image"
-              aria-labelledby="bill_image"
-              className="md:col-start-2 md:col-end-4"
+              name="image"
+              type="text"
+              hidden
+              className="hidden"
             />
+            <ImageUploadButton image={image} setImage={setImage} />
             <p className="text-red-500"> {errors?.bill_image?.message} </p>
           </span>
           <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">

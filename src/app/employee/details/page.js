@@ -16,11 +16,13 @@ import { GrUpdate } from "react-icons/gr";
 import InputCon from "@/components/InputCon";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { ImageUploadButton } from "@/lib/utils/uploadthing";
 
 export default function DetailsPage() {
   const [isEditable, setIsEditable] = useState(false);
   const [success, setSuccess] = useState(false);
   const [empdata, setEmpdata] = useState({});
+  const [image, setImage] = useState("");
   const {
     register,
     setError,
@@ -28,6 +30,7 @@ export default function DetailsPage() {
     handleSubmit,
     control,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm();
   const { data: session } = useSession({
@@ -51,9 +54,14 @@ export default function DetailsPage() {
   }, [session]);
 
   useEffect(() => {
+    setValue("image", image);
+  }, [image]);
+
+  useEffect(() => {
     (async () => {
       const data = await fetchEmpData();
       setEmpdata(data);
+      setImage(data.image);
       // console.log("api data ", data);
       reset(data);
     })();
@@ -64,11 +72,19 @@ export default function DetailsPage() {
     const formData = new FormData();
 
     for (const key in formdata) {
-      if (key === "image") formData.append(key, formdata[key][0]);
-      else formData.append(key, formdata[key]);
+      formData.append(key, formdata[key]);
     }
     formData.append("rezorpay_contact_id", empdata?.rezorpay_contact_id);
     formData.append("rezorpay_fund_id", empdata?.rezorpay_fund_id);
+
+    if (
+      empdata.bank_acc_no.toString() !==
+        formdata.get("bank_acc_no").toString() ||
+      empdata.bank_ifsc_code.toString() !==
+        formdata.get("bank_ifsc_code").toString()
+    ) {
+      formdata.append("change_acc", "1");
+    }
 
     const result = await fetch("/api/employee/details/" + session?.user?._id, {
       method: "PUT",
@@ -272,28 +288,16 @@ export default function DetailsPage() {
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
               <span className="text-xl font-semibold">Profile Image : </span>
-              <Input
+              <input
                 {...register("image", {
-                  // required: "Please provide your image.",
-                  // validate: (v) =>
-                  //   getValues("image")[0]
-                  //     ? v[0].size < 500 * 1024 ||
-                  //       "Imgae Size is Large, max 500kb"
-                  //     : true,
+                  required: "Please Upload The Profile Image",
                 })}
-                type={"file"}
-                radius="sm"
-                size="md"
-                variant="faded"
-                color="secondary"
-                accept=".png, .jpg, .jpeg"
-                disabled={!isEditable}
-                className="md:col-start-2 md:col-end-4"
-                // isRequired={true}
-                // startContent={
-                //   <Avatar src={"/kuldip_upload/" + getValues("image")} />
-                // }
+                name="image"
+                type="text"
+                hidden
+                className="hidden"
               />
+              <ImageUploadButton image={image} setImage={setImage} />
               <p className="text-red-500"> {errors?.image?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1 n">
@@ -309,7 +313,7 @@ export default function DetailsPage() {
                 }}
                 render={({ field }) => (
                   <>
-                    <Textarea 
+                    <Textarea
                       radius="sm"
                       size="lg"
                       variant="faded"

@@ -280,7 +280,7 @@ export default function PayrollPage() {
                           <Avatar
                             size="lg"
                             isBordered={item?.designation === "Manager"}
-                            src={"/kuldip_upload/" + item?.image}
+                            src={item?.image}
                             color="secondary"
                           />
                         }

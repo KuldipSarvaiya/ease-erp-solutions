@@ -222,13 +222,13 @@ export default function Page({ params: { id }, searchParams }) {
           {/* hero section */}
           <div className="grid grid-cols-2 max-md:grid-cols-1 grid-rows-1  max-md:grid-rows-2">
             <Image
-              src={"/kuldip_upload/" + data?.image}
+              src={data?.image}
               height={400}
               width={500}
               alt="Image Of Product"
               aria-label="image of product"
               aria-labelledby="product image"
-              className="bg-slate-400 aspect-square object-contain rounded-2xl"
+              className="bg-slate-400 aspect-square object-contain bg-transparent rounded-2xl"
             />
             {/* side of image */}
             <div className="text-xl h-full flex flex-col flex-nowrap justify-around">

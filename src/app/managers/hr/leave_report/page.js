@@ -110,11 +110,11 @@ export default async function LeavePage() {
                     {new Date(leave.createdAt).toLocaleDateString()}
                   </td>
                   <td className="text-left align-middle capitalize">
-                    {leave.requested_by.middle_name}
+                    {leave.requested_by.middle_name}{" "}
                     {leave.requested_by.first_name}
                   </td>
                   <td className="text-left align-middle uppercase">
-                    {leave?.department?.dept_name}
+                    {leave?.department?.dept_name.replaceAll("-", " ")}
                   </td>
                   <td className="text-left align-middle">
                     {leave.dates_of_leave.map((date, i) => (
@@ -239,11 +239,11 @@ export default async function LeavePage() {
                     {new Date(leave.createdAt).toLocaleDateString()}
                   </td>
                   <td className="text-left align-middle capitalize">
-                    {leave.requested_by.middle_name}
+                    {leave.requested_by.middle_name}{" "}
                     {leave.requested_by.first_name}
                   </td>
                   <td className="text-left align-middle uppercase">
-                    {leave?.department?.dept_name}
+                    {leave?.department?.dept_name.replaceAll("-", " ")}
                   </td>
                   <td className="text-left align-middle">
                     {leave.dates_of_leave.map((date, i) => (

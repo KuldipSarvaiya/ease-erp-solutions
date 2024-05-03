@@ -61,7 +61,7 @@ function ProductCard({ card_only, product }) {
         )}
         {/* <CardBody> */}
         <Image
-          src={"/kuldip_upload/" + product?.image}
+          src={product?.image}
           alt="image of the product"
           height={300}
           width={300}
@@ -72,6 +72,7 @@ function ProductCard({ card_only, product }) {
           <p className="text-lg flex items-center flex-row justify-between w-full px-2 text-black/80 capitalize">
             <span>{product?.name}</span>
             <span className="underline text-sm flex items-center gap-3 flex-wrap">
+              {product?.size}
               <BsCircleFill style={{ color: product?.color }} />{" "}
               {product?.available_stock_units} {product?.unit_of_measurement}
             </span>

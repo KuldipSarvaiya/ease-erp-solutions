@@ -18,7 +18,7 @@ function ProductSellCard({ product }) {
           alt="Woman listing to music"
           className="object-cover aspect-square"
           height={300}
-          src={"/kuldip_upload/" + product?.image}
+          src={product?.image}
           width={300}
         />
         <CardFooter

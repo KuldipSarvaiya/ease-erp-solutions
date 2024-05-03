@@ -1,10 +1,6 @@
 import RawMaterial from "@/lib/models/raw_material.model";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
-import { join } from "node:path";
-import { cwd } from "node:process";
-import { Buffer } from "node:buffer";
-import { writeFile } from "node:fs";
 // import RawMaterialStockHistory from "@/lib/models/raw_material_stock_history.model";
 import connectDB from "@/lib/mongoose";
 import RawMaterialStock from "@/lib/models/raw_material_stock.model";
@@ -12,19 +8,7 @@ import RawMaterialStock from "@/lib/models/raw_material_stock.model";
 export async function POST(request) {
   const data = await request.formData();
 
-  // console.log("api = ", data);
-
-  const image_name = `${Date.now()}__${data.get("image").name}`.replaceAll(
-    " ",
-    "-"
-  );
-  const arrBuf = await data.get("image").arrayBuffer();
-  const buffer = new Buffer.from(arrBuf);
-
-  const ulr = join(cwd(), "public", "kuldip_upload", image_name);
-  writeFile(ulr, buffer, () => {
-    // console.log("file saved");
-  });
+  // console.log("api = ", data.get("image"));
 
   const colors = data.getAll("color")?.[0]?.split(",") || "";
   const sizes = data.getAll("size")?.[0]?.split(",") || "";
@@ -35,10 +19,10 @@ export async function POST(request) {
   if (produced_by[0] === "") produced_by = undefined;
 
   // console.log(
-   // colors,
-   // sizes,
+  // colors,
+  // sizes,
   //  description,
-   // chemical_property,
+  // chemical_property,
   //  produced_by,
   //  used_by
   //);
@@ -54,7 +38,7 @@ export async function POST(request) {
         color: color,
         size: size.replaceAll(" ", ""),
         chemical_property: chemical_property,
-        image: image_name,
+        image: data.get("image"),
         unit_of_measurement: data.get("unit_of_measurement"),
         usage_process_level: +data.get("usage_process_level"),
         produced_by: produced_by,
@@ -102,22 +86,7 @@ export async function POST(request) {
 export async function PUT(request) {
   const data = await request.formData();
 
-  // console.log("raw material put = ", data);
-
-  const img_obj = {};
-  if (data.get("image").name) {
-    img_obj.image = `${Date.now()}__${data.get("image").name}`.replaceAll(
-      " ",
-      "-"
-    );
-    const arrBuf = await data.get("image").arrayBuffer();
-    const buffer = new Buffer.from(arrBuf);
-
-    const ulr = join(cwd(), "public", "kuldip_upload", img_obj.image);
-    writeFile(ulr, buffer, () => {
-      // console.log("file saved");
-    });
-  }
+  // console.log("raw material put = ", data.get("image"));
 
   const description = data.get("description")?.split(";");
   const chemical_property = data.get("chemical_property")?.split(";");
@@ -136,7 +105,7 @@ export async function PUT(request) {
     },
     {
       $set: {
-        ...img_obj,
+        image: data.get("image"),
         name: data.get("name"),
         raw_material_group_id: data.get("raw_material_group_id"),
         description: description,

@@ -1,8 +1,4 @@
 import { NextResponse } from "next/server";
-import { join } from "node:path";
-import { cwd } from "node:process";
-import { Buffer } from "node:buffer";
-import { writeFile } from "node:fs";
 import connectDB from "@/lib/mongoose";
 import Product from "@/lib/models/product.model";
 import { revalidatePath } from "next/cache";
@@ -12,18 +8,6 @@ export async function POST(request) {
   const data = await request.formData();
 
   // console.log("api = ", data);
-
-  const image_name = `${Date.now()}__${data.get("image").name}`.replaceAll(
-    " ",
-    "-"
-  );
-  const arrBuf = await data.get("image").arrayBuffer();
-  const buffer = new Buffer.from(arrBuf);
-
-  const ulr = join(cwd(), "public", "kuldip_upload", image_name);
-  writeFile(ulr, buffer, () => {
-    // console.log("file saved");
-  });
 
   const colors = data.getAll("color")[0].split(",");
   const sizes = data.getAll("size")[0].split(",");
@@ -38,7 +22,7 @@ export async function POST(request) {
       products.push({
         product_group_id: data.get("product_group_id"),
         name: data.get("name"),
-        image: image_name,
+        image: data.get("image"),
         description: description,
         chemical_property: chemical_property,
         color: color,
@@ -80,22 +64,7 @@ export async function POST(request) {
 export async function PUT(request) {
   const data = await request.formData();
 
-  // console.log("product put = ", data); 
-
-  const img_obj = {};
-  if (data.get("image").name) {
-    img_obj.image = `${Date.now()}__${data.get("image").name}`.replaceAll(
-      " ",
-      "-"
-    );
-    const arrBuf = await data.get("image").arrayBuffer();
-    const buffer = new Buffer.from(arrBuf);
-
-    const ulr = join(cwd(), "public", "kuldip_upload", img_obj.image);
-    writeFile(ulr, buffer, () => {
-      // console.log("file saved");
-    });
-  }
+  // console.log("product put = ", data);
 
   const description = data.get("description").split(";");
   const chemical_property = data.get("chemical_property").split(";");
@@ -107,7 +76,7 @@ export async function PUT(request) {
     { _id: data.get("_id") },
     {
       $set: {
-        ...img_obj,
+        image: data.get("image"),
         name: data.get("name"),
         description: description,
         chemical_property: chemical_property,

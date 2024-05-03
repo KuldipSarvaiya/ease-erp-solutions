@@ -31,7 +31,7 @@ const SupplierTooltip = ({ supplier }) => {
             alt="supplier img"
             height={100}
             radius="sm"
-            src={"/kuldip_upload/" + supplier?.image}
+            src={supplier?.image}
             width={100}
             className="object-cover rounded-lg bg-transparent aspect-square"
             aria-label="photo of supplier"
@@ -71,7 +71,7 @@ const RawMaterialTooltip = ({ raw_material }) => {
             alt="raw_material img"
             height={100}
             radius="sm"
-            src={"/kuldip_upload/" + raw_material?.image}
+            src={raw_material?.image}
             width={100}
             className="object-cover rounded-lg bg-transparent aspect-square"
             aria-label="photo of raw_material"
@@ -143,10 +143,10 @@ function PurchaseTable() {
                     content={
                       <Image
                         alt="Bill Image"
-                        src={"/kuldip_upload/" + order.bill_image}
-                        height={250}
-                        width={250}
-                        className="object-cover"
+                        src={order.bill_image}
+                        height={300}
+                        width={300}
+                        className="object-cover bg-transparent"
                       />
                     }
                     delay={1000}

@@ -30,16 +30,7 @@ function CustomerTable({ id }) {
             data.map((cust) => {
               return {
                 ...cust,
-                image: (
-                  <Avatar
-                    size="sm"
-                    src={
-                      cust?.image?.startsWith("https://")
-                        ? cust?.image
-                        : "/kuldip_upload/" + cust?.image
-                    }
-                  />
-                ),
+                image: <Avatar size="sm" src={cust?.image} />,
                 orders: 0,
                 address: (
                   <div className="max-w-80 text-wrap">{cust?.address}</div>

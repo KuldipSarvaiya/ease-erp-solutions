@@ -16,6 +16,7 @@ import { GrPowerReset } from "react-icons/gr";
 import { VscInsert } from "react-icons/vsc";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { ImageUploadButton } from "@/lib/utils/uploadthing";
 
 function NewProduct({ id, data }) {
   const { data: session } = useSession({
@@ -27,16 +28,25 @@ function NewProduct({ id, data }) {
   const [depts, setDepts] = useState([]);
   const router = useRouter();
   const [colors, setColors] = useState([]);
+  const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     getValues,
     reset,
     setError,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: id ? data : {},
   });
+
+  useEffect(() => {
+    setValue("image", image);
+  }, [image]);
+
   // console.log("this item data = ", data);
   // fetches departments
   useEffect(() => {
@@ -60,6 +70,8 @@ function NewProduct({ id, data }) {
   }, [id]);
 
   async function createNewProduct(formdata) {
+    setLoading(true);
+
     formdata.color = id ? colors[0] : colors;
     formdata.size = formdata.size.replaceAll(/\n|\r|\t/g, " ").split(",");
     formdata.description = formdata.description.replaceAll(/\n|\r|\t/g, " ");
@@ -78,14 +90,16 @@ function NewProduct({ id, data }) {
     const formData = new FormData();
 
     for (const key in formdata) {
-      if (key === "image") formData.append(key, formdata[key][0]);
-      else formData.append(key, formdata[key]);
+      formData.append(key, formdata[key]);
     }
 
     const result = await fetch("/api/inventory/product", {
       method: id ? "PUT" : "POST",
       body: formData,
     });
+
+    setLoading(false);
+
     if (!result.ok)
       return alert("Failed To Create New Product.\n Please Try Again");
 
@@ -99,6 +113,7 @@ function NewProduct({ id, data }) {
         : (() => {
             setColors([]);
             reset();
+            setImage("");
           })();
 
     for (const key in res) {
@@ -155,36 +170,16 @@ function NewProduct({ id, data }) {
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
         <span className="text-xl font-semibold">Product Image : </span>
-        <Input
-          defaultValue={getValues("image")}
+        <input
           {...register("image", {
-            required: id ? false : "Please Drop a Product Image",
-            validate: (v) =>
-              id
-                ? true
-                : v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
+            required: id ? false : "Please Upload The Product Image",
           })}
-          startContent={
-            <Avatar
-              size="md"
-              src={
-                !id && getValues("image")?.[0]
-                  ? URL?.createObjectURL(getValues("image")[0])
-                  : null
-              }
-            />
-          }
-          variant="faded"
-          size="md"
-          color="secondary"
-          type="file"
-          multiple={false}
-          accept=".png, .jpg, .jpeg"
           name="image"
-          aria-label="image"
-          aria-labelledby="image"
-          className="md:col-start-2 md:col-end-4"
+          type="text"
+          hidden
+          className="hidden"
         />
+        <ImageUploadButton image={image} setImage={setImage} />
         <p className="text-red-500"> {errors?.image?.message} </p>
       </span>
       <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
@@ -287,7 +282,7 @@ function NewProduct({ id, data }) {
           defaultValue={getValues("unit_of_measurement")}
           {...register("unit_of_measurement", {
             required: "Please Specify Unit of Measurement Of the Product",
-          })} 
+          })}
           variant="faded"
           size="md"
           color="secondary"
@@ -473,12 +468,14 @@ function NewProduct({ id, data }) {
           type="submit"
           color="secondary"
           variant="shadow"
+          isLoading={loading}
           endContent={<big>📦</big>}
           // isDisabled={!colors.length}
         >
           {id ? "UPDATE" : "ADD"} PRODUCT
         </Button>
         <Button
+          isDisabled={loading}
           type="reset"
           color="secondary"
           variant="shadow"

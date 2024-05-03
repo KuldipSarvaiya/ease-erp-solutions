@@ -9,7 +9,7 @@ const nextConfig = {
   //   bodyParser: false, // this is used with form in api
   // },
   images: {
-    domains: ["lh3.googleusercontent.com", "localhost"],
+    domains: ["lh3.googleusercontent.com", "localhost", "utfs.io"],
   },
 };
 

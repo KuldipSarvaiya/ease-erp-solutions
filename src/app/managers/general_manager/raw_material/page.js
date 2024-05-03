@@ -64,7 +64,8 @@ export default async function LowMaterialPage() {
             USED RAW MATERIAL
           </p>
           <Divider className="my-3" />{" "}
-          <div className="lg:columns-3 md:columns-2 max-sm:columns-1 gap-8 space-y-8">
+          <div className="grid lg:grid-cols-3 md:grid-rows-2 sm:grid-rows-1 gap-8">
+            {/* <div className="lg:columns-3 md:columns-2 max-sm:columns-1 gap-8 space-y-8"> */}
             {materials?.[0]?.used_materials?.map((material) => (
               <RawMaterialCard
                 no_dept={true}

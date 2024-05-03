@@ -105,7 +105,7 @@ function ChatModel() {
                       className={` flex flex-row justify-start items-start gap-1 `}
                     >
                       <Avatar
-                        src={"/kuldip_upload/" + msg.sent_by.image}
+                        src={msg.sent_by.image}
                         size="sm"
                         title={
                           session?.user?.department_id?.dept_name
@@ -140,7 +140,7 @@ function ChatModel() {
                       className={` flex flex-row-reverse justify-start items-start gap-1 `}
                     >
                       <Avatar
-                        src={"/kuldip_upload/" + msg.sent_by.image}
+                        src={msg.sent_by.image}
                         size="sm"
                         title={
                           msg?.sent_by?.department_id?.dept_name

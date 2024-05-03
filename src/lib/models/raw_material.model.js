@@ -28,8 +28,7 @@ const raw_materialSchema = new Schema({
   },
   image: {
     type: String,
-    required: true,
-    immutable: true,
+    required: true, 
   },
   unit_of_measurement: {
     type: String,

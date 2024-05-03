@@ -1,6 +1,7 @@
 "use client";
 
 import InputCon from "@/components/InputCon";
+import { ImageUploadButton } from "@/lib/utils/uploadthing";
 import {
   Avatar,
   Button,
@@ -40,6 +41,11 @@ function Page() {
   const [depts, setDepts] = useState([]);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState("");
+
+  useEffect(() => {
+    setValue("image", image);
+  }, [image]);
 
   useEffect(() => {
     (async function () {
@@ -59,8 +65,7 @@ function Page() {
     const formData = new FormData();
 
     for (const key in formdata) {
-      if (key === "image") formData.append(key, formdata[key][0]);
-      else formData.append(key, formdata[key]);
+      formData.append(key, formdata[key]);
     }
     formData.append("updated_by", session?.user?._id);
 
@@ -71,6 +76,7 @@ function Page() {
       });
       if (res.ok) {
         setSuccess("Employee Has Been Registered Successfully");
+        setImage("");
         reset();
         setTimeout(() => setSuccess(false), [5000]);
       } else {
@@ -158,34 +164,16 @@ function Page() {
           </span>
           <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
             <span className="text-xl font-semibold">Profile Image : </span>
-            <Input
+            <input
               {...register("image", {
-                required: "Please Select a Profile Image",
-                validate: (v) =>
-                  v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
+                required: "Please Upload The Profile Image",
               })}
-              startContent={
-                <Avatar
-                  size="md"
-                  src={
-                    getValues("image")?.[0]
-                      ? URL.createObjectURL(getValues("image")[0])
-                      : null
-                  }
-                />
-              }
-              variant="faded"
-              size="md"
-              color="secondary"
-              type="file"
-              multiple={false}
-              accept=".png, .jpg, .jpeg"
               name="image"
-              aria-label="image"
-              aria-labelledby="image"
-              // isRequired
-              className="md:col-start-2 md:col-end-4"
+              type="text"
+              hidden
+              className="hidden"
             />
+            <ImageUploadButton image={image} setImage={setImage} />
             <p className="text-red-500"> {errors?.image?.message} </p>
           </span>
           <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">

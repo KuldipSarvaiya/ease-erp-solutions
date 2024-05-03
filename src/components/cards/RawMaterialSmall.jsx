@@ -182,7 +182,7 @@ async function RawMaterialSmall({ no_decrement, no_increment, material }) {
           alt="product img"
           height={100}
           radius="sm"
-          src={"/kuldip_upload/" + material?.raw_material?.image}
+          src={material?.raw_material?.image}
           width={100}
           className="object-cover rounded-lg bg-slate-800 max-h-28 "
           aria-label="photot of raw material"

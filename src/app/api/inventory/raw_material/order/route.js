@@ -4,10 +4,7 @@ import RawMaterialStock from "@/lib/models/raw_material_stock.model";
 import RawMaterialStockHistory from "@/lib/models/raw_material_stock_history.model";
 import Supplier from "@/lib/models/supplier.model";
 import connectDB from "@/lib/mongoose";
-import { NextResponse } from "next/server";
-import { writeFile } from "node:fs";
-import { join } from "node:path";
-import { cwd } from "node:process";
+import { NextResponse } from "next/server"; 
 
 export async function GET() {
   await connectDB();
@@ -66,15 +63,6 @@ export async function POST(req) {
   const updated_by = formdata.get("updated_by");
   const bill_image = formdata.get("bill_image");
 
-  const image = `${Date.now()}__${bill_image.name}`.replaceAll(" ", "-");
-  const arrBuf = await bill_image.arrayBuffer();
-  const buffer = new Buffer.from(arrBuf);
-
-  const ulr = join(cwd(), "public", "kuldip_upload", image);
-  writeFile(ulr, buffer, () => {
-    // console.log("file saved");
-  });
-
   const res = await RawMaterialOrder.insertMany([
     {
       raw_material_id: raw_material_id,
@@ -91,7 +79,7 @@ export async function POST(req) {
       total_tax: total_tax,
       delivery_charge: delivery_charge,
       net_bill_amount: net_bill_amount,
-      bill_image: image,
+      bill_image: bill_image,
       updated_by: updated_by,
     },
   ]);

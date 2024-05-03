@@ -63,7 +63,7 @@ function GMEmployeeCard({ emp }) {
           alt="employee logo"
           height={100}
           radius="sm"
-          src={"/kuldip_upload/" + emp?.image}
+          src={emp?.image}
           width={100}
           className="object-cover rounded-lg bg-slate-800"
         />

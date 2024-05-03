@@ -70,11 +70,7 @@ function DashBoardNavBar({ menuItems, mainPath }) {
             isBordered
             color="secondary"
             about="profile"
-            src={
-              session?.user?.image
-                ? "/kuldip_upload/" + session?.user?.image
-                : ""
-            }
+            src={session?.user?.image || ""}
           />
         </NavbarItem>
         <NavbarItem>

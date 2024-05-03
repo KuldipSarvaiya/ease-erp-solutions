@@ -162,7 +162,7 @@ async function ProductSmall({ product, no_decrement }) {
           alt="product img"
           height={100}
           radius="sm"
-          src={"/kuldip_upload/" + product?.image}
+          src={product?.image}
           width={100}
           className="max-h-24 rounded-lg bg-slate-800 object-cover"
           aria-label="photot of product"

@@ -5,6 +5,7 @@ import {
   createCustomer,
   createSupplier,
 } from "@/lib/utils/server_actions/inventory";
+import { ImageUploadButton } from "@/lib/utils/uploadthing";
 import {
   Avatar,
   Button,
@@ -31,6 +32,7 @@ function Page({ params: { men } }) {
   });
   const router = useRouter();
   const [rawMaterial, setRawMaterial] = useState([]);
+  const [image, setImage] = useState("");
   const {
     register,
     control,
@@ -41,6 +43,10 @@ function Page({ params: { men } }) {
     setValue,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    setValue("image", image);
+  }, [image]);
 
   useEffect(() => {
     // console.log(men);
@@ -71,8 +77,7 @@ function Page({ params: { men } }) {
     const formdata = new FormData();
 
     for (const key in data) {
-      if (key === "image") formdata.append(key, data[key][0]);
-      else formdata.append(key, data[key]);
+      formdata.append(key, data[key]);
     }
     formdata.append("updated_by", session?.user?._id);
 
@@ -134,34 +139,16 @@ function Page({ params: { men } }) {
           </span>
           <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
             <span className="text-xl font-semibold">Image : </span>
-            <Input
+            <input
               {...register("image", {
-                required: "Please Drop a Supplier Image",
-                validate: (v) =>
-                  v[0].size < 500 * 1024 || "Imgae Size is Large, max 500kb",
+                required: "Please Upload The Profile Image",
               })}
-              startContent={
-                <Avatar
-                  radius="lg"
-                  size="md"
-                  src={
-                    getValues("image")?.[0]
-                      ? URL.createObjectURL(getValues("image")[0])
-                      : null
-                  }
-                />
-              }
-              variant="faded"
-              size="md"
-              color="secondary"
-              type="file"
-              multiple={false}
-              accept=".png, .jpg, .jpeg"
               name="image"
-              aria-label="image"
-              aria-labelledby="image"
-              className="md:col-start-2 md:col-end-4"
+              type="text"
+              hidden
+              className="hidden"
             />
+            <ImageUploadButton image={image} setImage={setImage} />
             <p className="text-red-500"> {errors?.image?.message} </p>
           </span>
           <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">

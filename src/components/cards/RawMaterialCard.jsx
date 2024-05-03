@@ -70,10 +70,10 @@ function RawMaterialCard({ card_only, material, no_dept }) {
         </CardHeader>
         {/* <CardBody> */}
         <Image
-          alt="Woman listing to music"
+          alt="Raw Material Image"
           className="object-cover w-full h-full"
           height={300}
-          src={"/kuldip_upload/" + material?.image}
+          src={material?.image}
           width={300}
         />
         {/* </CardBody> */}

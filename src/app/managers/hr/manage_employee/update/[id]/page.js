@@ -2,6 +2,7 @@
 
 import InputCon from "@/components/InputCon";
 import { resignEmployee } from "@/lib/utils/server_actions/hr";
+import { ImageUploadButton } from "@/lib/utils/uploadthing";
 import {
   Avatar,
   Button,
@@ -40,6 +41,7 @@ function Page({ params: { id } }) {
   const [depts, setDepts] = useState([]);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState("");
   const {
     register,
     reset,
@@ -76,6 +78,7 @@ function Page({ params: { id } }) {
       data.latitude = data.attendance_coordinates.latitude;
       data.longitude = data.attendance_coordinates.longitude;
       reset(data);
+      setImage(data.image);
       // setValue("home_address", data.home_address );
     }
   }, [data, depts]);
@@ -98,13 +101,19 @@ function Page({ params: { id } }) {
   async function handelAction(formdata) {
     setLoading(true);
     formdata.append("id", id);
-    // formdata.append("rezorpay_contact_id", "cont_O4qRcGPLF7j0Gv");
-    // formdata.append("rezorpay_fund_id", "fa_O4rgIpJkcKVLgk");
+    formdata.append("image", image);
     formdata.append("rezorpay_contact_id", data?.rezorpay_contact_id);
     formdata.append("rezorpay_fund_id", data?.rezorpay_fund_id);
     formdata.append("updated_by", session?.user?._id);
     if (formdata.get("department_id") === "") {
       formdata.append("department_id", data?.department_id);
+    }
+    if (
+      data.bank_acc_no.toString() !== formdata.get("bank_acc_no").toString() ||
+      data.bank_ifsc_code.toString() !==
+        formdata.get("bank_ifsc_code").toString()
+    ) {
+      formdata.append("change_acc", "1");
     }
 
     const res = await fetch("/api/hr/employee", {
@@ -227,7 +236,7 @@ function Page({ params: { id } }) {
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">
               <span className="text-xl font-semibold">Profile Image : </span>
-              <Input
+              {/* <Input
                 {...register("image", {
                   // required: "Please Select a Profile Image",
                   validate: (v) =>
@@ -239,7 +248,7 @@ function Page({ params: { id } }) {
                 isDisabled={!data}
                 startContent={
                   <Avatar size="md" src={"/kuldip_upload/" + data?.image} />
-                }
+                } 
                 variant="faded"
                 size="md"
                 color="secondary"
@@ -251,7 +260,8 @@ function Page({ params: { id } }) {
                 aria-labelledby="image"
                 // isRequired
                 className="md:col-start-2 md:col-end-4"
-              />
+              /> */}
+              <ImageUploadButton image={image} setImage={setImage} />
               <p className="text-red-500"> {errors?.image?.message} </p>
             </span>
             <span className="grid grid-cols-4 max-md:grid-cols-1 max-md:grid-rows-2 grid-rows-1">

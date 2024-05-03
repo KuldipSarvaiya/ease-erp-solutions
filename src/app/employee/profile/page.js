@@ -27,7 +27,7 @@ export default async function ProfilePage() {
       {/* photo name */}
       <div className="flex flex-row justify-start max-w-full ml-10 h-32 items-end gap-14 max-md:items-center max-md:h-fit max-md:flex-col max-md:gap-2 max-md:justify-center max-md:m-0">
         <Avatar
-          src={`/kuldip_upload/${emp.image}`}
+          src={emp.image}
           alt="profile"
           size="lg"
           isBordered
