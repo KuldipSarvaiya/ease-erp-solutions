@@ -191,7 +191,7 @@ export default function SalarySlipPage() {
                     <td className="flex flex-col gap-3">
                       <p className="flex flex-row gap-5 justify-start items-start text-nowrap">
                         <Image
-                          src={"/kuldip_upload/" + printSal?.employee?.image}
+                          src={printSal?.employee?.image}
                           width={170}
                           height={170}
                           className="rounded-2xl object-cover aspect-square"
