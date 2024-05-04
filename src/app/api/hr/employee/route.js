@@ -205,6 +205,13 @@ export async function GET(req) {
         localField: "_id",
         foreignField: "department_id",
         as: "employees",
+        pipeline: [
+          {
+            $match: {
+              is_ex_employee: false,
+            },
+          },
+        ],
       },
     },
     {
@@ -214,7 +221,6 @@ export async function GET(req) {
             input: "$employees",
             cond: {
               $ne: ["$$this.designation", "Admin"],
-              $ne: ["$$this.is_ex_employee", true],
             },
           },
         },
