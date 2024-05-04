@@ -16,7 +16,7 @@ export async function GET(request) {
 
   await connectDB();
 
-  const res = await Product.find(qry.find)
+  const res = await Product.find({ ...qry.find, is_deleted: false })
     .sort({ available_stock_units: -1 })
     .limit(20);
 

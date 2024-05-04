@@ -35,11 +35,27 @@ export default function Page({ params: { id }, searchParams }) {
       .then((res) => res.json())
       .then((d) => {
         // console.log(d);
-        if (d.length > 0) setData(d?.[0]);
-        else notFound();
+        if (d.length > 0) {
+          // console.log(
+          //   d,
+          //   d?.[0].color !== "#" + searchParams?.color,
+          //   d?.[0].size !== searchParams?.size
+          // );
+          if (
+            d?.[0].color !== "#" + searchParams?.color ||
+            d?.[0].size !== searchParams?.size
+          )
+            notFound();
+          setData(d?.[0]);
+        } else {
+          alert("⚠️ This Product is No Lonager Availbale For Sell");
+          setData(true);
+        }
       })
       .catch((e) => console.error(e));
   }, [searchParams?.size, searchParams?.color]);
+
+  if (data === true) notFound();
 
   // place order function
   function placeOrder() {

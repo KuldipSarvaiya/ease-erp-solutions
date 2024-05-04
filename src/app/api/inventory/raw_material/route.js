@@ -133,6 +133,7 @@ export async function GET(req) {
   const res = await RawMaterial.aggregate([
     {
       $match: {
+        is_deleted: false,
         produced_by: {
           $exists: true,
           $eq: [],

@@ -1,5 +1,6 @@
 import Product from "@/lib/models/product.model";
 import connectDB from "@/lib/mongoose";
+import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params: { gid } }) {
@@ -9,7 +10,14 @@ export async function GET(req, { params: { gid } }) {
   await connectDB();
 
   const product = await Product.aggregate([
-    { $match: { product_group_id: gid, color: "#" + color, size: size } },
+    {
+      $match: {
+        is_deleted: false,
+        product_group_id: gid,
+        color: "#" + color,
+        size: size,
+      },
+    },
     {
       $lookup: {
         from: "products",
@@ -17,6 +25,11 @@ export async function GET(req, { params: { gid } }) {
         foreignField: "product_group_id",
         as: "group_products",
         pipeline: [
+          {
+            $match: {
+              is_deleted: false,
+            },
+          },
           {
             $project: {
               color: 1,

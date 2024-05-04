@@ -15,6 +15,13 @@ export default async function Page() {
         localField: "raw_material_id",
         foreignField: "_id",
         as: "raw_material",
+        pipeline: [
+          {
+            $match: {
+              is_deleted: false,
+            },
+          },
+        ],
       },
     },
     {

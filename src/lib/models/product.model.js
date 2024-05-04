@@ -25,11 +25,11 @@ const productSchema = new Schema(
     },
     color: {
       type: String,
-      required: false, 
+      required: false,
     },
     size: {
       type: String,
-      required: false, 
+      required: false,
     },
     unit_of_measurement: {
       type: String,
@@ -63,6 +63,11 @@ const productSchema = new Schema(
       type: [Schema.ObjectId],
       ref: "Department",
       required: false,
+    },
+    is_deleted: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     updated_by: {
       type: Schema.ObjectId,

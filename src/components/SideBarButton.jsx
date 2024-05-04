@@ -21,7 +21,9 @@ function SideBarButton({ item, mainPath }) {
       // variant={"shadow"}
       variant={isActive ? "flat" : "shadow"}
     >
-      {item.replaceAll("_", " ")}
+      {item === "raw_material_stock"
+        ? "rawmaterial stock"
+        : item.replaceAll("_", " ")}
     </Button>
   );
 }

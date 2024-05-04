@@ -16,11 +16,11 @@ const raw_materialSchema = new Schema({
   },
   color: {
     type: String,
-    required: false, 
+    required: false,
   },
   size: {
     type: String,
-    required: false, 
+    required: false,
   },
   chemical_property: {
     type: [String],
@@ -28,7 +28,7 @@ const raw_materialSchema = new Schema({
   },
   image: {
     type: String,
-    required: true, 
+    required: true,
   },
   unit_of_measurement: {
     type: String,
@@ -64,6 +64,11 @@ const raw_materialSchema = new Schema({
   //   ref: "RawMaterailStock",
   //   required: false,
   // },
+  is_deleted: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   updated_by: {
     type: Schema.ObjectId,
     ref: "Employee",

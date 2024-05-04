@@ -1,12 +1,12 @@
 import Download from "@/components/Dowload";
 import ProductSmall from "@/components/cards/ProductSmall";
 import HistoryTable from "./HistoryTable";
-import {  Divider } from "@nextui-org/react";  
-import Product from "@/lib/models/product.model"; 
+import { Divider } from "@nextui-org/react";
+import Product from "@/lib/models/product.model";
 
 export default async function ProdStockPage() {
-  const products = await Product.find({});
-  
+  const products = await Product.find({ is_deleted: false });
+
   return (
     <div className="relative w-full h-full max-h-full max-w-full">
       {/*  products  */}
