@@ -31,7 +31,7 @@ function CustomerTable({ id }) {
               return {
                 ...cust,
                 image: <Avatar size="sm" src={cust?.image} />,
-                orders: 0,
+                orders: cust?.orders?.length || 0,
                 address: (
                   <div className="max-w-80 text-wrap">{cust?.address}</div>
                 ),

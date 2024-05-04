@@ -34,7 +34,7 @@ export function ImageUploadButton({ image, setImage }) {
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
           setImage(res[0].url);
-          console.log("Files: ", res, res[0].url);
+          // console.log("Files: ", res, res[0].url);
           setSuccess("✅ Uploading Successful");
           setTimeout(() => {
             setSuccess(false);
@@ -42,7 +42,7 @@ export function ImageUploadButton({ image, setImage }) {
         }}
         onUploadError={(error) => {
           // alert(`ERROR! ${error.message}`);
-          console.log(error);
+          // console.log(error);
           setSuccess("⚠️ Uploading Failed");
           setTimeout(() => {
             setSuccess(false);

@@ -35,6 +35,7 @@ export async function allEmpGroupDept() {
     {
       $match: {
         designation: { $ne: "Admin" },
+        is_ex_employee: { $ne: true },
       },
     },
     {

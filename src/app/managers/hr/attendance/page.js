@@ -148,7 +148,7 @@ export default function Page() {
                   <div className="flex flex-wrap flex-row justify-start gap-3 max-md:justify-center">
                     {dept?.employees?.map((emp, i) => (
                       <AttendanceChip
-                        key={emp?._id + "asjk23hegb" + i}
+                        key={emp?._id + i}
                         session={session}
                         emp={emp}
                         status={emp?.attendance?.state || "absent"}
@@ -164,7 +164,7 @@ export default function Page() {
 
       {/* chart */}
       <div className="border-4 rounded-3xl mx-10 mt-10 mb-7 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
-        <Bar options={options} data={chart_data} />
+        {/* <Bar options={options} data={chart_data} /> */}
       </div>
     </div>
   );

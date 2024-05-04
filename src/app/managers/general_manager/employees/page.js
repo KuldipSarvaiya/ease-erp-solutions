@@ -24,6 +24,7 @@ export default async function EmpPage() {
     {
       $match: {
         designation: "Employee",
+        is_ex_employee: false,
         department_id: new mongoose.Types.ObjectId(department_id),
       },
     },
