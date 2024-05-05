@@ -31,7 +31,7 @@ const ProductTooltip = ({ product }) => {
             alt="product img"
             height={100}
             radius="sm"
-            src={"/kuldip_upload/" + product?.image}
+            src={product?.image}
             width={100}
             className="object-contain rounded-lg bg-transparent aspect-square"
             aria-label="photo of product"

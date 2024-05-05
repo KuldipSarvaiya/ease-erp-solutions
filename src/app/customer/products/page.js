@@ -89,7 +89,7 @@ function ProductsPage() {
             }
           />
         </form>
-        <span className="flex w-80 text-base">
+        {/* <span className="flex w-80 text-base">
           <Select
             variant="faded"
             size="sm"
@@ -111,7 +111,7 @@ function ProductsPage() {
               Price : Low To High
             </SelectItem>
           </Select>
-        </span>
+        </span> */}
       </div>
 
       {products === false && <center>No Products Found</center>}
