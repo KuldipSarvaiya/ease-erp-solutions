@@ -16,6 +16,7 @@ function ProductsPage() {
       .then((data) => {
         setProducts(data);
         setStore(data);
+        console.log(data);
         if (data.length === 0) setProducts(false);
       })
       .catch((e) => console.log(e));

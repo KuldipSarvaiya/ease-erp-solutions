@@ -165,7 +165,7 @@ export default function NavBar() {
                 setIsMenuOpen(false);
                 setActive(item);
               }}
-              href={`/customer/${item.toLowerCase()}`}
+              href={`/customer/${item.toLowerCase().replace("home", "")}`}
             >
               {item}
             </UiLink>

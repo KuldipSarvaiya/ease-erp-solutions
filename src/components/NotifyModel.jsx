@@ -33,11 +33,12 @@ function NotifyModel() {
           method: "GET",
           next: { tags: ["myNotice"] },
         })
-          .then((res) => res.json())
+          .then((res) => res?.json())
           .then((data) => {
             // console.log(data);
             setNotices(data.notice);
-          });
+          })
+          .catch((e) => console.log(e));
       })();
   }, [session]);
 
@@ -50,7 +51,8 @@ function NotifyModel() {
       .then((data) => {
         // console.log(data); // do something with the response
         setNotices(notices.filter((n) => n !== notice));
-      });
+      })
+      .catch((e) => console.log(e));
   }
 
   return (

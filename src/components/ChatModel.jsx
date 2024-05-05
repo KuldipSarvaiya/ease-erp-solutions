@@ -41,7 +41,7 @@ function ChatModel() {
         date_time: new Date(),
       }),
     })
-      .then((res) => res.json())
+      .then((res) => res?.json())
       .then((data) => {
         setMsgs((prev) => [
           ...prev,
@@ -69,13 +69,14 @@ function ChatModel() {
       method: "GET",
       next: { tags: ["chatting"] },
     })
-      .then((res) => res.json())
+      .then((res) => res?.json())
       .then((data) => {
         setMsgs(data);
         scrollDown?.current?.scrollIntoView({
           behavior: "smooth",
         });
-      });
+      })
+      .catch((e) => console.log(e));
   }
 
   useEffect(() => {
@@ -158,7 +159,7 @@ function ChatModel() {
                   </div>
                 );
               })}
-              <div ref={scrollDown} className="bg-red-700 h-20 w-10"></div>
+              <div ref={scrollDown} className="h-20 w-10"></div>
             </div>
           </ModalBody>
           <ModalFooter className="flex flex-row justify-center">
