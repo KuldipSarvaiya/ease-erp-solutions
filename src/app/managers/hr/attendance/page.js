@@ -164,7 +164,7 @@ export default function Page() {
 
       {/* chart */}
       <div className="border-4 rounded-3xl mx-10 mt-10 mb-7 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
-        {/* <Bar options={options} data={chart_data} /> */}
+        <Bar options={options} data={ch/art_data} />
       </div>
     </div>
   );
