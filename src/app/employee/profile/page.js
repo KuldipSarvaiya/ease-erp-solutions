@@ -111,6 +111,9 @@ export default async function ProfilePage() {
             <div className="flex flex-row flex-nowrap gap-5 mt-5">
               <div className="flex flex-col flex-nowrap gap-3">
                 <p>
+                  <b>User Name</b>
+                </p>
+                <p>
                   <b>Designation</b>
                 </p>
                 <p>
@@ -133,6 +136,7 @@ export default async function ProfilePage() {
                 </p>
               </div>
               <div className="flex flex-col flex-nowrap gap-3">
+                <p>: {emp.username}</p>
                 <p>: {emp.designation}</p>
                 <p>: {new Date(emp.doj).toDateString()}</p>
                 <p>: {emp.department_id.dept_name.replaceAll("-", " ")}</p>

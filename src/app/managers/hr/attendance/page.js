@@ -38,7 +38,7 @@ export default function Page() {
           return alert("Can Not Get Employee Details Due To Network Error");
 
         const json = await res.json();
-        // console.log(json);
+        console.log(json);
         setData(json);
       })();
     }
@@ -69,42 +69,61 @@ export default function Page() {
       y: {
         stacked: true,
         label: "Total Employees In Each Department",
+        ticks: {
+          precision: 0,
+        },
       },
     },
   };
 
-  const labels = [
-    "hr",
-    "finance",
-    "inventory",
-    "fabri-manufacturing",
-    "cleaning-and-finishing",
-    "dying-and-printing",
-    "cutting",
-    "sewing",
-    "packing-and-labeling",
-  ];
+  const labels = data?.map(
+    (item) =>
+      item.dept_name.replaceAll("-", " ").toUpperCase().substr(0, 13) +
+      `${item.dept_name.length > 12 ? "..." : ""}`
+  );
+
+  const present_emp = data?.map((dept) => {
+    return dept.employees.filter(
+      (item) => item?.attendance?.state === "present"
+    ).length;
+  });
+  const onleave_emp = data?.map((dept) => {
+    return dept.employees.filter(
+      (item) => item?.attendance?.state === "onleave"
+    ).length;
+  });
+  const pending_emp = data?.map((dept) => {
+    return dept.employees.filter(
+      (item) => item?.attendance?.state === "pending"
+    ).length;
+  });
+  const absent_emp = data?.map((dept) => {
+    return dept.employees.filter((item) => {
+      return !item?.attendance;
+    }).length;
+  });
+
   const chart_data = {
     labels,
     datasets: [
       {
         label: "Present",
-        data: [23, 12, 24, 24, 43, 34, 34, 43, 34],
+        data: present_emp,
         backgroundColor: "#10b981",
       },
       {
         label: "Onleave",
-        data: [22, 32, 43, 32, 53, 34, 24, 43, 34],
+        data: onleave_emp,
         backgroundColor: "#ef4444",
       },
       {
         label: "Pending",
-        data: [24, 22, 22, 23, 21, 22, 24, 23, 33],
+        data: pending_emp,
         backgroundColor: "#eab308",
       },
       {
         label: "Absent",
-        data: [43, 12, 22, 24, 11, 22, 24, 23, 34],
+        data: absent_emp,
         backgroundColor: "#cbd5e1",
       },
     ],
@@ -164,7 +183,7 @@ export default function Page() {
 
       {/* chart */}
       <div className="border-4 rounded-3xl mx-10 mt-10 mb-7 p-4 max-md:mx-2 shadow-lg shadow-slate-500 flex gap-2 flex-wrap max-md:justify-around content-stretch">
-        <Bar options={options} data={ch/art_data} />
+        <Bar options={options} data={chart_data} />
       </div>
     </div>
   );

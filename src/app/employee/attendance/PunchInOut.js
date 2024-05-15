@@ -5,8 +5,6 @@ import { Button } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { GiEntryDoor, GiExitDoor } from "react-icons/gi";
 
-// todo : add dynamic employee's attendance coordinates
-
 export function PunchIn({ id }) {
   const [myCoords, setMyCoords] = useState({});
   const [loading, setLoading] = useState(false);
@@ -40,7 +38,7 @@ export function PunchIn({ id }) {
   if (h > 15 || h < 8)
     return (
       <center className="text-red-500 w-full py-10 font-semibold text-base">
-        Please punch in between 8am to 3pm
+        Please punch in between 8am to 3pm. You are Absent {":)"}
       </center>
     );
 
